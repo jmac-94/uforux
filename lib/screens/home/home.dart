@@ -228,8 +228,26 @@ class _HomeState extends State<Home> {
               .toString()
               .split(' ')[1]
               .split('.')[0];
+          final randomNumber = random.nextInt(1000);
+          final imageUrl = 'https://picsum.photos/200/300?random=$randomNumber';
 
           return ListTile(
+            leading: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                    8.0), // The radius of the rounded corners
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(
+                    8.0), // Same as the Container's border radius
+                child: Image.network(
+                  imageUrl,
+                  width: 50, // Your desired image width
+                  height: 50, // Your desired image height
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             title: Column(
               children: [
                 Text(
