@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/widgets/post_item.dart';
@@ -261,17 +264,18 @@ class _HomeState extends State<Home> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // The radius of the rounded corners
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Same as the Container's border radius
-                        child: Image.network(
-                          imageUrl,
-                          width: 50, // Your desired image width
-                          height: 50, // Your desired image height
-                          fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: GestureDetector(
+                          onTap: () => showFullImage(context, imageUrl),
+                          child: Image.network(
+                            imageUrl,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -326,3 +330,34 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 }
+
+void showFullImage(BuildContext context, String imageUrl) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      var edgeInsets = const EdgeInsets.all(10);
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: edgeInsets,
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context), // Closes the dialog on tap
+          child: PhotoViewGallery.builder(
+            itemCount: 1,
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider: CachedNetworkImageProvider(imageUrl),
+                minScale: PhotoViewComputedScale.contained,
+                maxScale: PhotoViewComputedScale.covered * 2,
+              );
+            },
+            scrollPhysics: const BouncingScrollPhysics(),
+            backgroundDecoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+∏

@@ -47,6 +47,8 @@ dependencies:
   firebase_storage: ^11.4.1
   file_picker: ^6.0.0
   faker: ^2.1.0
+  photo_view: ^0.14.0
+  cached_network_image: ^3.3.0
 
 dev_dependencies:
   flutter_test:
