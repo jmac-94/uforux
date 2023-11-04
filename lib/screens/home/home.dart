@@ -171,6 +171,21 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const TextField(
+          decoration: InputDecoration.collapsed(
+            hintText: 'Search',
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.filter_list,
+            ),
+            onPressed: () {},
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(
           Icons.add_comment,

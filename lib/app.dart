@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         darkTheme: themeData(
           themeData(ThemeConfig.darkTheme),
         ),
-        home: Wrapper(),
+        home: const Wrapper(),
         debugShowCheckedModeBanner: false,
       ),
     );

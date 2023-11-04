@@ -12,6 +12,7 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.user});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MainScreenState createState() => _MainScreenState();
 }
 
@@ -29,11 +30,13 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+
     final AppUser? user = widget.user;
+
     _screens = [
-      Calendar(),
+      Calendar(user: user),
       Home(user: user),
-      Notifications(),
+      Notifications(user: user),
       Profile(user: user),
     ];
   }
@@ -48,10 +51,11 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
+        items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline),
-            label: 'Seguidores',
+            icon: Icon(Icons.calendar_month_rounded),
+            label: 'Calendario',
+            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book_rounded),

@@ -1,9 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
-import 'package:uforuxpi3/services/database.dart';
 
 class Profile extends StatefulWidget {
   final AppUser? user;
@@ -16,26 +14,20 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  static const String emptyProfilePhotoPath =
-      "assets/images/empty-profile-photo.jpg";
-
   final AuthService _auth = AuthService();
 
   // User data
-  Map<String, dynamic>? data;
   String userId = '';
   String username = '';
   String email = '';
   String entrySemester = '';
-  String degree = ''; // carrera
+  String degree = '';
   String type = '';
   double score = 0;
   double calification = 0;
   int yearsTeaching = 0;
   bool assesor = false;
   List<dynamic> forums = [];
-  bool loggedIn = false;
-  bool isUserDataLoaded = false;
 
   @override
   void initState() {
@@ -48,16 +40,13 @@ class _ProfileState extends State<Profile> {
 
   Future<void> getData(AppUser? user) async {
     await user?.loadData();
-    data = user?.data;
+    Map<String, dynamic>? data = user?.data;
+
     username = data?['username'];
     degree = data?['degree'] ?? '';
     entrySemester = data?['entrySemester'] ?? '';
     assesor = data?['assesor'] ?? false;
-    score = (data?['score'] != null)
-        ? double.parse(data!['score'].toString())
-        : 0.0;
-    // forums = data?['forums'];
-    isUserDataLoaded = true;
+    score = (data?['score'] != null) ? data!['score'] : 0.0;
   }
 
   @override

@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:uforuxpi3/models/app_user.dart';
+import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/util/data.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({super.key});
+  final AppUser? user;
+
+  const Notifications({super.key, required this.user});
 
   @override
+  // ignore: library_private_types_in_public_api
   _NotificationsState createState() => _NotificationsState();
 }
 
 class _NotificationsState extends State<Notifications> {
+  final AuthService _auth = AuthService();
+
+  String userId = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

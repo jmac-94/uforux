@@ -9,7 +9,7 @@ import 'package:uforuxpi3/widgets/custom_text_field.dart';
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
-  SignIn({required this.toggleView});
+  const SignIn({super.key, required this.toggleView});
 
   @override
   _SignInState createState() => _SignInState();
