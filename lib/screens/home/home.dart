@@ -257,17 +257,19 @@ class _HomeState extends State<Home> {
           final imageUrl2 =
               'https://picsum.photos/200/300?random=$randomNumber2';
 
-          return ListTile(
-            title: Column(
-              children: [
-                Row(
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(28.0),
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(28.0),
                         child: GestureDetector(
                           onTap: () => showFullImage(context, imageUrl),
                           child: Image.network(
@@ -283,41 +285,49 @@ class _HomeState extends State<Home> {
                     Text(
                       comment['text'],
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Image.network(
-                    imageUrl2,
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Row(
-                  children: [
                     const Spacer(),
-                    Text(
-                      date.toString(),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
                     Text(
                       hours.toString(),
                     ),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Image.network(
+                  imageUrl2,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 20),
+                  const Icon(Icons.emoji_emotions),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.comment),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.local_fire_department),
+                  const Spacer(),
+                  Text(
+                    date.toString(),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
           );
         },
         separatorBuilder: (BuildContext context, int index) {
           return const Divider(
             color: Colors.black,
             height: 0.5,
-            indent: 16.0,
-            endIndent: 16.0,
           );
         },
       ),
