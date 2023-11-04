@@ -112,7 +112,6 @@ class _HomeState extends State<Home> {
         };
 
         // Add the new comment to the forum's 'comments' list
-        print(newComment);
         await _firestore
             .collection('forums')
             .doc(forumDocumentSnapshot.id)
@@ -212,7 +211,7 @@ class _HomeState extends State<Home> {
           );
         },
       ),
-      body: ListView.builder(
+      body: ListView.separated(
         controller: _scrollController,
         itemCount: _hasMoreData ? _comments.length + 1 : _comments.length,
         itemBuilder: (context, index) {
@@ -220,9 +219,49 @@ class _HomeState extends State<Home> {
             return const Center(child: CircularProgressIndicator());
           }
           var comment = _comments[index];
+          final created = comment['createdAt'].toDate().toString();
+          // delete the hours and minutes from the date and separate un another variable
+          final date =
+              DateTime.parse(created).toLocal().toString().split(' ')[0];
+          final hours = DateTime.parse(created)
+              .toLocal()
+              .toString()
+              .split(' ')[1]
+              .split('.')[0];
+
           return ListTile(
-            title: Text(comment['text']),
-            // Add other comment attributes here as needed
+            title: Column(
+              children: [
+                Text(
+                  comment['text'],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    const Spacer(),
+                    Text(
+                      date.toString(),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      hours.toString(),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Divider(
+            color: Colors.black,
+            height: 0.5,
+            indent: 16.0,
+            endIndent: 16.0,
           );
         },
       ),

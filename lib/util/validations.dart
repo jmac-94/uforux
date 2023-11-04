@@ -39,7 +39,7 @@ class Validations {
     final RegExp semesterExp = RegExp(r'^\d{4}-(1|2)$');
 
     if (!semesterExp.hasMatch(value)) {
-      return 'Formato de ciclo invalido. Formato esperado: YYYY-1 o YYYY-2';
+      return 'Formato de ciclo invalido. Formato esperado:\nYYYY-1 o YYYY-2';
     }
 
     return null;

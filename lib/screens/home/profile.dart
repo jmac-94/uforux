@@ -152,33 +152,30 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 318,
-                    child: Expanded(
-                      child: ListView(
-                        shrinkWrap: true,
-                        // physics: const BouncingScrollPhysics(),
-                        children: List.generate(
-                          10,
-                          (index) => Container(
-                            //color: Colors.primaries[index],
-                            margin: const EdgeInsets.all(5.0),
-                            height: 70,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              gradient: const LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [
-                                  Color(0xffD3CCE3),
-                                  Color(0xffE9E4F0),
-                                ],
-                              ),
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      // physics: const BouncingScrollPhysics(),
+                      children: List.generate(
+                        10,
+                        (index) => Container(
+                          //color: Colors.primaries[index],
+                          margin: const EdgeInsets.all(5.0),
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            gradient: const LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Color(0xffD3CCE3),
+                                Color(0xffE9E4F0),
+                              ],
                             ),
-                            child: Center(
-                              child: Text(
-                                'Foro numero $index°',
-                              ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Foro numero $index°',
                             ),
                           ),
                         ),

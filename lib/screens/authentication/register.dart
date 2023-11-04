@@ -166,6 +166,7 @@ class _RegisterState extends State<Register> {
               hintText: "Ciclo de ingreso",
               textInputAction: TextInputAction.done,
               validateFunction: Validations.validateSemester,
+              textInputType: TextInputType.datetime,
               onChange: (String? val) {
                 entrySemester = val ?? '';
               },
