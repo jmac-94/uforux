@@ -171,6 +171,26 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Foro general'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.low_priority,
+              color: Colors.black,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              color: Colors.black,
+            ),
+            onPressed: () {},
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(
           Icons.add_comment,
@@ -230,31 +250,45 @@ class _HomeState extends State<Home> {
               .split('.')[0];
           final randomNumber = random.nextInt(1000);
           final imageUrl = 'https://picsum.photos/200/300?random=$randomNumber';
+          final randomNumber2 = random.nextInt(1000);
+          final imageUrl2 =
+              'https://picsum.photos/200/300?random=$randomNumber2';
 
           return ListTile(
-            leading: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                    8.0), // The radius of the rounded corners
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    8.0), // Same as the Container's border radius
-                child: Image.network(
-                  imageUrl,
-                  width: 50, // Your desired image width
-                  height: 50, // Your desired image height
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             title: Column(
               children: [
-                Text(
-                  comment['text'],
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                            8.0), // The radius of the rounded corners
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Same as the Container's border radius
+                        child: Image.network(
+                          imageUrl,
+                          width: 50, // Your desired image width
+                          height: 50, // Your desired image height
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      comment['text'],
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  height: 20,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Image.network(
+                    imageUrl2,
+                    height: 180,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Row(
                   children: [
