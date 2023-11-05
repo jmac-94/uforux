@@ -8,6 +8,7 @@ class IconBadge extends StatefulWidget {
   const IconBadge({super.key, required this.icon, this.size, this.color});
 
   @override
+  // ignore: library_private_types_in_public_api
   _IconBadgeState createState() => _IconBadgeState();
 }
 

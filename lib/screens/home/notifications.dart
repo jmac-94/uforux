@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:uforuxpi3/models/app_user.dart';
-import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/util/data.dart';
 
 class Notifications extends StatefulWidget {
@@ -15,8 +14,6 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-  final AuthService _auth = AuthService();
-
   String userId = '';
 
   @override

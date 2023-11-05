@@ -7,7 +7,8 @@ class ChatBubble extends StatefulWidget {
   final bool isMe, isGroup, isReply;
 
   const ChatBubble(
-      {super.key, required this.message,
+      {super.key,
+      required this.message,
       required this.time,
       required this.isMe,
       required this.isGroup,
@@ -18,6 +19,7 @@ class ChatBubble extends StatefulWidget {
       required this.replyName});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ChatBubbleState createState() => _ChatBubbleState();
 }
 
@@ -107,7 +109,8 @@ class _ChatBubbleState extends State<ChatBubble> {
                   ? Container(
                       decoration: BoxDecoration(
                         color: chatBubbleReplyColor(),
-                        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5.0)),
                       ),
                       constraints: const BoxConstraints(
                         minHeight: 25,

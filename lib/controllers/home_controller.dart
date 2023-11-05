@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uforuxpi3/models/comment.dart';
+import 'package:uforuxpi3/util/dprint.dart';
 
 class HomeController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -50,7 +51,7 @@ class HomeController {
         }
       }
     } catch (e) {
-      print(e);
+      dPrint(e);
       hasMoreData = false;
     }
 
@@ -89,7 +90,7 @@ class HomeController {
         comments.add(newComment);
       }
     } catch (e) {
-      print(e);
+      dPrint(e);
     }
   }
 
@@ -100,7 +101,7 @@ class HomeController {
       final fileUrl = await result.ref.getDownloadURL();
       return fileUrl;
     } catch (e) {
-      print(e);
+      dPrint(e);
       return null;
     }
   }

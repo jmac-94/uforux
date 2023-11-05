@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/database.dart';
+import 'package:uforuxpi3/util/dprint.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,7 +26,7 @@ class AuthService {
 
       return _userFromFirebaseUser(user);
     } catch (e) {
-      print(e.toString());
+      dPrint(e.toString());
     }
   }
 
@@ -54,7 +55,7 @@ class AuthService {
 
       return _userFromFirebaseUser(user);
     } catch (e) {
-      print(e.toString());
+      dPrint(e.toString());
     }
   }
 
@@ -62,7 +63,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e.toString());
+      dPrint(e.toString());
       return null;
     }
   }

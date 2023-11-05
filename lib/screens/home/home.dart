@@ -28,7 +28,6 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(_scrollListener);
 
     _homeController = HomeController(widget.user.id);
-    // _homeController.fetchComments();
   }
 
   void _scrollListener() {
@@ -128,20 +127,8 @@ class _HomeState extends State<Home> {
                     }
                     // ---------- COMMENTARIES DATA------------------------------------------
                     var comment = _homeController.comments[index];
-                    final created = comment.createdAt.toString();
                     final realTime = timeago.format(comment.createdAt);
 
-
-                    
-                    final date = DateTime.parse(created)
-                        .toLocal()
-                        .toString()
-                        .split(' ')[0];
-                    final hours = DateTime.parse(created)
-                        .toLocal()
-                        .toString()
-                        .split(' ')[1]
-                        .split('.')[0];
                     final randomNumber = faker.randomGenerator.integer(1000);
                     final imageUrl =
                         'https://picsum.photos/200/300?random=$randomNumber';

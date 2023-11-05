@@ -23,7 +23,7 @@ class Comment {
       'userId': userId,
       'text': text,
       'ups': ups,
-      'createdAt': createdAt.toUtc().toIso8601String(),
+      'createdAt': createdAt,
       'attachments': attachments,
     };
   }

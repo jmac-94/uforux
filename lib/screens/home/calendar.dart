@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:uforuxpi3/models/app_user.dart';
-import 'package:uforuxpi3/services/auth.dart';
 
 class Calendar extends StatefulWidget {
   final AppUser? user;
@@ -14,8 +13,6 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  final AuthService _auth = AuthService();
-
   String userId = '';
 
   @override
