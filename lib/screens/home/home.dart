@@ -30,10 +30,8 @@ class _HomeState extends State<Home> {
   List<Map<String, dynamic>> _comments = [];
   bool _isLoading = false;
   bool _hasMoreData = true;
-  DocumentSnapshot? _lastDocument;
 
   String userId = '';
-  final AuthService _auth = AuthService();
 
   @override
   void initState() {
@@ -41,7 +39,7 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(_scrollListener);
     _fetchComments();
 
-    userId = widget.user!.uid;
+    userId = widget.user!.id;
   }
 
   void _fetchComments() async {

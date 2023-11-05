@@ -9,8 +9,14 @@ class DatabaseService {
 
   Future<Map<String, dynamic>> getUserData() async {
     final snapshot = await studentCollection.doc(uid).get();
-    final data = snapshot.data() as Map<String, dynamic>;
-    return data;
+
+    if (snapshot.exists) {
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      data['id'] = snapshot.id; // Add the user's ID to the data
+      return data;
+    } else {
+      return {};
+    }
   }
 
   Future updateStudentData({

@@ -7,7 +7,8 @@ import 'package:uforuxpi3/screens/home/notifications.dart';
 import 'package:uforuxpi3/screens/home/profile.dart';
 
 class MainScreen extends StatefulWidget {
-  final AppUser? user;
+  // El usuario no llega como null al MainScreen
+  final AppUser user;
 
   const MainScreen({super.key, required this.user});
 
@@ -31,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    final AppUser? user = widget.user;
+    final AppUser user = widget.user;
 
     _screens = [
       Calendar(user: user),

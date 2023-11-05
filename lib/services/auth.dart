@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uforuxpi3/services/database.dart';
@@ -9,16 +7,12 @@ class AuthService {
 
   // Change from FirebaseUser to AppUser
   AppUser? _userFromFirebaseUser(User? user) {
-    if (user != null) {
-      return AppUser(uid: user.uid);
-    }
-    return null;
+    return user == null ? null : AppUser(id: user.uid);
   }
 
-  // Get stream of AppUser
   Stream<AppUser?> get user {
-    return _auth.authStateChanges().map(_userFromFirebaseUser);
-    // .map((User? user) => _userFromFirebaseUser(user));
+    Stream<User?> streamUser = _auth.authStateChanges();
+    return streamUser.map(_userFromFirebaseUser);
   }
 
   Future signInWithEmailAndPassword(String email, String password) async {

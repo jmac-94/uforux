@@ -22,7 +22,7 @@ class _CalendarState extends State<Calendar> {
   void initState() {
     super.initState();
 
-    userId = widget.user!.uid;
+    userId = widget.user!.id;
   }
 
   @override

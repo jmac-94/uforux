@@ -2,9 +2,10 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
+import 'package:uforuxpi3/services/database.dart';
 
 class Profile extends StatefulWidget {
-  final AppUser? user;
+  final AppUser user;
 
   const Profile({super.key, required this.user});
 
@@ -16,43 +17,18 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final AuthService _auth = AuthService();
 
-  // User data
-  String userId = '';
-  String username = '';
-  String email = '';
-  String entrySemester = '';
-  String degree = '';
-  String type = '';
-  double score = 0;
-  double calification = 0;
-  int yearsTeaching = 0;
-  bool assesor = false;
-  List<dynamic> forums = [];
+  late AppUser loggedUser;
 
-  @override
-  void initState() {
-    super.initState();
-
-    userId = widget.user!.uid;
-
-    getData(widget.user);
-  }
-
-  Future<void> getData(AppUser? user) async {
-    await user?.loadData();
-    Map<String, dynamic>? data = user?.data;
-
-    username = data?['username'];
-    degree = data?['degree'] ?? '';
-    entrySemester = data?['entrySemester'] ?? '';
-    assesor = data?['assesor'] ?? false;
-    score = (data?['score'] != null) ? data!['score'] : 0.0;
+  Future<void> loadData(String id) async {
+    Map<String, dynamic> userData =
+        await DatabaseService(uid: id).getUserData();
+    loggedUser = AppUser.fromJson(userData);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getData(widget.user),
+      future: loadData(widget.user.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
@@ -89,7 +65,7 @@ class _ProfileState extends State<Profile> {
                   AnimatedTextKit(
                     animatedTexts: [
                       TypewriterAnimatedText(
-                        'Hi $username!',
+                        'Hi ${loggedUser.username}!',
                         textStyle: const TextStyle(
                           fontSize: 32.0,
                           fontWeight: FontWeight.bold,
@@ -116,7 +92,7 @@ class _ProfileState extends State<Profile> {
                     children: [
                       ProfileBoxes(
                         path: "assets/images/CS.jpg",
-                        carrera: degree,
+                        carrera: loggedUser.degree ?? '',
                       ),
                       const ProfileBoxes(
                         path: "assets/images/cm5.jpeg",
