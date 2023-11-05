@@ -262,96 +262,113 @@ class _HomeState extends State<Home> {
           final randomText =
               faker.lorem.sentence().characters.take(40).toString();
           // ----------------------------------------------------------------------
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(28.0),
-                      child: GestureDetector(
-                        onTap: () => showFullImage(context, imageUrl),
-                        child: Image.network(
-                          imageUrl,
-                          width: 25,
-                          height: 25,
-                          fit: BoxFit.cover,
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (BuildContext context, _, __) {
+                  return const ImageDetailPage();
+                },
+                transitionsBuilder:
+                    (___, Animation<double> animation, ____, Widget child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+              ));
+            },
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(28.0),
+                        child: GestureDetector(
+                          onTap: () => showFullImage(context, imageUrl),
+                          child: Image.network(
+                            imageUrl,
+                            width: 25,
+                            height: 25,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(name),
+                      ),
+                      const Spacer(),
+                      Text(
+                        hours.toString(),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.more_horiz),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Text(
+                      randomText,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(name),
+                  ),
+                ),
+                Container(
+                  height: 200,
+                  width: 320,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl2),
+                      fit: BoxFit.fill,
                     ),
+                    borderRadius: BorderRadiusDirectional.circular(12),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5.0,
+                      horizontal: 20,
+                    ),
+                    child: Text(
+                      comment['text'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    const Icon(Icons.emoji_emotions),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.comment),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.local_fire_department),
                     const Spacer(),
                     Text(
-                      hours.toString(),
+                      date.toString(),
                     ),
-                    const SizedBox(width: 8),
-                    const Icon(Icons.more_horiz),
+                    const SizedBox(
+                      width: 10,
+                    ),
                   ],
                 ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
-                    randomText,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              Container(
-                height: 200,
-                width: 320,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl2),
-                    fit: BoxFit.fill,
-                  ),
-                  borderRadius: BorderRadiusDirectional.circular(12),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 20,
-                  ),
-                  child: Text(
-                    comment['text'],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  const SizedBox(width: 20),
-                  const Icon(Icons.emoji_emotions),
-                  const SizedBox(width: 10),
-                  const Icon(Icons.comment),
-                  const SizedBox(width: 10),
-                  const Icon(Icons.local_fire_department),
-                  const Spacer(),
-                  Text(
-                    date.toString(),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
+              ],
+            ),
           );
         },
         separatorBuilder: (BuildContext context, int index) {
@@ -399,4 +416,37 @@ void showFullImage(BuildContext context, String imageUrl) {
       );
     },
   );
+}
+
+class ImageDetailPage extends StatelessWidget {
+  const ImageDetailPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey,
+      body: Stack(
+        children: [
+          const Center(
+            child: Text(
+              'Hi',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 30,
+              ),
+            ),
+          ),
+          // Botón de cerrar en la esquina superior
+          Positioned(
+            top: MediaQuery.of(context).padding.top,
+            right: 0,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
