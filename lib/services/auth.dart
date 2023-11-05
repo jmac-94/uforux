@@ -1,5 +1,6 @@
-import 'package:uforuxpi3/models/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/database.dart';
 
 class AuthService {

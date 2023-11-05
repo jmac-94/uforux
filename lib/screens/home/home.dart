@@ -7,30 +7,31 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:uforuxpi3/models/app_user.dart';
-import 'package:uforuxpi3/services/auth.dart';
-import 'package:uforuxpi3/widgets/post_item.dart';
-import 'package:uforuxpi3/util/data.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+
+import 'package:uforuxpi3/models/app_user.dart';
+import 'package:uforuxpi3/models/comment.dart';
 
 class Home extends StatefulWidget {
-  final AppUser? user;
+  final AppUser user;
 
   const Home({super.key, required this.user});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  final ScrollController _scrollController = ScrollController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final ScrollController _scrollController = ScrollController();
   final int _perPage = 20;
-  List<Map<String, dynamic>> _comments = [];
+
   bool _isLoading = false;
   bool _hasMoreData = true;
+
+  List<Comment> _comments = [];
 
   String userId = '';
 
@@ -40,7 +41,7 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(_scrollListener);
     _fetchComments();
 
-    userId = widget.user!.id;
+    userId = widget.user.id;
   }
 
   void _fetchComments() async {
@@ -65,19 +66,19 @@ class _HomeState extends State<Home> {
         // Determine the range of comments to fetch
         final int currentLength = _comments.length;
         final int nextFetchLimit = currentLength + _perPage;
+
         if (nextFetchLimit >= comments.length) {
-          _comments = comments.map((c) => c as Map<String, dynamic>).toList();
+          _comments = comments.map((c) => Comment.fromJson(c)).toList();
           _hasMoreData = false; // No more comments to load
         } else {
-          List<Map<String, dynamic>> newComments = comments
+          List<Comment> newComments = comments
               .sublist(currentLength, nextFetchLimit)
-              .map((c) => c as Map<String, dynamic>)
+              .map((c) => Comment.fromJson(c))
               .toList();
           _comments.addAll(newComments);
         }
       }
     } catch (e) {
-      // Handle the exception
       print(e);
       _hasMoreData = false;
     }
@@ -101,24 +102,21 @@ class _HomeState extends State<Home> {
 
       if (querySnapshot.docs.isNotEmpty) {
         var forumDocumentSnapshot = querySnapshot.docs.first;
-        var newComment = {
-          'attachments':
-              attachments, // Update this as per the attachments the user adds
-          'createdAt': Timestamp.now(),
-          'id': DateTime.now()
-              .millisecondsSinceEpoch
-              .toString(), // Or any unique id generator
-          'text': text,
-          'ups': 0,
-          'userId': userId, // Assuming you have the current user's ID here
-        };
+        var newComment = Comment(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          userId: userId,
+          text: text,
+          ups: 0,
+          createdAt: Timestamp.now().toDate(),
+          attachments: attachments,
+        );
 
         // Add the new comment to the forum's 'comments' list
         await _firestore
             .collection('forums')
             .doc(forumDocumentSnapshot.id)
             .update({
-          'comments': FieldValue.arrayUnion([newComment]),
+          'comments': FieldValue.arrayUnion([newComment.toJson()]),
         });
 
         // Update the local list of comments and refresh the UI
@@ -220,7 +218,6 @@ class _HomeState extends State<Home> {
                   TextButton(
                     child: const Text('Enviar'),
                     onPressed: () {
-                      String text = commentController.text;
                       Navigator.of(context).pop(); // Close the dialog
                       _selectAndUploadFile(
                           commentController.text); // Submit the comment
@@ -241,7 +238,7 @@ class _HomeState extends State<Home> {
           }
           // ---------- COMMENTARIES DATA------------------------------------------
           var comment = _comments[index];
-          final created = comment['createdAt'].toDate().toString();
+          final created = comment.createdAt.toString();
 
           final date =
               DateTime.parse(created).toLocal().toString().split(' ')[0];
@@ -330,7 +327,7 @@ class _HomeState extends State<Home> {
                         horizontal: 20,
                       ),
                       child: Text(
-                        comment['text'],
+                        comment.text,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

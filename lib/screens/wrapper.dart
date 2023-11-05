@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/screens/authentication/authentication.dart';
 import 'package:uforuxpi3/screens/home/main_screen.dart';
