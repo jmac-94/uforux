@@ -318,31 +318,33 @@ class _HomeState extends State<Home> {
                     ),
                     child: isImage
                         ? Expanded(child: Image.network(imageUrl2))
-                        : const Expanded(
+                        : Expanded(
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Text(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.'),
+                                    '${comment['text']}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.'),
                               ),
                             ),
                           ),
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                        horizontal: 20,
-                      ),
-                      child: Text(
-                        comment['text'],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
+                  isImage
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5.0,
+                              horizontal: 20,
+                            ),
+                            child: Text(
+                              comment['text'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
                   Row(
                     children: [
                       const SizedBox(width: 20),
