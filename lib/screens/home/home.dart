@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:faker/faker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +175,6 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Foro general'),
-        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(
@@ -239,9 +239,10 @@ class _HomeState extends State<Home> {
           if (index == _comments.length) {
             return const Center(child: CircularProgressIndicator());
           }
+          // ---------- COMMENTARIES DATA------------------------------------------
           var comment = _comments[index];
           final created = comment['createdAt'].toDate().toString();
-          // delete the hours and minutes from the date and separate un another variable
+
           final date =
               DateTime.parse(created).toLocal().toString().split(' ')[0];
           final hours = DateTime.parse(created)
@@ -249,64 +250,114 @@ class _HomeState extends State<Home> {
               .toString()
               .split(' ')[1]
               .split('.')[0];
-          final randomNumber = random.nextInt(1000);
+          final randomNumber = faker.randomGenerator.integer(1000);
           final imageUrl = 'https://picsum.photos/200/300?random=$randomNumber';
-          final randomNumber2 = random.nextInt(1000);
+          final randomNumber2 = faker.randomGenerator.integer(1000);
           final imageUrl2 =
               'https://picsum.photos/200/300?random=$randomNumber2';
+          //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
+          final name = faker.person.name();
+          final randomText =
+              faker.lorem.sentence().characters.take(40).toString();
+          // ----------------------------------------------------------------------
 
-          return ListTile(
-            title: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: GestureDetector(
-                          onTap: () => showFullImage(context, imageUrl),
-                          child: Image.network(
-                            imageUrl,
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
+          return GestureDetector(
+            onTap: () {
+              showHeroDialog(context);
+            },
+            child: Hero(
+              tag: 'uniqueTextTag',
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(28.0),
+                          child: GestureDetector(
+                            onTap: () => showFullImage(context, imageUrl),
+                            child: Image.network(
+                              imageUrl,
+                              width: 25,
+                              height: 25,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(name),
+                        ),
+                        const Spacer(),
+                        Text(
+                          hours.toString(),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.more_horiz),
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Text(
+                        randomText,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Text(
-                      comment['text'],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Image.network(
-                    imageUrl2,
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
                   ),
-                ),
-                Row(
-                  children: [
-                    const Spacer(),
-                    Text(
-                      date.toString(),
+                  Container(
+                    height: 200,
+                    width: 320,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(imageUrl2),
+                        fit: BoxFit.fill,
+                      ),
+                      borderRadius: BorderRadiusDirectional.circular(12),
                     ),
-                    const SizedBox(
-                      width: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5.0,
+                        horizontal: 20,
+                      ),
+                      child: Text(
+                        comment['text'],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    Text(
-                      hours.toString(),
-                    ),
-                  ],
-                )
-              ],
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 20),
+                      const Icon(Icons.emoji_emotions),
+                      const SizedBox(width: 10),
+                      const Icon(Icons.comment),
+                      const SizedBox(width: 10),
+                      const Icon(Icons.local_fire_department),
+                      const Spacer(),
+                      Text(
+                        date.toString(),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -314,8 +365,6 @@ class _HomeState extends State<Home> {
           return const Divider(
             color: Colors.black,
             height: 0.5,
-            indent: 16.0,
-            endIndent: 16.0,
           );
         },
       ),
@@ -351,6 +400,41 @@ void showFullImage(BuildContext context, String imageUrl) {
             scrollPhysics: const BouncingScrollPhysics(),
             backgroundDecoration: const BoxDecoration(
               color: Colors.transparent,
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void showHeroDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.white,
+        insetPadding: const EdgeInsets.all(0),
+        child: SafeArea(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 1.2,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Center(
+                child: Hero(
+                  tag: 'uniqueTextTag',
+                  child: Text(
+                    'Hello, World!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
