@@ -3,7 +3,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
                       onPressed: () {
                         String text = commentController.text;
                         Navigator.of(context).pop();
-                        _homeController.selectAndUploadFile(text);
+                        _homeController.submitComment(text);
                       },
                     ),
                   ],
@@ -129,7 +129,10 @@ class _HomeState extends State<Home> {
                     // ---------- COMMENTARIES DATA------------------------------------------
                     var comment = _homeController.comments[index];
                     final created = comment.createdAt.toString();
+                    final realTime = timeago.format(comment.createdAt);
 
+
+                    
                     final date = DateTime.parse(created)
                         .toLocal()
                         .toString()
@@ -180,11 +183,29 @@ class _HomeState extends State<Home> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(name),
+                                    child: Text(
+                                      name,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                  const Text(
+                                    'from  ',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  const Text(
+                                    ' #MATH',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.redAccent,
+                                    ),
                                   ),
                                   const Spacer(),
                                   Text(
-                                    hours.toString(),
+                                    realTime,
                                   ),
                                   const SizedBox(width: 8),
                                   const Icon(Icons.more_horiz),
@@ -218,7 +239,10 @@ class _HomeState extends State<Home> {
                                         child: Align(
                                           alignment: Alignment.bottomLeft,
                                           child: Text(
-                                              '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.'),
+                                            '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.',
+                                            maxLines: 4,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -239,21 +263,13 @@ class _HomeState extends State<Home> {
                                     ),
                                   )
                                 : const SizedBox(),
-                            Row(
+                            const Row(
                               children: [
-                                const SizedBox(width: 20),
-                                const Icon(Icons.emoji_emotions),
-                                const SizedBox(width: 10),
-                                const Icon(Icons.comment),
-                                const SizedBox(width: 10),
-                                const Icon(Icons.local_fire_department),
-                                const Spacer(),
-                                Text(
-                                  date.toString(),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
+                                SizedBox(width: 10),
+                                Icon(Icons.local_fire_department),
+                                Spacer(),
+                                Icon(Icons.comment),
+                                SizedBox(width: 20),
                               ],
                             ),
                             const SizedBox(

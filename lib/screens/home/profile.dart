@@ -104,7 +104,9 @@ class _ProfileState extends State<Profile> {
                         carrera: "Turismo",
                       ),
                       const ProfileBoxes(
-                          path: "assets/images/cm8.jpeg", carrera: "Economia"),
+                        path: "assets/images/cm8.jpeg",
+                        carrera: "Economia",
+                      ),
                     ],
                   ),
                   Container(
