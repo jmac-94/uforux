@@ -415,22 +415,25 @@ void showHeroDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return Dialog(
-        backgroundColor: Colors.grey,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: const Center(
-              child: Hero(
-                tag: 'uniqueTextTag', // Match the tag with the first Hero
-                child: Text(
-                  'Hello, World!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+        backgroundColor: Colors.white,
+        insetPadding: const EdgeInsets.all(0),
+        child: SafeArea(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 1.2,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Center(
+                child: Hero(
+                  tag: 'uniqueTextTag',
+                  child: Text(
+                    'Hello, World!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
