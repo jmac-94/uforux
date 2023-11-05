@@ -174,6 +174,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Foro general'),
         actions: [
           IconButton(
@@ -232,150 +233,160 @@ class _HomeState extends State<Home> {
           );
         },
       ),
-      body: ListView.separated(
-        controller: _scrollController,
-        itemCount: _hasMoreData ? _comments.length + 1 : _comments.length,
-        itemBuilder: (context, index) {
-          if (index == _comments.length) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          // ---------- COMMENTARIES DATA------------------------------------------
-          var comment = _comments[index];
-          final created = comment['createdAt'].toDate().toString();
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white, Color(0xff00C9FF)],
+          ),
+        ),
+        child: ListView.separated(
+          controller: _scrollController,
+          itemCount: _hasMoreData ? _comments.length + 1 : _comments.length,
+          itemBuilder: (context, index) {
+            if (index == _comments.length) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            // ---------- COMMENTARIES DATA------------------------------------------
+            var comment = _comments[index];
+            final created = comment['createdAt'].toDate().toString();
 
-          final date =
-              DateTime.parse(created).toLocal().toString().split(' ')[0];
-          final hours = DateTime.parse(created)
-              .toLocal()
-              .toString()
-              .split(' ')[1]
-              .split('.')[0];
-          final randomNumber = faker.randomGenerator.integer(1000);
-          final imageUrl = 'https://picsum.photos/200/300?random=$randomNumber';
-          final randomNumber2 = faker.randomGenerator.integer(1000);
-          final imageUrl2 =
-              'https://picsum.photos/200/300?random=$randomNumber2';
-          //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
-          final name = faker.person.name();
-          final randomText =
-              faker.lorem.sentence().characters.take(40).toString();
-          final isImage = faker.randomGenerator.boolean();
-          // ----------------------------------------------------------------------
+            final date =
+                DateTime.parse(created).toLocal().toString().split(' ')[0];
+            final hours = DateTime.parse(created)
+                .toLocal()
+                .toString()
+                .split(' ')[1]
+                .split('.')[0];
+            final randomNumber = faker.randomGenerator.integer(1000);
+            final imageUrl =
+                'https://picsum.photos/200/300?random=$randomNumber';
+            final randomNumber2 = faker.randomGenerator.integer(1000);
+            final imageUrl2 =
+                'https://picsum.photos/200/300?random=$randomNumber2';
+            //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
+            final name = faker.person.name();
+            final randomText =
+                faker.lorem.sentence().characters.take(40).toString();
+            final isImage = faker.randomGenerator.boolean();
+            // ----------------------------------------------------------------------
 
-          return GestureDetector(
-            onTap: () {
-              showHeroDialog(context);
-            },
-            child: Hero(
-              tag: 'uniqueTextTag',
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(28.0),
-                          child: GestureDetector(
-                            onTap: () => showFullImage(context, imageUrl),
-                            child: Image.network(
-                              imageUrl,
-                              width: 25,
-                              height: 25,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(name),
-                        ),
-                        const Spacer(),
-                        Text(
-                          hours.toString(),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.more_horiz),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Text(
-                        randomText,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadiusDirectional.circular(12),
-                    ),
-                    child: isImage
-                        ? Expanded(child: Image.network(imageUrl2))
-                        : Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Text(
-                                    '${comment['text']}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.'),
+            return GestureDetector(
+              onTap: () {
+                showHeroDialog(context);
+              },
+              child: Hero(
+                tag: 'uniqueTextTag',
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(28.0),
+                            child: GestureDetector(
+                              onTap: () => showFullImage(context, imageUrl),
+                              child: Image.network(
+                                imageUrl,
+                                width: 25,
+                                height: 25,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                  ),
-                  isImage
-                      ? Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 5.0,
-                              horizontal: 20,
-                            ),
-                            child: Text(
-                              comment['text'],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(name),
                           ),
-                        )
-                      : const SizedBox(),
-                  Row(
-                    children: [
-                      const SizedBox(width: 20),
-                      const Icon(Icons.emoji_emotions),
-                      const SizedBox(width: 10),
-                      const Icon(Icons.comment),
-                      const SizedBox(width: 10),
-                      const Icon(Icons.local_fire_department),
-                      const Spacer(),
-                      Text(
-                        date.toString(),
+                          const Spacer(),
+                          Text(
+                            hours.toString(),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.more_horiz),
+                        ],
                       ),
-                      const SizedBox(
-                        width: 10,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Text(
+                          randomText,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadiusDirectional.circular(12),
+                      ),
+                      child: isImage
+                          ? Expanded(child: Image.network(imageUrl2))
+                          : Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: Text(
+                                      '${comment['text']}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.'),
+                                ),
+                              ),
+                            ),
+                    ),
+                    isImage
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 5.0,
+                                horizontal: 20,
+                              ),
+                              child: Text(
+                                comment['text'],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    Row(
+                      children: [
+                        const SizedBox(width: 20),
+                        const Icon(Icons.emoji_emotions),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.comment),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.local_fire_department),
+                        const Spacer(),
+                        Text(
+                          date.toString(),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            color: Colors.black,
-            height: 0.5,
-          );
-        },
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const Divider(
+              color: Colors.black,
+              height: 0.5,
+            );
+          },
+        ),
       ),
     );
   }
