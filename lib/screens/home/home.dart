@@ -259,6 +259,7 @@ class _HomeState extends State<Home> {
           final name = faker.person.name();
           final randomText =
               faker.lorem.sentence().characters.take(40).toString();
+          final isImage = faker.randomGenerator.boolean();
           // ----------------------------------------------------------------------
 
           return GestureDetector(
@@ -312,15 +313,21 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   Container(
-                    height: 200,
-                    width: 320,
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(imageUrl2),
-                        fit: BoxFit.fill,
-                      ),
                       borderRadius: BorderRadiusDirectional.circular(12),
                     ),
+                    child: isImage
+                        ? Expanded(child: Image.network(imageUrl2))
+                        : const Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Text(
+                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.'),
+                              ),
+                            ),
+                          ),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -419,22 +426,25 @@ void showHeroDialog(BuildContext context) {
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 1.2,
             height: MediaQuery.of(context).size.height * 0.6,
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: const Center(
-                child: Hero(
-                  tag: 'uniqueTextTag',
-                  child: Text(
-                    'Hello, World!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+            child: const Column(
+              children: <Widget>[
+                Expanded(
+                  child: Center(
+                    child: Hero(
+                      tag: 'uniqueTextTag',
+                      child: Text(
+                        'Hello, World!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 32.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
