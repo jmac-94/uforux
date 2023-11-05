@@ -1,16 +1,11 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:faker/faker.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
-import 'package:uforuxpi3/models/comment.dart';
 
 class Home extends StatefulWidget {
   final AppUser user;
@@ -23,349 +18,243 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   final ScrollController _scrollController = ScrollController();
-  final int _perPage = 20;
-
-  bool _isLoading = false;
-  bool _hasMoreData = true;
-
-  List<Comment> _comments = [];
-
-  String userId = '';
+  late HomeController _homeController;
 
   @override
   void initState() {
     super.initState();
+
     _scrollController.addListener(_scrollListener);
-    _fetchComments();
 
-    userId = widget.user.id;
-  }
-
-  void _fetchComments() async {
-    if (_isLoading) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      var querySnapshot = await _firestore
-          .collection('forums')
-          .where('name', isEqualTo: 'general')
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        var documentSnapshot = querySnapshot.docs.first;
-        Map<String, dynamic> data = documentSnapshot.data();
-        List<dynamic> comments = data['comments'] ?? {};
-
-        // Determine the range of comments to fetch
-        final int currentLength = _comments.length;
-        final int nextFetchLimit = currentLength + _perPage;
-
-        if (nextFetchLimit >= comments.length) {
-          _comments = comments.map((c) => Comment.fromJson(c)).toList();
-          _hasMoreData = false; // No more comments to load
-        } else {
-          List<Comment> newComments = comments
-              .sublist(currentLength, nextFetchLimit)
-              .map((c) => Comment.fromJson(c))
-              .toList();
-          _comments.addAll(newComments);
-        }
-      }
-    } catch (e) {
-      print(e);
-      _hasMoreData = false;
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  Future<void> _submitComment(String text,
-      {List<String> attachments = const []}) async {
-    if (text.trim().isEmpty) return; // Don't submit empty comments.
-
-    try {
-      // Fetch the ID of the 'general' forum
-      var querySnapshot = await _firestore
-          .collection('forums')
-          .where('name', isEqualTo: 'general')
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        var forumDocumentSnapshot = querySnapshot.docs.first;
-        var newComment = Comment(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          userId: userId,
-          text: text,
-          ups: 0,
-          createdAt: Timestamp.now().toDate(),
-          attachments: attachments,
-        );
-
-        // Add the new comment to the forum's 'comments' list
-        await _firestore
-            .collection('forums')
-            .doc(forumDocumentSnapshot.id)
-            .update({
-          'comments': FieldValue.arrayUnion([newComment.toJson()]),
-        });
-
-        // Update the local list of comments and refresh the UI
-        setState(() {
-          _comments.add(newComment);
-        });
-      }
-    } catch (e) {
-      // Handle the exception, maybe show an error message to the user
-      print(e);
-    }
-  }
-
-  Future<String?> _uploadFile(File file, String path) async {
-    try {
-      final ref = FirebaseStorage.instance.ref().child(path);
-      final result = await ref.putFile(file);
-      final fileUrl = await result.ref.getDownloadURL();
-      return fileUrl; // Retorna la URL del archivo subido
-    } catch (e) {
-      // Manejar errores aquí
-      print(e);
-      return null;
-    }
-  }
-
-  Future<void> _selectAndUploadFile(String text) async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      File file = File(result
-          .files.single.path!); // Asumimos que se selecciona un solo archivo
-      String fileName = result.files.single.name;
-      // CAMBIAR ESTE FILEPATH POR FAVOR
-      String filePath =
-          'forums/forum_id/comments/comment_id/documents/$fileName';
-      String? fileUrl = await _uploadFile(file, filePath);
-      if (fileUrl != null) {
-        // Llama a tu función para enviar el comentario aquí, incluyendo el archivo adjunto
-        _submitComment(text, attachments: [fileUrl]);
-      }
-    }
+    _homeController = HomeController(widget.user.id);
+    // _homeController.fetchComments();
   }
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
-        _hasMoreData) {
-      _fetchComments();
+        _homeController.hasMoreData) {
+      _homeController.fetchComments();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Foro general'),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.low_priority,
-              color: Colors.black,
+        appBar: AppBar(
+          title: const Text('Foro general'),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.low_priority,
+                color: Colors.black,
+              ),
+              onPressed: () {},
             ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: Colors.black,
+            IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
+              onPressed: () {},
             ),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.add_comment,
-          color: Colors.white,
+          ],
         ),
-        onPressed: () {
-          TextEditingController commentController = TextEditingController();
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Nuevo Comentario'),
-                content: TextField(
-                  controller: commentController,
-                  decoration: const InputDecoration(
-                    hintText: 'Escribe tu comentario aquí',
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(
+            Icons.add_comment,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            TextEditingController commentController = TextEditingController();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Nuevo Comentario'),
+                  content: TextField(
+                    controller: commentController,
+                    decoration: const InputDecoration(
+                      hintText: 'Escribe tu comentario aquí',
+                    ),
                   ),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Cancelar'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('Enviar'),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                      _selectAndUploadFile(
-                          commentController.text); // Submit the comment
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      ),
-      body: ListView.separated(
-        controller: _scrollController,
-        itemCount: _hasMoreData ? _comments.length + 1 : _comments.length,
-        itemBuilder: (context, index) {
-          if (index == _comments.length) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          // ---------- COMMENTARIES DATA------------------------------------------
-          var comment = _comments[index];
-          final created = comment.createdAt.toString();
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Cancelar'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Enviar'),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                        _homeController.selectAndUploadFile(
+                            commentController.text); // Submit the comment
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+        body: FutureBuilder<void>(
+          future: _homeController.fetchComments(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return ListView.separated(
+                controller: _scrollController,
+                itemCount: _homeController.hasMoreData
+                    ? _homeController.comments.length + 1
+                    : _homeController.comments.length,
+                itemBuilder: (context, index) {
+                  if (index == _homeController.comments.length) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  // ---------- COMMENTARIES DATA------------------------------------------
+                  var comment = _homeController.comments[index];
+                  final created = comment.createdAt.toString();
 
-          final date =
-              DateTime.parse(created).toLocal().toString().split(' ')[0];
-          final hours = DateTime.parse(created)
-              .toLocal()
-              .toString()
-              .split(' ')[1]
-              .split('.')[0];
-          final randomNumber = faker.randomGenerator.integer(1000);
-          final imageUrl = 'https://picsum.photos/200/300?random=$randomNumber';
-          final randomNumber2 = faker.randomGenerator.integer(1000);
-          final imageUrl2 =
-              'https://picsum.photos/200/300?random=$randomNumber2';
-          //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
-          final name = faker.person.name();
-          final randomText =
-              faker.lorem.sentence().characters.take(40).toString();
-          // ----------------------------------------------------------------------
+                  final date = DateTime.parse(created)
+                      .toLocal()
+                      .toString()
+                      .split(' ')[0];
+                  final hours = DateTime.parse(created)
+                      .toLocal()
+                      .toString()
+                      .split(' ')[1]
+                      .split('.')[0];
+                  final randomNumber = faker.randomGenerator.integer(1000);
+                  final imageUrl =
+                      'https://picsum.photos/200/300?random=$randomNumber';
+                  final randomNumber2 = faker.randomGenerator.integer(1000);
+                  final imageUrl2 =
+                      'https://picsum.photos/200/300?random=$randomNumber2';
+                  //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
+                  final name = faker.person.name();
+                  final randomText =
+                      faker.lorem.sentence().characters.take(40).toString();
+                  // ----------------------------------------------------------------------
 
-          return GestureDetector(
-            onTap: () {
-              showHeroDialog(context);
-            },
-            child: Hero(
-              tag: 'uniqueTextTag',
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(28.0),
-                          child: GestureDetector(
-                            onTap: () => showFullImage(context, imageUrl),
-                            child: Image.network(
-                              imageUrl,
-                              width: 25,
-                              height: 25,
-                              fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      showHeroDialog(context);
+                    },
+                    child: Hero(
+                      tag: 'uniqueTextTag',
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(28.0),
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        showFullImage(context, imageUrl),
+                                    child: Image.network(
+                                      imageUrl,
+                                      width: 25,
+                                      height: 25,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(name),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  hours.toString(),
+                                ),
+                                const SizedBox(width: 8),
+                                const Icon(Icons.more_horiz),
+                              ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(name),
-                        ),
-                        const Spacer(),
-                        Text(
-                          hours.toString(),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.more_horiz),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Text(
-                        randomText,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
+                              child: Text(
+                                randomText,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 200,
+                            width: 320,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(imageUrl2),
+                                fit: BoxFit.fill,
+                              ),
+                              borderRadius:
+                                  BorderRadiusDirectional.circular(12),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 5.0,
+                                horizontal: 20,
+                              ),
+                              child: Text(
+                                comment.text,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 20),
+                              const Icon(Icons.emoji_emotions),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.comment),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.local_fire_department),
+                              const Spacer(),
+                              Text(
+                                date.toString(),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  Container(
-                    height: 200,
-                    width: 320,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(imageUrl2),
-                        fit: BoxFit.fill,
-                      ),
-                      borderRadius: BorderRadiusDirectional.circular(12),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                        horizontal: 20,
-                      ),
-                      child: Text(
-                        comment.text,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(width: 20),
-                      const Icon(Icons.emoji_emotions),
-                      const SizedBox(width: 10),
-                      const Icon(Icons.comment),
-                      const SizedBox(width: 10),
-                      const Icon(Icons.local_fire_department),
-                      const Spacer(),
-                      Text(
-                        date.toString(),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            color: Colors.black,
-            height: 0.5,
-          );
-        },
-      ),
-    );
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const Divider(
+                    color: Colors.black,
+                    height: 0.5,
+                  );
+                },
+              );
+            }
+          },
+        ));
   }
 
   @override
