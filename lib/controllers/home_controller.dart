@@ -13,15 +13,22 @@ class HomeController {
   final int perPage = 20;
   bool isLoading = false;
   bool hasMoreData = true;
+  bool initialFetchDone = false;
   List<Comment> comments = [];
   String userId;
 
   HomeController(this.userId);
 
-  Future<void> fetchComments() async {
+  Future<void> fetchComments({bool isRefresh = false}) async {
     if (isLoading) return;
 
     isLoading = true;
+
+    // Si es una operación de refresco, reiniciar la lista de comentarios y la bandera de más datos.
+    if (isRefresh) {
+      comments.clear();
+      hasMoreData = true;
+    }
 
     try {
       final querySnapshot = await _firestore
@@ -32,12 +39,12 @@ class HomeController {
 
       if (querySnapshot.docs.isNotEmpty) {
         final documentSnapshot = querySnapshot.docs.first;
-        final data = documentSnapshot.data();
+        final data = documentSnapshot.data() as Map<String, dynamic>;
         final List<dynamic> commentsData = data['comments'] ?? [];
 
-        // Determine the range of comments to fetch
+        // Determina el rango de comentarios a obtener
         final currentLength = comments.length;
-        final nextFetchLimit = currentLength + perPage;
+        final nextFetchLimit = isRefresh ? perPage : currentLength + perPage;
 
         if (nextFetchLimit >= commentsData.length) {
           comments = commentsData.map((c) => Comment.fromJson(c)).toList();
@@ -53,9 +60,11 @@ class HomeController {
     } catch (e) {
       dPrint(e);
       hasMoreData = false;
+    } finally {
+      isLoading = false;
+      initialFetchDone =
+          true; // Marca que la primera carga de datos se ha completado.
     }
-
-    isLoading = false;
   }
 
   Future<void> submitComment(String text,

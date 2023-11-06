@@ -40,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -49,7 +49,8 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          // set the color depends if the theme is dark or light
+          color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -59,16 +60,20 @@ class _MainScreenState extends State<MainScreen> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 8,
+            ),
             child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
-              gap: 8,
+              gap: 3,
               activeColor: Colors.black,
               iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 12,
+              ),
               duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.grey[100]!,
+              tabBackgroundColor: Colors.grey[200]!,
               color: Colors.black,
               tabs: const [
                 GButton(

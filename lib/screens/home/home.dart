@@ -6,6 +6,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
+import 'package:uforuxpi3/models/comment.dart';
 
 class Home extends StatefulWidget {
   final AppUser user;
@@ -41,93 +42,101 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Foro general'),
-          actions: [
-            IconTheme(
-              data: IconThemeData(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-              ),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.low_priority,
-                ),
-                onPressed: () {},
-              ),
+      appBar: AppBar(
+        title: const Text('Foro general'),
+        actions: [
+          IconTheme(
+            data: IconThemeData(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
             ),
-            IconTheme(
-              data: IconThemeData(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
+            child: IconButton(
+              icon: const Icon(
+                Icons.low_priority,
               ),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.search,
-                ),
-                onPressed: () {},
-              ),
+              onPressed: () {},
             ),
-            IconTheme(
-              data: IconThemeData(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-              ),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.notification_add_outlined,
-                ),
-                onPressed: () {},
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(
-            Icons.add_comment,
-            color: Colors.white,
           ),
-          onPressed: () {
-            TextEditingController commentController = TextEditingController();
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Nuevo Comentario'),
-                  content: TextField(
-                    controller: commentController,
-                    decoration: const InputDecoration(
-                      hintText: 'Escribe tu comentario aquí',
-                    ),
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Cancelar'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: const Text('Enviar'),
-                      onPressed: () {
-                        String text = commentController.text;
-                        Navigator.of(context).pop();
-                        _homeController.submitComment(text);
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          },
+          IconTheme(
+            data: IconThemeData(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.search,
+              ),
+              onPressed: () {},
+            ),
+          ),
+          IconTheme(
+            data: IconThemeData(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.notification_add_outlined,
+              ),
+              onPressed: () {},
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.add_comment,
+          color: Colors.white,
         ),
-        body: FutureBuilder<void>(
-          future: _homeController.fetchComments(),
+        onPressed: () {
+          TextEditingController commentController = TextEditingController();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Nuevo Comentario'),
+                content: TextField(
+                  controller: commentController,
+                  decoration: const InputDecoration(
+                    hintText: 'Escribe tu comentario aquí',
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Enviar'),
+                    onPressed: () {
+                      String text = commentController.text;
+                      Navigator.of(context).pop();
+                      _homeController.submitComment(text);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _homeController.fetchComments(isRefresh: true);
+          setState(() {});
+        },
+        child: FutureBuilder<void>(
+          future: _homeController.initialFetchDone
+              ? null
+              : _homeController.fetchComments(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting &&
+                !_homeController.initialFetchDone) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
@@ -139,7 +148,11 @@ class _HomeState extends State<Home> {
                     : _homeController.comments.length,
                 itemBuilder: (context, index) {
                   if (index == _homeController.comments.length) {
-                    return const Center(child: CircularProgressIndicator());
+                    if (_homeController.hasMoreData) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return Container(); // No hay más datos para cargar
+                    }
                   }
                   // ---------- COMMENTARIES DATA------------------------------------------
                   var comment = _homeController.comments[index];
@@ -166,119 +179,29 @@ class _HomeState extends State<Home> {
                       tag: 'uniqueTextTag',
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(28.0),
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        showFullImage(context, imageUrl),
-                                    child: Image.network(
-                                      imageUrl,
-                                      width: 25,
-                                      height: 25,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    name,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  'from  ',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                const Text(
-                                  ' #MATH',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.redAccent,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  realTime,
-                                ),
-                                const SizedBox(width: 8),
-                                const Icon(Icons.more_horiz),
-                              ],
-                            ),
+                          PersonDataForum(
+                            imageUrl: imageUrl,
+                            name: name,
+                            realTime: realTime,
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 40),
-                              child: Text(
-                                randomText,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadiusDirectional.circular(12),
-                            ),
-                            child: isImage
-                                ? Expanded(child: Image.network(imageUrl2))
-                                : Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.bottomLeft,
-                                        child: Text(
-                                          '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.',
-                                          maxLines: 4,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                          ),
-                          isImage
-                              ? Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 5.0,
-                                      horizontal: 20,
-                                    ),
-                                    child: Text(
-                                      comment.text,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox(),
-                          const Row(
+                          Row(
                             children: [
-                              Spacer(),
-                              Icon(Icons.local_fire_department),
-                              SizedBox(width: 10),
-                              Icon(Icons.comment),
-                              SizedBox(width: 20),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    ...forumData(
+                                      imageUrl2,
+                                      randomText,
+                                      isImage,
+                                      comment.text,
+                                      comment,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconsActions(isImage: isImage),
+                              const SizedBox(width: 10),
                             ],
-                          ),
-                          const SizedBox(
-                            height: 10,
                           ),
                         ],
                       ),
@@ -296,7 +219,9 @@ class _HomeState extends State<Home> {
               );
             }
           },
-        ));
+        ),
+      ),
+    );
   }
 
   @override
@@ -306,6 +231,133 @@ class _HomeState extends State<Home> {
   }
 }
 
+class PersonDataForum extends StatelessWidget {
+  const PersonDataForum({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    required this.realTime,
+  });
+
+  final String imageUrl;
+  final String name;
+  final String realTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 5,
+        vertical: 5,
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(28.0),
+            child: GestureDetector(
+              onTap: () => showFullImage(context, imageUrl),
+              child: Image.network(
+                imageUrl,
+                width: 25,
+                height: 25,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 11,
+              ),
+            ),
+          ),
+          const Text(
+            'from  ',
+            style: TextStyle(
+              fontSize: 11,
+            ),
+          ),
+          const Text(
+            ' #MATH',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.redAccent,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            realTime,
+            style: const TextStyle(
+              fontSize: 11,
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class IconsActions extends StatelessWidget {
+  final isImage;
+  const IconsActions({
+    super.key,
+    required this.isImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return isImage
+        ? const Column(
+            children: [
+              Icon(
+                Icons.local_fire_department,
+                size: 30,
+              ),
+              Text('324', style: TextStyle(fontSize: 12)),
+              SizedBox(height: 10),
+              Icon(
+                Icons.comment,
+                size: 30,
+              ),
+              Text('32', style: TextStyle(fontSize: 12)),
+              SizedBox(height: 10),
+              Icon(
+                Icons.more_horiz,
+                size: 30,
+              ),
+              Text('2', style: TextStyle(fontSize: 12)),
+              SizedBox(height: 10),
+            ],
+          )
+        : const Column(
+            children: [
+              Icon(
+                Icons.local_fire_department,
+                size: 26,
+              ),
+              Text('324', style: TextStyle(fontSize: 10)),
+              SizedBox(height: 8),
+              Icon(
+                Icons.comment,
+                size: 26,
+              ),
+              Text('32', style: TextStyle(fontSize: 10)),
+              SizedBox(height: 8),
+              Icon(
+                Icons.more_horiz,
+                size: 26,
+              ),
+              Text('2', style: TextStyle(fontSize: 10)),
+              SizedBox(height: 10),
+            ],
+          );
+  }
+}
+
+// posibly deprecaded function
 void showFullImage(BuildContext context, String imageUrl) {
   showDialog(
     context: context,
@@ -377,4 +429,86 @@ void showHeroDialog(BuildContext context) {
       );
     },
   );
+}
+
+List<Widget> forumData(
+  final String imageUrl2,
+  final String randomText,
+  final bool isImage,
+  final String text,
+  final Comment comment,
+) {
+  return [
+    Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: Text(
+          randomText,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ),
+    Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadiusDirectional.circular(12),
+      ),
+      child: isImage
+          ? Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                  vertical: 8.0,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    imageUrl2,
+                    height: 250,
+                    width: 270,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            )
+          : Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                  vertical: 8.0,
+                ),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.',
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+    ),
+    isImage
+        ? Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 5.0,
+                horizontal: 20,
+              ),
+              child: Text(
+                comment.text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          )
+        : const SizedBox(),
+    const SizedBox(
+      height: 10,
+    ),
+  ];
 }

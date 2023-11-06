@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: Constants.appName,
         theme: ThemeClass.lighTheme,
-        darkTheme: ThemeClass.darkTheme,
+         darkTheme: ThemeClass.darkTheme,
         themeMode: ThemeMode.light,
         home: const Wrapper(),
         debugShowCheckedModeBanner: false,
@@ -63,16 +63,16 @@ class ThemeClass {
   );
 
   static ThemeData darkTheme = ThemeData(
-    primaryColor: ThemeData.dark().scaffoldBackgroundColor,
+    primaryColor: ThemeData.dark().primaryColor,
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Colors.red,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: ThemeData.dark().scaffoldBackgroundColor,
+      backgroundColor: ThemeData.dark().primaryColor,
     ),
     colorScheme: const ColorScheme.dark().copyWith(
-      primary: _themeClass.darkprimaryColor,
-      secondary: _themeClass.secondaryColor,
+      primary: ThemeData.dark().primaryColor,
+      secondary: ThemeData.dark().secondaryHeaderColor,
     ),
   );
 }
