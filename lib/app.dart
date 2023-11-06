@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         title: Constants.appName,
         theme: ThemeClass.lighTheme,
         darkTheme: ThemeClass.darkTheme,
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         home: const Wrapper(),
         debugShowCheckedModeBanner: false,
       ),
@@ -48,6 +48,15 @@ class ThemeClass {
       primary: _themeClass.lightprimaryColor,
       secondary: _themeClass.secondaryColor,
     ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: ThemeData.light().scaffoldBackgroundColor,
+      foregroundColor: Colors.black,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedItemColor: Colors.black,
+      unselectedItemColor: Colors.grey,
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -58,7 +67,6 @@ class ThemeClass {
     appBarTheme: AppBarTheme(
       backgroundColor: ThemeData.dark().scaffoldBackgroundColor,
     ),
-    
     colorScheme: const ColorScheme.dark().copyWith(
       primary: _themeClass.darkprimaryColor,
       secondary: _themeClass.secondaryColor,

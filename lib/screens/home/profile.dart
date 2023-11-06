@@ -40,16 +40,11 @@ class _ProfileState extends State<Profile> {
             appBar: AppBar(
               title: const Text('Perfil'),
               actions: <Widget>[
-                IconTheme(
-                  data: Theme.of(context).brightness == Brightness.dark
-                      ? const IconThemeData(color: Colors.white)
-                      : const IconThemeData(color: Colors.black),
-                  child: IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () async {
-                      await _auth.signOut();
-                    },
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () async {
+                    await _auth.signOut();
+                  },
                 ),
               ],
             ),

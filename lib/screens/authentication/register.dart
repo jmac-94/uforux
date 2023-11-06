@@ -182,15 +182,15 @@ class _RegisterState extends State<Register> {
               },
             ),
             const SizedBox(height: 20.0),
-            CustomDropdownField(
-              items: degrees,
-              hintText: 'Carrera',
-              onChanged: (value) {},
-              validator: Validations.validateDegree,
-              onSaved: (value) {
-                degree = value ?? '';
-              },
-            ),
+              CustomDropdownField(
+                items: degrees,
+                hintText: 'Carrera',
+                onChanged: (value) {},
+                validator: Validations.validateDegree,
+                onSaved: (value) {
+                  degree = value ?? '';
+                },
+              ),
           ],
         ).fadeInList(2, false),
       ],

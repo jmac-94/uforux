@@ -8,7 +8,9 @@ import 'firebase_options.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: 'uforux-pi3',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }
+  
