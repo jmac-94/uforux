@@ -18,12 +18,9 @@ class MyApp extends StatelessWidget {
       initialData: null,
       child: MaterialApp(
         title: Constants.appName,
-        theme: themeData(
-          themeData(ThemeConfig.lightTheme),
-        ),
-        darkTheme: themeData(
-          themeData(ThemeConfig.darkTheme),
-        ),
+        theme: ThemeClass.lighTheme,
+        darkTheme: ThemeClass.darkTheme,
+        themeMode: ThemeMode.dark,
         home: const Wrapper(),
         debugShowCheckedModeBanner: false,
       ),
@@ -38,3 +35,35 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class ThemeClass {
+  Color lightprimaryColor = const Color(0xFFE5E5E5);
+  Color darkprimaryColor = const Color(0xFF121212);
+  Color secondaryColor = const Color(0xFFE5E5E5);
+  Color accentColor = const Color(0xFFE5E5E5);
+
+  static ThemeData lighTheme = ThemeData(
+    primaryColor: ThemeData.light().scaffoldBackgroundColor,
+    colorScheme: const ColorScheme.light().copyWith(
+      primary: _themeClass.lightprimaryColor,
+      secondary: _themeClass.secondaryColor,
+    ),
+  );
+
+  static ThemeData darkTheme = ThemeData(
+    primaryColor: ThemeData.dark().scaffoldBackgroundColor,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Colors.red,
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: ThemeData.dark().scaffoldBackgroundColor,
+    ),
+    
+    colorScheme: const ColorScheme.dark().copyWith(
+      primary: _themeClass.darkprimaryColor,
+      secondary: _themeClass.secondaryColor,
+    ),
+  );
+}
+
+ThemeClass _themeClass = ThemeClass();

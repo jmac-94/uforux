@@ -42,22 +42,46 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
           title: const Text('Foro general'),
           actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.low_priority,
-                color: Colors.black,
+            IconTheme(
+              data: IconThemeData(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
               ),
-              onPressed: () {},
+              child: IconButton(
+                icon: const Icon(
+                  Icons.low_priority,
+                ),
+                onPressed: () {},
+              ),
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
+            IconTheme(
+              data: IconThemeData(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
               ),
-              onPressed: () {},
+              child: IconButton(
+                icon: const Icon(
+                  Icons.search,
+                ),
+                onPressed: () {},
+              ),
+            ),
+            IconTheme(
+              data: IconThemeData(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.notification_add_outlined,
+                ),
+                onPressed: () {},
+              ),
             ),
           ],
         ),
@@ -108,172 +132,167 @@ class _HomeState extends State<Home> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              return Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.white, Color(0xff00C9FF)],
-                  ),
-                ),
-                child: ListView.separated(
-                  controller: _scrollController,
-                  itemCount: _homeController.hasMoreData
-                      ? _homeController.comments.length + 1
-                      : _homeController.comments.length,
-                  itemBuilder: (context, index) {
-                    if (index == _homeController.comments.length) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    // ---------- COMMENTARIES DATA------------------------------------------
-                    var comment = _homeController.comments[index];
-                    final realTime = timeago.format(comment.createdAt);
+              return ListView.separated(
+                controller: _scrollController,
+                itemCount: _homeController.hasMoreData
+                    ? _homeController.comments.length + 1
+                    : _homeController.comments.length,
+                itemBuilder: (context, index) {
+                  if (index == _homeController.comments.length) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  // ---------- COMMENTARIES DATA------------------------------------------
+                  var comment = _homeController.comments[index];
+                  final realTime = timeago.format(comment.createdAt);
 
-                    final randomNumber = faker.randomGenerator.integer(1000);
-                    final imageUrl =
-                        'https://picsum.photos/200/300?random=$randomNumber';
-                    final randomNumber2 = faker.randomGenerator.integer(1000);
-                    final imageUrl2 =
-                        'https://picsum.photos/200/300?random=$randomNumber2';
-                    //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
-                    final name = faker.person.name();
-                    final randomText =
-                        faker.lorem.sentence().characters.take(40).toString();
-                    final isImage = faker.randomGenerator.boolean();
-                    // ----------------------------------------------------------------------
+                  final randomNumber = faker.randomGenerator.integer(1000);
+                  final imageUrl =
+                      'https://picsum.photos/200/300?random=$randomNumber';
+                  final randomNumber2 = faker.randomGenerator.integer(1000);
+                  final imageUrl2 =
+                      'https://picsum.photos/200/300?random=$randomNumber2';
+                  //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
+                  final name = faker.person.name();
+                  final randomText =
+                      faker.lorem.sentence().characters.take(40).toString();
+                  final isImage = faker.randomGenerator.boolean();
+                  // ----------------------------------------------------------------------
 
-                    return GestureDetector(
-                      onTap: () {
-                        showHeroDialog(context);
-                      },
-                      child: Hero(
-                        tag: 'uniqueTextTag',
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(28.0),
-                                    child: GestureDetector(
-                                      onTap: () =>
-                                          showFullImage(context, imageUrl),
-                                      child: Image.network(
-                                        imageUrl,
-                                        width: 25,
-                                        height: 25,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      name,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  const Text(
-                                    'from  ',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  const Text(
-                                    ' #MATH',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    realTime,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Icon(Icons.more_horiz),
-                                ],
-                              ),
+                  return GestureDetector(
+                    onTap: () {
+                      showHeroDialog(context);
+                    },
+                    child: Hero(
+                      tag: 'uniqueTextTag',
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 40),
-                                child: Text(
-                                  randomText,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(28.0),
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        showFullImage(context, imageUrl),
+                                    child: Image.network(
+                                      imageUrl,
+                                      width: 25,
+                                      height: 25,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    name,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                                const Text(
+                                  'from  ',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const Text(
+                                  ' #MATH',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  realTime,
+                                ),
+                                const SizedBox(width: 8),
+                                const Icon(Icons.more_horiz),
+                              ],
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
+                              child: Text(
+                                randomText,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadiusDirectional.circular(12),
-                              ),
-                              child: isImage
-                                  ? Expanded(child: Image.network(imageUrl2))
-                                  : Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Text(
-                                            '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.',
-                                            maxLines: 4,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadiusDirectional.circular(12),
+                            ),
+                            child: isImage
+                                ? Expanded(child: Image.network(imageUrl2))
+                                : Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text(
+                                          '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.',
+                                          maxLines: 4,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
-                            ),
-                            isImage
-                                ? Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0,
-                                        horizontal: 20,
-                                      ),
-                                      child: Text(
-                                        comment.text,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                  ),
+                          ),
+                          isImage
+                              ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0,
+                                      horizontal: 20,
                                     ),
-                                  )
-                                : const SizedBox(),
-                            const Row(
-                              children: [
-                                SizedBox(width: 10),
-                                Icon(Icons.local_fire_department),
-                                Spacer(),
-                                Icon(Icons.comment),
-                                SizedBox(width: 20),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
+                                    child: Text(
+                                      comment.text,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
+                          const Row(
+                            children: [
+                              Spacer(),
+                              Icon(Icons.local_fire_department),
+                              SizedBox(width: 10),
+                              Icon(Icons.comment),
+                              SizedBox(width: 20),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Divider(
-                      color: Colors.black,
-                      height: 0.5,
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey.withOpacity(0.5)
+                        : Colors.grey.withOpacity(0.5),
+                    height: 0.1,
+                  );
+                },
               );
             }
           },
@@ -322,25 +341,30 @@ void showHeroDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return Dialog(
-        backgroundColor: Colors.white,
         insetPadding: const EdgeInsets.all(0),
         child: SafeArea(
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 1.2,
-            height: MediaQuery.of(context).size.height * 0.6,
-            child: const Column(
+            width: MediaQuery.of(context).size.width * 1.3,
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Column(
               children: <Widget>[
                 Expanded(
                   child: Center(
                     child: Hero(
                       tag: 'uniqueTextTag',
-                      child: Text(
-                        'Hello, World!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 32.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                      child: Scaffold(
+                        appBar: AppBar(
+                          title: const Text('Hero Dialog'),
+                          automaticallyImplyLeading: false,
+                        ),
+                        body: const Center(
+                          child: Text(
+                            'Hello, World!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 32.0,
+                            ),
+                          ),
                         ),
                       ),
                     ),

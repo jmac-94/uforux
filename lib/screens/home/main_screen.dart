@@ -57,22 +57,18 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month_rounded),
             label: 'Calendario',
-            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book_rounded),
             label: 'Foros',
-            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
             icon: IconBadge(icon: Icons.notifications),
             label: 'Notificaciones',
-            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Perfil',
-            backgroundColor: Colors.black,
           ),
         ],
       ),
