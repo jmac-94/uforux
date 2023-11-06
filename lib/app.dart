@@ -57,6 +57,9 @@ class ThemeClass {
       selectedItemColor: Colors.black,
       unselectedItemColor: Colors.grey,
     ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Colors.blueAccent,
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(

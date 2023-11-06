@@ -50,6 +50,8 @@ dependencies:
   photo_view: ^0.14.0
   cached_network_image: ^3.3.0
   timeago: ^3.6.0
+  google_nav_bar: ^5.0.6
+  line_icons: ^2.0.3
 
 dev_dependencies:
   flutter_test:
