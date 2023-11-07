@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:line_icons/line_icons.dart';
-
 import 'package:uforuxpi3/models/app_user.dart';
-import 'package:uforuxpi3/widgets/icon_badge.dart';
 import 'package:uforuxpi3/screens/home/calendar.dart';
 import 'package:uforuxpi3/screens/home/home.dart';
 import 'package:uforuxpi3/screens/home/notifications.dart';
@@ -40,10 +37,9 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: _screens.elementAt(_currentIndex),
       ),

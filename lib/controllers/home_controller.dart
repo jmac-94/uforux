@@ -39,6 +39,7 @@ class HomeController {
 
       if (querySnapshot.docs.isNotEmpty) {
         final documentSnapshot = querySnapshot.docs.first;
+        // ignore: unnecessary_cast
         final data = documentSnapshot.data() as Map<String, dynamic>;
         final List<dynamic> commentsData = data['comments'] ?? [];
 

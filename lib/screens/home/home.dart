@@ -45,51 +45,29 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Foro general'),
         actions: [
-          IconTheme(
-            data: IconThemeData(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
+          IconButton(
+            icon: const Icon(
+              Icons.low_priority,
             ),
-            child: IconButton(
-              icon: const Icon(
-                Icons.low_priority,
-              ),
-              onPressed: () {},
-            ),
+            onPressed: () {},
           ),
-          IconTheme(
-            data: IconThemeData(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
+          IconButton(
+            icon: const Icon(
+              Icons.search,
             ),
-            child: IconButton(
-              icon: const Icon(
-                Icons.search,
-              ),
-              onPressed: () {},
-            ),
+            onPressed: () {},
           ),
-          IconTheme(
-            data: IconThemeData(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
+          IconButton(
+            icon: const Icon(
+              Icons.notification_add_outlined,
             ),
-            child: IconButton(
-              icon: const Icon(
-                Icons.notification_add_outlined,
-              ),
-              onPressed: () {},
-            ),
+            onPressed: () {},
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(
           Icons.add_comment,
-          color: Colors.white,
         ),
         onPressed: () {
           TextEditingController commentController = TextEditingController();
@@ -301,6 +279,7 @@ class PersonDataForum extends StatelessWidget {
 }
 
 class IconsActions extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final isImage;
   const IconsActions({
     super.key,

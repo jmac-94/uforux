@@ -5,10 +5,10 @@ class DropdownButtonSelector extends StatefulWidget {
   final void Function(String?)? onChanged;
 
   const DropdownButtonSelector({
-    Key? key,
+    super.key,
     required this.list,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<DropdownButtonSelector> createState() => _DropdownButtonSelectorState();
