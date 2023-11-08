@@ -41,164 +41,174 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Foro general'),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.low_priority,
-            ),
-            onPressed: () {},
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset(
+            'assets/images/clouds.jpg',
+            fit: BoxFit.cover,
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.notification_add_outlined,
-            ),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.add_comment,
         ),
-        onPressed: () {
-          TextEditingController commentController = TextEditingController();
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Nuevo Comentario'),
-                content: TextField(
-                  controller: commentController,
-                  decoration: const InputDecoration(
-                    hintText: 'Escribe tu comentario aquí',
-                  ),
+        Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            title: const Text('Foro general'),
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.low_priority,
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Cancelar'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('Enviar'),
-                    onPressed: () {
-                      String text = commentController.text;
-                      Navigator.of(context).pop();
-                      _homeController.submitComment(text);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await _homeController.fetchComments(isRefresh: true);
-          setState(() {});
-        },
-        child: FutureBuilder<void>(
-          future: _homeController.initialFetchDone
-              ? null
-              : _homeController.fetchComments(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting &&
-                !_homeController.initialFetchDone) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              return ListView.separated(
-                controller: _scrollController,
-                itemCount: _homeController.hasMoreData
-                    ? _homeController.comments.length + 1
-                    : _homeController.comments.length,
-                itemBuilder: (context, index) {
-                  if (index == _homeController.comments.length) {
-                    if (_homeController.hasMoreData) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else {
-                      return Container(); // No hay más datos para cargar
-                    }
-                  }
-                  // ---------- COMMENTARIES DATA------------------------------------------
-                  var comment = _homeController.comments[index];
-                  final realTime = timeago.format(comment.createdAt);
-
-                  final randomNumber = faker.randomGenerator.integer(1000);
-                  final imageUrl =
-                      'https://picsum.photos/200/300?random=$randomNumber';
-                  final randomNumber2 = faker.randomGenerator.integer(1000);
-                  final imageUrl2 =
-                      'https://picsum.photos/200/300?random=$randomNumber2';
-                  //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
-                  final name = faker.person.name();
-                  final randomText =
-                      faker.lorem.sentence().characters.take(40).toString();
-                  final isImage = faker.randomGenerator.boolean();
-                  // ----------------------------------------------------------------------
-
-                  return GestureDetector(
-                    onTap: () {
-                      showHeroDialog(context);
-                    },
-                    child: Hero(
-                      tag: 'uniqueTextTag',
-                      child: Column(
-                        children: [
-                          PersonDataForum(
-                            imageUrl: imageUrl,
-                            name: name,
-                            realTime: realTime,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    ...forumData(
-                                      imageUrl2,
-                                      randomText,
-                                      isImage,
-                                      comment.text,
-                                      comment,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              IconsActions(isImage: isImage),
-                              const SizedBox(width: 10),
-                            ],
-                          ),
-                        ],
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.search,
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.notification_add_outlined,
+                ),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(
+              Icons.add_comment,
+            ),
+            onPressed: () {
+              TextEditingController commentController = TextEditingController();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Nuevo Comentario'),
+                    content: TextField(
+                      controller: commentController,
+                      decoration: const InputDecoration(
+                        hintText: 'Escribe tu comentario aquí',
                       ),
                     ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey.withOpacity(0.5)
-                        : Colors.grey.withOpacity(0.5),
-                    height: 0.1,
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Cancelar'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Enviar'),
+                        onPressed: () {
+                          String text = commentController.text;
+                          Navigator.of(context).pop();
+                          _homeController.submitComment(text);
+                        },
+                      ),
+                    ],
                   );
                 },
               );
-            }
-          },
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await _homeController.fetchComments(isRefresh: true);
+              setState(() {});
+            },
+            child: FutureBuilder<void>(
+              future: _homeController.initialFetchDone
+                  ? null
+                  : _homeController.fetchComments(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    !_homeController.initialFetchDone) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return ListView.separated(
+                    controller: _scrollController,
+                    itemCount: _homeController.hasMoreData
+                        ? _homeController.comments.length + 1
+                        : _homeController.comments.length,
+                    itemBuilder: (context, index) {
+                      if (index == _homeController.comments.length) {
+                        if (_homeController.hasMoreData) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          return Container(); // No hay más datos para cargar
+                        }
+                      }
+                      // ---------- COMMENTARIES DATA------------------------------------------
+                      var comment = _homeController.comments[index];
+                      final realTime = timeago.format(comment.createdAt);
+
+                      final randomNumber = faker.randomGenerator.integer(1000);
+                      final imageUrl =
+                          'https://picsum.photos/200/300?random=$randomNumber';
+                      final randomNumber2 = faker.randomGenerator.integer(1000);
+                      final imageUrl2 =
+                          'https://picsum.photos/200/300?random=$randomNumber2';
+                      //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
+                      final name = faker.person.name();
+                      final randomText =
+                          faker.lorem.sentence().characters.take(40).toString();
+                      final isImage = faker.randomGenerator.boolean();
+                      // ----------------------------------------------------------------------
+
+                      return Hero(
+                        tag: 'CommentsForum',
+                        child: Column(
+                          children: [
+                            HeaderF(
+                              imageUrl: imageUrl,
+                              name: name,
+                              realTime: realTime,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      ...bodyData(
+                                        imageUrl2,
+                                        randomText,
+                                        isImage,
+                                        comment.text,
+                                        comment,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconsActions(isImage: isImage),
+                                const SizedBox(width: 5),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.grey.withOpacity(0.5)
+                            : Colors.grey.withOpacity(0.5),
+                        height: 0.1,
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -209,8 +219,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-class PersonDataForum extends StatelessWidget {
-  const PersonDataForum({
+class HeaderF extends StatelessWidget {
+  const HeaderF({
     super.key,
     required this.imageUrl,
     required this.name,
@@ -225,21 +235,18 @@ class PersonDataForum extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: 5,
-        vertical: 5,
+        horizontal: 6,
+        vertical: 4,
       ),
       child: Row(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(28.0),
-            child: GestureDetector(
-              onTap: () => showFullImage(context, imageUrl),
-              child: Image.network(
-                imageUrl,
-                width: 25,
-                height: 25,
-                fit: BoxFit.cover,
-              ),
+            child: Image.network(
+              imageUrl,
+              width: 25,
+              height: 25,
+              fit: BoxFit.cover,
             ),
           ),
           Padding(
@@ -278,139 +285,7 @@ class PersonDataForum extends StatelessWidget {
   }
 }
 
-class IconsActions extends StatelessWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final isImage;
-  const IconsActions({
-    super.key,
-    required this.isImage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return isImage
-        ? const Column(
-            children: [
-              Icon(
-                Icons.local_fire_department,
-                size: 30,
-              ),
-              Text('324', style: TextStyle(fontSize: 12)),
-              SizedBox(height: 10),
-              Icon(
-                Icons.comment,
-                size: 30,
-              ),
-              Text('32', style: TextStyle(fontSize: 12)),
-              SizedBox(height: 10),
-              Icon(
-                Icons.more_horiz,
-                size: 30,
-              ),
-              Text('2', style: TextStyle(fontSize: 12)),
-              SizedBox(height: 10),
-            ],
-          )
-        : const Column(
-            children: [
-              Icon(
-                Icons.local_fire_department,
-                size: 26,
-              ),
-              Text('324', style: TextStyle(fontSize: 10)),
-              SizedBox(height: 8),
-              Icon(
-                Icons.comment,
-                size: 26,
-              ),
-              Text('32', style: TextStyle(fontSize: 10)),
-              SizedBox(height: 8),
-              Icon(
-                Icons.more_horiz,
-                size: 26,
-              ),
-              Text('2', style: TextStyle(fontSize: 10)),
-              SizedBox(height: 10),
-            ],
-          );
-  }
-}
-
-// posibly deprecaded function
-void showFullImage(BuildContext context, String imageUrl) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      var edgeInsets = const EdgeInsets.all(10);
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: edgeInsets,
-        child: GestureDetector(
-          onTap: () => Navigator.pop(context), // Closes the dialog on tap
-          child: PhotoViewGallery.builder(
-            itemCount: 1,
-            builder: (context, index) {
-              return PhotoViewGalleryPageOptions(
-                imageProvider: CachedNetworkImageProvider(imageUrl),
-                minScale: PhotoViewComputedScale.contained,
-                maxScale: PhotoViewComputedScale.covered * 2,
-              );
-            },
-            scrollPhysics: const BouncingScrollPhysics(),
-            backgroundDecoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
-          ),
-        ),
-      );
-    },
-  );
-}
-
-void showHeroDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        insetPadding: const EdgeInsets.all(0),
-        child: SafeArea(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 1.3,
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Center(
-                    child: Hero(
-                      tag: 'uniqueTextTag',
-                      child: Scaffold(
-                        appBar: AppBar(
-                          title: const Text('Hero Dialog'),
-                          automaticallyImplyLeading: false,
-                        ),
-                        body: const Center(
-                          child: Text(
-                            'Hello, World!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 32.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    },
-  );
-}
-
-List<Widget> forumData(
+List<Widget> bodyData(
   final String imageUrl2,
   final String randomText,
   final bool isImage,
@@ -419,9 +294,9 @@ List<Widget> forumData(
 ) {
   return [
     Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.topLeft,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Text(
           randomText,
           style: const TextStyle(
@@ -439,7 +314,7 @@ List<Widget> forumData(
           ? Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0,
+                  horizontal: 10.0,
                   vertical: 8.0,
                 ),
                 child: ClipRRect(
@@ -456,8 +331,8 @@ List<Widget> forumData(
           : Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0,
-                  vertical: 8.0,
+                  horizontal: 20.0,
+                  vertical: 6.0,
                 ),
                 child: Align(
                   alignment: Alignment.bottomLeft,
@@ -490,4 +365,123 @@ List<Widget> forumData(
       height: 10,
     ),
   ];
+}
+
+class IconsActions extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
+  final isImage;
+  const IconsActions({
+    super.key,
+    required this.isImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return isImage
+        ? Column(
+            children: [
+              const Icon(
+                Icons.local_fire_department,
+                size: 30,
+              ),
+              const Text('324', style: TextStyle(fontSize: 12)),
+              const SizedBox(height: 10),
+              IconButton(
+                onPressed: () {
+                  commentsInfo(context);
+                },
+                icon: const Icon(
+                  Icons.comment,
+                  size: 30,
+                ),
+              ),
+              const Text('32', style: TextStyle(fontSize: 12)),
+              const SizedBox(height: 10),
+              const Icon(
+                Icons.more_horiz,
+                size: 30,
+              ),
+              const Text('2', style: TextStyle(fontSize: 12)),
+              const SizedBox(height: 10),
+            ],
+          )
+        : Column(
+            children: [
+              const Icon(
+                Icons.local_fire_department,
+                size: 26,
+              ),
+              const Text(
+                '324',
+                style: TextStyle(fontSize: 10),
+              ),
+              IconButton(
+                constraints: const BoxConstraints(
+                  maxHeight: 34,
+                ),
+                iconSize: 26,
+                onPressed: () {
+                  commentsInfo(context);
+                },
+                icon: const Icon(
+                  Icons.comment,
+                ),
+              ),
+              const Text(
+                '32',
+                style: TextStyle(fontSize: 10),
+              ),
+              const SizedBox(height: 4),
+              const Icon(
+                Icons.more_horiz,
+                size: 26,
+              ),
+              const Text('2', style: TextStyle(fontSize: 10)),
+              const SizedBox(height: 10),
+            ],
+          );
+  }
+}
+
+void commentsInfo(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        insetPadding: const EdgeInsets.all(0),
+        child: SafeArea(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 1.3,
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Center(
+                    child: Hero(
+                      tag: 'CommentsForum',
+                      child: Scaffold(
+                        appBar: AppBar(
+                          title: const Text('Hero Dialog'),
+                          automaticallyImplyLeading: false,
+                        ),
+                        body: const Center(
+                          child: Text(
+                            'Hello, World!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 32.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }
