@@ -164,43 +164,56 @@ class _HomeState extends State<Home> {
 
                       return Hero(
                         tag: 'CommentsForum',
-                        child: Column(
-                          children: [
-                            HeaderF(
-                              imageUrl: imageUrl,
-                              name: name,
-                              realTime: realTime,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      ...bodyData(
-                                        imageUrl2,
-                                        randomText,
-                                        isImage,
-                                        comment.text,
-                                        comment,
-                                      ),
-                                    ],
-                                  ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blueGrey[100],
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: const Offset(
+                                      0, 1), // changes position of shadow
                                 ),
-                                IconsActions(isImage: isImage),
-                                const SizedBox(width: 5),
                               ],
                             ),
-                          ],
+                            child: Column(
+                              children: [
+                                HeaderF(
+                                  imageUrl: imageUrl,
+                                  name: name,
+                                  realTime: realTime,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          ...bodyData(
+                                            imageUrl2,
+                                            randomText,
+                                            isImage,
+                                            comment.text,
+                                            comment,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconsActions(isImage: isImage),
+                                    const SizedBox(width: 5),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.grey.withOpacity(0.5)
-                            : Colors.grey.withOpacity(0.5),
-                        height: 0.1,
-                      );
+                      return Container();
                     },
                   );
                 }
