@@ -1,8 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
@@ -50,30 +47,33 @@ class _HomeState extends State<Home> {
           ),
         ),
         Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            title: const Text('Foro general'),
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.low_priority,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(40),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              title: const Text('Foro general'),
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.low_priority,
+                  ),
+                  onPressed: () {},
                 ),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.search,
+                IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                  ),
+                  onPressed: () {},
                 ),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.notification_add_outlined,
+                IconButton(
+                  icon: const Icon(
+                    Icons.notification_add_outlined,
+                  ),
+                  onPressed: () {},
                 ),
-                onPressed: () {},
-              ),
-            ],
+              ],
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             child: const Icon(
@@ -158,17 +158,22 @@ class _HomeState extends State<Home> {
                       //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
                       final name = faker.person.name();
                       final randomText =
-                          faker.lorem.sentence().characters.take(40).toString();
+                          faker.lorem.sentence().characters.take(30).toString();
                       final isImage = faker.randomGenerator.boolean();
                       // ----------------------------------------------------------------------
 
                       return Hero(
                         tag: 'CommentsForum',
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.blueGrey[100],
+                              color: Colors.grey[100],
+                              // put a gif image
+                              // image: const DecorationImage(
+                              //   image: AssetImage('assets/images/giphy.gif'),
+                              //   fit: BoxFit.cover,
+                              // ),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
@@ -182,29 +187,43 @@ class _HomeState extends State<Home> {
                             ),
                             child: Column(
                               children: [
+                                const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 15.0,
+                                      top: 5,
+                                    ),
+                                    child: Text(
+                                      'Because you follow CS',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w100,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 HeaderF(
                                   imageUrl: imageUrl,
                                   name: name,
                                   realTime: realTime,
                                 ),
-                                Row(
+                                const SizedBox(height: 5),
+                                Column(
                                   children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          ...bodyData(
-                                            imageUrl2,
-                                            randomText,
-                                            isImage,
-                                            comment.text,
-                                            comment,
-                                          ),
-                                        ],
-                                      ),
+                                    ...bodyData(
+                                      imageUrl2,
+                                      randomText,
+                                      isImage,
+                                      comment.text,
+                                      comment,
                                     ),
-                                    IconsActions(isImage: isImage),
-                                    const SizedBox(width: 5),
                                   ],
+                                ),
+                                IconsActions(isImage: isImage),
+                                const SizedBox(
+                                  height: 10,
                                 ),
                               ],
                             ),
@@ -246,13 +265,20 @@ class HeaderF extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 6,
-        vertical: 4,
+    return Container(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+        //color: Colors.blue[100],
       ),
-      child: Row(
-        children: [
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
+        ),
+        child: Row(children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(28.0),
             child: Image.network(
@@ -263,7 +289,7 @@ class HeaderF extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: Text(
               name,
               style: const TextStyle(
@@ -272,16 +298,17 @@ class HeaderF extends StatelessWidget {
             ),
           ),
           const Text(
-            'from  ',
+            'del curso de ',
             style: TextStyle(
               fontSize: 11,
+              fontWeight: FontWeight.w200,
             ),
           ),
           const Text(
-            ' #MATH',
+            'MATH',
             style: TextStyle(
               fontSize: 11,
-              color: Colors.redAccent,
+              color: Colors.blueAccent,
             ),
           ),
           const Spacer(),
@@ -291,8 +318,7 @@ class HeaderF extends StatelessWidget {
               fontSize: 11,
             ),
           ),
-          const SizedBox(width: 8),
-        ],
+        ]),
       ),
     );
   }
@@ -307,16 +333,13 @@ List<Widget> bodyData(
 ) {
   return [
     Align(
-      alignment: Alignment.topLeft,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Text(
-          randomText,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-          overflow: TextOverflow.ellipsis,
+      alignment: Alignment.center,
+      child: Text(
+        randomText,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
         ),
+        overflow: TextOverflow.ellipsis,
       ),
     ),
     Container(
@@ -336,7 +359,7 @@ List<Widget> bodyData(
                     imageUrl2,
                     height: 250,
                     width: 270,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -345,14 +368,14 @@ List<Widget> bodyData(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20.0,
-                  vertical: 6.0,
                 ),
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
                     '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.',
-                    maxLines: 4,
+                    maxLines: 5,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -390,69 +413,73 @@ class IconsActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isImage
-        ? Column(
-            children: [
-              const Icon(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
                 Icons.local_fire_department,
-                size: 30,
+                size: 25,
               ),
-              const Text('324', style: TextStyle(fontSize: 12)),
-              const SizedBox(height: 10),
-              IconButton(
-                onPressed: () {
-                  commentsInfo(context);
-                },
-                icon: const Icon(
-                  Icons.comment,
-                  size: 30,
-                ),
+              constraints: const BoxConstraints.tightFor(
+                width: 35,
               ),
-              const Text('32', style: TextStyle(fontSize: 12)),
-              const SizedBox(height: 10),
-              const Icon(
+            ),
+            const Text(
+              '594',
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                commentsInfo(context);
+              },
+              icon: const Icon(
+                Icons.comment,
+                size: 25,
+              ),
+              constraints: const BoxConstraints.tightFor(
+                width: 37,
+              ),
+            ),
+            const Text(
+              '32',
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
                 Icons.more_horiz,
-                size: 30,
+                size: 25,
               ),
-              const Text('2', style: TextStyle(fontSize: 12)),
-              const SizedBox(height: 10),
-            ],
-          )
-        : Column(
-            children: [
-              const Icon(
-                Icons.local_fire_department,
-                size: 26,
+              constraints: const BoxConstraints.tightFor(
+                width: 37,
               ),
-              const Text(
-                '324',
-                style: TextStyle(fontSize: 10),
-              ),
-              IconButton(
-                constraints: const BoxConstraints(
-                  maxHeight: 34,
-                ),
-                iconSize: 26,
-                onPressed: () {
-                  commentsInfo(context);
-                },
-                icon: const Icon(
-                  Icons.comment,
-                ),
-              ),
-              const Text(
-                '32',
-                style: TextStyle(fontSize: 10),
-              ),
-              const SizedBox(height: 4),
-              const Icon(
-                Icons.more_horiz,
-                size: 26,
-              ),
-              const Text('2', style: TextStyle(fontSize: 10)),
-              const SizedBox(height: 10),
-            ],
-          );
+            ),
+            const Text(
+              '2',
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -463,9 +490,12 @@ void commentsInfo(BuildContext context) {
       return Dialog(
         insetPadding: const EdgeInsets.all(0),
         child: SafeArea(
-          child: SizedBox(
+          child: Container(
             width: MediaQuery.of(context).size.width * 1.3,
             height: MediaQuery.of(context).size.height * 0.8,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
             child: Column(
               children: <Widget>[
                 Expanded(
