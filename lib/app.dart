@@ -60,6 +60,7 @@ class ThemeClass {
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Colors.blueAccent,
     ),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
   );
 
   static ThemeData darkTheme = ThemeData(
