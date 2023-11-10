@@ -3,7 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/screens/home/calendar.dart';
 import 'package:uforuxpi3/screens/home/home.dart';
-import 'package:uforuxpi3/screens/home/notifications.dart';
+import 'package:uforuxpi3/screens/home/books.dart';
 import 'package:uforuxpi3/screens/home/profile.dart';
 
 class MainScreen extends StatefulWidget {
@@ -32,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
     _screens = [
       Calendar(user: user),
       Home(user: user),
-      Notifications(user: user),
+      Books(user: user),
       Profile(user: user),
     ];
   }
@@ -74,19 +74,19 @@ class _MainScreenState extends State<MainScreen> {
               tabs: const [
                 GButton(
                   icon: Icons.calendar_month,
-                  text: 'Calendar',
+                  text: 'Calendario',
                 ),
                 GButton(
                   icon: Icons.home,
-                  text: 'Forum',
+                  text: 'Foro',
                 ),
                 GButton(
                   icon: Icons.book,
-                  text: 'Books',
+                  text: 'Libros',
                 ),
                 GButton(
                   icon: Icons.person,
-                  text: 'Profile',
+                  text: 'Perfil',
                 ),
               ],
               selectedIndex: _currentIndex,
