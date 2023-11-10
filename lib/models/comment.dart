@@ -8,7 +8,7 @@ class Comment {
   final int ups;
   final Timestamp createdAt;
   final List<String> attachments;
-  List<Comment>? comments;
+  Map<String, Comment>? comments;
 
   Comment({
     required this.id,
@@ -21,33 +21,29 @@ class Comment {
   });
 
   Map<String, dynamic> toJson() {
-    if (comments == null) {
-      return {
-        'id': id,
-        'userId': userId,
-        'text': text,
-        'ups': ups,
-        'createdAt': createdAt,
-        'attachments': attachments,
-      };
-    }
-
-    return {
+    Map<String, dynamic> json = {
       'id': id,
       'userId': userId,
       'text': text,
       'ups': ups,
       'createdAt': createdAt,
       'attachments': attachments,
-      'comments': comments,
     };
+
+    if (comments != null) {
+      json['comments'] =
+          comments?.map((key, value) => MapEntry(key, value.toJson()));
+    }
+
+    return json;
   }
 
   static Comment fromJson(Map<String, dynamic> json) {
     if (json.containsKey('comments')) {
-      dynamic c = (json['comments'] as List<dynamic>)
-          .map((a) => Comment.fromJson(a))
-          .toList();
+      final Map<String, dynamic> jsonComments = json['comments'];
+
+      final Map<String, Comment> c = jsonComments
+          .map((key, value) => MapEntry(key, Comment.fromJson(value)));
 
       return Comment(
         id: json['id'],
@@ -72,13 +68,5 @@ class Comment {
           .map((a) => a as String)
           .toList(),
     );
-  }
-
-  void addSubcomment(Comment subcomment) {
-    if (comments != null) {
-      comments?.add(subcomment);
-    } else {
-      comments = [subcomment];
-    }
   }
 }

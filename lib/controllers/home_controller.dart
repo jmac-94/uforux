@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:uforuxpi3/models/comment.dart';
 import 'package:uforuxpi3/util/dprint.dart';
 
@@ -17,7 +18,8 @@ class HomeController {
   bool isLoading = false;
   bool hasMoreData = true;
   bool initialFetchDone = false;
-  List<Comment> comments = [];
+  // Lista de mapas con Key = comment.id y Value = comment
+  Map<String, Comment> comments = {};
 
   HomeController(this.userId);
 
@@ -30,13 +32,14 @@ class HomeController {
   }
 
   Future<void> overwriteComments(
-      String forumId, List<dynamic> jsonComments) async {
+      String forumId, Map<String, dynamic> jsonComments) async {
     try {
       await _firestore.collection('forums').doc(forumId).update({
         'comments': jsonComments,
       });
 
-      comments = jsonComments.map((c) => Comment.fromJson(c)).toList();
+      comments = jsonComments
+          .map((key, value) => MapEntry(key, Comment.fromJson(value)));
     } catch (e) {
       dPrint(e);
     }
@@ -58,22 +61,29 @@ class HomeController {
 
       if (querySnapshot.docs.isNotEmpty) {
         final documentSnapshot = querySnapshot.docs.first;
-        // ignore: unnecessary_cast
-        final data = documentSnapshot.data() as Map<String, dynamic>;
-        final List<dynamic> commentsData = data['comments'] ?? [];
+        final data = documentSnapshot.data();
+        final Map<String, dynamic> commentsData = data['comments'] ?? {};
 
         // Determina el rango de comentarios a obtener
         final currentLength = comments.length;
         final nextFetchLimit = isRefresh ? perPage : currentLength + perPage;
 
+        dPrint('fetchComments: $commentsData');
+
         if (nextFetchLimit >= commentsData.length) {
-          comments = commentsData.map((c) => Comment.fromJson(c)).toList();
+          comments = commentsData
+              .map((key, value) => MapEntry(key, Comment.fromJson(value)));
           hasMoreData = false;
         } else {
-          final List<Comment> newComments = commentsData
-              .sublist(currentLength, nextFetchLimit)
-              .map((c) => Comment.fromJson(c))
-              .toList();
+          final Iterable<MapEntry<String, Comment>> entries = commentsData
+              .entries
+              .skip(currentLength)
+              .take(nextFetchLimit - currentLength)
+              .map((entry) =>
+                  MapEntry(entry.key, Comment.fromJson(entry.value)));
+
+          final Map<String, Comment> newComments = Map.fromEntries(entries);
+
           comments.addAll(newComments);
         }
       }
@@ -105,14 +115,23 @@ class HomeController {
           attachments: attachments,
         );
 
+        // Convert the new comment to JSON
+        Map<String, dynamic> jsonComment = newComment.toJson();
+
+        // Get the existing comments
+        Map<String, dynamic> commentsData =
+            forumDocumentSnapshot.data()['comments'] ?? {};
+
+        commentsData[newComment.id] = jsonComment;
+
         await _firestore
             .collection('forums')
             .doc(forumDocumentSnapshot.id)
             .update({
-          'comments': FieldValue.arrayUnion([newComment.toJson()]),
+          'comments': commentsData,
         });
 
-        comments.add(newComment);
+        comments[newComment.id] = newComment;
       }
     } catch (e) {
       dPrint(e);
@@ -149,7 +168,7 @@ class HomeController {
     }
   }
 
-  Future<void> addSubcomment(Comment comment, Comment subcomment) async {
+  Future<void> submitSubcomment(Comment comment, Comment subcomment) async {
     try {
       final query = await getGeneralForum();
 
@@ -157,23 +176,20 @@ class HomeController {
         final generalForum = query.docs.first;
         final generalForumData = generalForum.data();
 
-        final List<dynamic> jsonComments = generalForumData['comments'] ?? [];
+        final String commentId = comment.id;
 
-        // POR AHORA ITERAR SOBRE TODOS LOS COMENTARIOS DEL FORO PARA ENCONTRAR
-        // AL QUE VAMOS A CAMBIAR SUS SUBCOMENTARIOS
-        for (var i = 0; i < jsonComments.length; i++) {
-          Map<String, dynamic> currentComment = jsonComments[i];
+        final Map<String, dynamic> jsonComments =
+            generalForumData['comments'] ?? {};
 
-          if (currentComment['id'] == comment.id) {
-            if (currentComment.containsKey('comments')) {
-              currentComment['comments'].add(subcomment.toJson());
-            } else {
-              currentComment['comments'] = [subcomment.toJson()];
-            }
+        final Map<String, dynamic> currentComment = jsonComments[commentId];
 
-            jsonComments[i] = currentComment;
-          }
+        if (currentComment.containsKey('comments')) {
+          currentComment['comments'][subcomment.id] = subcomment.toJson();
+        } else {
+          currentComment['comments'] = {subcomment.id: subcomment.toJson()};
         }
+
+        jsonComments[commentId] = currentComment;
 
         await overwriteComments(generalForum.id, jsonComments);
       }

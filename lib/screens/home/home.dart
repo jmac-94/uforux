@@ -145,7 +145,9 @@ class _HomeState extends State<Home> {
                         }
                       }
                       // ---------- COMMENTARIES DATA------------------------------------------
-                      var comment = _homeController.comments[index];
+                      var commentsList =
+                          _homeController.comments.values.toList();
+                      var comment = commentsList[index];
                       final realTime =
                           timeago.format(comment.createdAt.toDate());
 
@@ -408,7 +410,7 @@ class IconsActions extends StatelessWidget {
               const Text('324', style: TextStyle(fontSize: 12)),
               const SizedBox(height: 10),
               IconButton(
-                onPressed: () {
+                onPressed: () async {
                   dPrint(comment.id);
                   // texto para subcomment
                   const String text = 'Este es mi primer subcomentario.';
@@ -424,9 +426,7 @@ class IconsActions extends StatelessWidget {
                     'attachments': [],
                   });
 
-                  // agregar el subcomment al comment
-                  // comment.addSubcomment(subcomment);
-                  homeController.addSubcomment(comment, subcomment);
+                  await homeController.submitSubcomment(comment, subcomment);
                 },
                 icon: const Icon(
                   Icons.comment,
@@ -463,7 +463,7 @@ class IconsActions extends StatelessWidget {
                   maxHeight: 34,
                 ),
                 iconSize: 26,
-                onPressed: () {
+                onPressed: () async {
                   dPrint(comment.id);
                   // texto para subcomment
                   const String text = 'Este es mi primer subcomentario.';
@@ -480,8 +480,7 @@ class IconsActions extends StatelessWidget {
                   });
 
                   // agregar el subcomment al comment
-                  // comment.addSubcomment(subcomment);
-                  homeController.addSubcomment(comment, subcomment);
+                  await homeController.submitSubcomment(comment, subcomment);
                 },
                 icon: const Icon(
                   Icons.comment,

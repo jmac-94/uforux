@@ -1,8 +1,10 @@
+import 'package:uforuxpi3/models/comment.dart';
+
 class Forum {
   final String name;
   final String description;
   final DateTime createdAt;
-  final List<Map<String, dynamic>> comments;
+  final Map<String, Comment> comments;
 
   Forum({
     required this.name,
@@ -16,7 +18,7 @@ class Forum {
       'name': name,
       'description': description,
       'createdAt': createdAt.toUtc().toIso8601String(),
-      'comments': comments,
+      'comments': comments.map((key, value) => MapEntry(key, value.toJson())),
     };
   }
 
@@ -25,9 +27,9 @@ class Forum {
       name: json['name'],
       description: json['description'],
       createdAt: DateTime.parse(json['createdAt']),
-      comments: (json['comments'] as List<dynamic>)
-          .map((c) => c as Map<String, dynamic>)
-          .toList(),
+      comments: (json['comments'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, Comment.fromJson(value)),
+      ),
     );
   }
 }
