@@ -144,94 +144,106 @@ class _HomeState extends State<Home> {
                             child: CircularProgressIndicator(),
                           );
                         } else {
-                          return Container(); // No hay más datos para cargar
+                          return Container(); // No more data to load
                         }
                       }
+
                       // ---------- COMMENTARIES DATA------------------------------------------
                       var commentsList =
                           _homeController.comments.values.toList();
                       var comment = commentsList[index];
+
                       final realTime =
                           timeago.format(comment.createdAt.toDate());
-
                       final randomNumber = faker.randomGenerator.integer(1000);
                       final imageUrl =
                           'https://picsum.photos/200/300?random=$randomNumber';
                       final randomNumber2 = faker.randomGenerator.integer(1000);
                       final imageUrl2 =
                           'https://picsum.photos/200/300?random=$randomNumber2';
-                      //! Reemplazar por el nombre del usuario que hizo el comentario FIREBASE
-                      final name = faker.person.name();
-                      final randomText =
-                          faker.lorem.sentence().characters.take(30).toString();
                       final isImage = faker.randomGenerator.boolean();
                       // ----------------------------------------------------------------------
 
-                      return Hero(
-                        tag: 'CommentsForum',
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: const Offset(
-                                      0, 1), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 15.0,
-                                      top: 5,
-                                    ),
-                                    child: Text(
-                                      'Because you follow CS',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w100,
-                                        color: Colors.red,
+                      return FutureBuilder<AppUser>(
+                        future: _homeController.fetchAppUser(comment.userId),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AppUser> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            final commentAuthor = snapshot.data;
+                            final String name = commentAuthor != null
+                                ? (commentAuthor.username ?? '')
+                                : '';
+
+                            return Hero(
+                              tag: 'CommentsForum',
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: const Offset(
+                                            0, 1), // changes position of shadow
                                       ),
-                                    ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      const Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 15.0,
+                                            top: 5,
+                                          ),
+                                          child: Text(
+                                            'Because you follow CS',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w100,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      ForumHeader(
+                                        imageUrl: imageUrl,
+                                        name: name,
+                                        realTime: realTime,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      BodyData(
+                                        imageUrl2: imageUrl2,
+                                        isImage: isImage,
+                                        text: comment.text,
+                                        comment: comment,
+                                      ),
+                                      IconsActions(
+                                        isImage: isImage,
+                                        comment: comment,
+                                        homeController: _homeController,
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
                                   ),
                                 ),
-                                ForumHeader(
-                                  imageUrl: imageUrl,
-                                  name: name,
-                                  realTime: realTime,
-                                ),
-                                const SizedBox(height: 5),
-                                BodyData(
-                                  imageUrl2: imageUrl2,
-                                  randomText: randomText,
-                                  isImage: isImage,
-                                  text: comment.text,
-                                  comment: comment,
-                                ),
-                                IconsActions(
-                                  isImage: isImage,
-                                  comment: comment,
-                                  homeController: _homeController,
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
+                            );
+                          }
+                        },
                       );
                     },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Container();
-                    },
+                    separatorBuilder: (context, index) => const Divider(),
                   );
                 }
               },

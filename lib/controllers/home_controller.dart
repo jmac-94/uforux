@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uforuxpi3/models/app_user.dart';
+import 'package:uforuxpi3/services/database.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:uforuxpi3/models/comment.dart';
@@ -197,5 +199,11 @@ class HomeController {
     } catch (e) {
       dPrint(e);
     }
+  }
+
+  Future<AppUser> fetchAppUser(String id) async {
+    final databaseService = DatabaseService(uid: id);
+    final Map<String, dynamic> userJson = await databaseService.getUserData();
+    return AppUser.fromJson(userJson);
   }
 }

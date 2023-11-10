@@ -3,7 +3,6 @@ import 'package:uforuxpi3/models/comment.dart';
 
 class BodyData extends StatelessWidget {
   final String imageUrl2;
-  final String randomText;
   final bool isImage;
   final String text;
   final Comment comment;
@@ -11,7 +10,6 @@ class BodyData extends StatelessWidget {
   const BodyData(
       {super.key,
       required this.imageUrl2,
-      required this.randomText,
       required this.isImage,
       required this.text,
       required this.comment});
@@ -20,16 +18,6 @@ class BodyData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: Text(
-            randomText,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadiusDirectional.circular(12),
@@ -60,7 +48,7 @@ class BodyData extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        '${comment.text}   norem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, nec aliquam nisl nisl nec nisl.',
+                        comment.text,
                         maxLines: 5,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
