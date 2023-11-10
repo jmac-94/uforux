@@ -1,12 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/models/comment.dart';
+import 'package:uforuxpi3/util/dprint.dart';
 
 class Home extends StatefulWidget {
   final AppUser user;
@@ -147,7 +146,8 @@ class _HomeState extends State<Home> {
                       }
                       // ---------- COMMENTARIES DATA------------------------------------------
                       var comment = _homeController.comments[index];
-                      final realTime = timeago.format(comment.createdAt);
+                      final realTime =
+                          timeago.format(comment.createdAt.toDate());
 
                       final randomNumber = faker.randomGenerator.integer(1000);
                       final imageUrl =
@@ -202,7 +202,11 @@ class _HomeState extends State<Home> {
                                         ],
                                       ),
                                     ),
-                                    IconsActions(isImage: isImage),
+                                    IconsActions(
+                                      isImage: isImage,
+                                      comment: comment,
+                                      homeController: _homeController,
+                                    ),
                                     const SizedBox(width: 5),
                                   ],
                                 ),
@@ -381,11 +385,15 @@ List<Widget> bodyData(
 }
 
 class IconsActions extends StatelessWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final isImage;
+  final bool isImage;
+  final Comment comment;
+  final HomeController homeController;
+
   const IconsActions({
     super.key,
     required this.isImage,
+    required this.comment,
+    required this.homeController,
   });
 
   @override
@@ -401,7 +409,24 @@ class IconsActions extends StatelessWidget {
               const SizedBox(height: 10),
               IconButton(
                 onPressed: () {
-                  commentsInfo(context);
+                  dPrint(comment.id);
+                  // texto para subcomment
+                  const String text = 'Este es mi primer subcomentario.';
+
+                  // crear el subcomment
+                  final String userId = homeController.userId;
+                  Comment subcomment = Comment.fromJson({
+                    'id': DateTime.now().millisecondsSinceEpoch.toString(),
+                    'userId': userId,
+                    'text': text,
+                    'ups': 0,
+                    'createdAt': Timestamp.now(),
+                    'attachments': [],
+                  });
+
+                  // agregar el subcomment al comment
+                  // comment.addSubcomment(subcomment);
+                  homeController.addSubcomment(comment, subcomment);
                 },
                 icon: const Icon(
                   Icons.comment,
@@ -410,9 +435,14 @@ class IconsActions extends StatelessWidget {
               ),
               const Text('32', style: TextStyle(fontSize: 12)),
               const SizedBox(height: 10),
-              const Icon(
-                Icons.more_horiz,
-                size: 30,
+              IconButton(
+                onPressed: () {
+                  commentsInfo(context);
+                },
+                icon: const Icon(
+                  Icons.more_horiz,
+                  size: 30,
+                ),
               ),
               const Text('2', style: TextStyle(fontSize: 12)),
               const SizedBox(height: 10),
@@ -434,7 +464,24 @@ class IconsActions extends StatelessWidget {
                 ),
                 iconSize: 26,
                 onPressed: () {
-                  commentsInfo(context);
+                  dPrint(comment.id);
+                  // texto para subcomment
+                  const String text = 'Este es mi primer subcomentario.';
+
+                  // crear el subcomment
+                  final String userId = homeController.userId;
+                  Comment subcomment = Comment.fromJson({
+                    'id': DateTime.now().millisecondsSinceEpoch.toString(),
+                    'userId': userId,
+                    'text': text,
+                    'ups': 0,
+                    'createdAt': Timestamp.now(),
+                    'attachments': [],
+                  });
+
+                  // agregar el subcomment al comment
+                  // comment.addSubcomment(subcomment);
+                  homeController.addSubcomment(comment, subcomment);
                 },
                 icon: const Icon(
                   Icons.comment,
@@ -445,9 +492,14 @@ class IconsActions extends StatelessWidget {
                 style: TextStyle(fontSize: 10),
               ),
               const SizedBox(height: 4),
-              const Icon(
-                Icons.more_horiz,
-                size: 26,
+              IconButton(
+                onPressed: () {
+                  commentsInfo(context);
+                },
+                icon: const Icon(
+                  Icons.more_horiz,
+                  size: 30,
+                ),
               ),
               const Text('2', style: TextStyle(fontSize: 10)),
               const SizedBox(height: 10),

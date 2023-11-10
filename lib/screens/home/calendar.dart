@@ -31,6 +31,7 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     double _rating = 3;
+
     return Scaffold(
       bottomSheet: GFBottomSheet(
         animationDuration: 300,

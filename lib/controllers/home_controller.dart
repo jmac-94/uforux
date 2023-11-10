@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,14 +11,36 @@ class HomeController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  String userId;
+
   final int perPage = 20;
   bool isLoading = false;
   bool hasMoreData = true;
   bool initialFetchDone = false;
   List<Comment> comments = [];
-  String userId;
 
   HomeController(this.userId);
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getGeneralForum() async {
+    return await _firestore
+        .collection('forums')
+        .where('name', isEqualTo: 'general')
+        .limit(1)
+        .get();
+  }
+
+  Future<void> overwriteComments(
+      String forumId, List<dynamic> jsonComments) async {
+    try {
+      await _firestore.collection('forums').doc(forumId).update({
+        'comments': jsonComments,
+      });
+
+      comments = jsonComments.map((c) => Comment.fromJson(c)).toList();
+    } catch (e) {
+      dPrint(e);
+    }
+  }
 
   Future<void> fetchComments({bool isRefresh = false}) async {
     if (isLoading) return;
@@ -31,11 +54,7 @@ class HomeController {
     }
 
     try {
-      final querySnapshot = await _firestore
-          .collection('forums')
-          .where('name', isEqualTo: 'general')
-          .limit(1)
-          .get();
+      final querySnapshot = await getGeneralForum();
 
       if (querySnapshot.docs.isNotEmpty) {
         final documentSnapshot = querySnapshot.docs.first;
@@ -73,11 +92,7 @@ class HomeController {
     if (text.trim().isEmpty) return;
 
     try {
-      final querySnapshot = await _firestore
-          .collection('forums')
-          .where('name', isEqualTo: 'general')
-          .limit(1)
-          .get();
+      final querySnapshot = await getGeneralForum();
 
       if (querySnapshot.docs.isNotEmpty) {
         final forumDocumentSnapshot = querySnapshot.docs.first;
@@ -86,7 +101,7 @@ class HomeController {
           userId: userId,
           text: text,
           ups: 0,
-          createdAt: Timestamp.now().toDate(),
+          createdAt: Timestamp.now(),
           attachments: attachments,
         );
 
@@ -131,6 +146,39 @@ class HomeController {
       if (fileUrl != null) {
         submitComment(text, attachments: [fileUrl]);
       }
+    }
+  }
+
+  Future<void> addSubcomment(Comment comment, Comment subcomment) async {
+    try {
+      final query = await getGeneralForum();
+
+      if (query.docs.isNotEmpty) {
+        final generalForum = query.docs.first;
+        final generalForumData = generalForum.data();
+
+        final List<dynamic> jsonComments = generalForumData['comments'] ?? [];
+
+        // POR AHORA ITERAR SOBRE TODOS LOS COMENTARIOS DEL FORO PARA ENCONTRAR
+        // AL QUE VAMOS A CAMBIAR SUS SUBCOMENTARIOS
+        for (var i = 0; i < jsonComments.length; i++) {
+          Map<String, dynamic> currentComment = jsonComments[i];
+
+          if (currentComment['id'] == comment.id) {
+            if (currentComment.containsKey('comments')) {
+              currentComment['comments'].add(subcomment.toJson());
+            } else {
+              currentComment['comments'] = [subcomment.toJson()];
+            }
+
+            jsonComments[i] = currentComment;
+          }
+        }
+
+        await overwriteComments(generalForum.id, jsonComments);
+      }
+    } catch (e) {
+      dPrint(e);
     }
   }
 }
