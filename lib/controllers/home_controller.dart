@@ -1,10 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:uforuxpi3/models/comment.dart';
 import 'package:uforuxpi3/util/dprint.dart';
 
@@ -13,13 +13,14 @@ class HomeController {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   String userId;
+  // Lista de mapas con Key = comment.id y Value = comment
+  Map<String, Comment> comments = {};
 
+  final uuid = const Uuid();
   final int perPage = 20;
   bool isLoading = false;
   bool hasMoreData = true;
   bool initialFetchDone = false;
-  // Lista de mapas con Key = comment.id y Value = comment
-  Map<String, Comment> comments = {};
 
   HomeController(this.userId);
 
@@ -107,7 +108,7 @@ class HomeController {
       if (querySnapshot.docs.isNotEmpty) {
         final forumDocumentSnapshot = querySnapshot.docs.first;
         final newComment = Comment(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          id: uuid.v1(),
           userId: userId,
           text: text,
           ups: 0,

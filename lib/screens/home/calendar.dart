@@ -30,7 +30,7 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    double _rating = 3;
+    double rating = 3;
 
     return Scaffold(
       bottomSheet: GFBottomSheet(
@@ -108,11 +108,11 @@ class _CalendarState extends State<Calendar> {
         child: Column(
           children: [
             GFRating(
-              value: _rating,
+              value: rating,
               filledIcon: const Icon(Icons.flip_camera_ios),
               defaultIcon: const Icon(Icons.flip_camera_ios_outlined),
               onChanged: (value) => setState(() {
-                _rating = value;
+                rating = value;
               }),
             ),
             GFRating(

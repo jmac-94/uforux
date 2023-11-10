@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:uuid/uuid.dart';
+
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/models/comment.dart';
@@ -390,6 +392,7 @@ class IconsActions extends StatelessWidget {
   final bool isImage;
   final Comment comment;
   final HomeController homeController;
+  final uuid = const Uuid();
 
   const IconsActions({
     super.key,
@@ -418,7 +421,7 @@ class IconsActions extends StatelessWidget {
                   // crear el subcomment
                   final String userId = homeController.userId;
                   Comment subcomment = Comment.fromJson({
-                    'id': DateTime.now().millisecondsSinceEpoch.toString(),
+                    'id': uuid.v1(),
                     'userId': userId,
                     'text': text,
                     'ups': 0,
