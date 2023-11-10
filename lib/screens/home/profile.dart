@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/services/database.dart';
+import 'package:uforuxpi3/widgets/profile_box.dart';
+import 'package:uforuxpi3/widgets/profile_picture.dart';
 
 class Profile extends StatefulWidget {
   final AppUser user;
@@ -11,8 +13,7 @@ class Profile extends StatefulWidget {
   const Profile({super.key, required this.user});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ProfileState createState() => _ProfileState();
+  State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
@@ -54,7 +55,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 40,
                   ),
-                  MyProfile(),
+                  const ProfilePicture(),
                   const SizedBox(
                     height: 5,
                   ),
@@ -86,21 +87,21 @@ class _ProfileState extends State<Profile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ProfileBoxes(
+                      ProfileBox(
                         path: "assets/images/CS.jpg",
                         carrera: loggedUser.degree ?? '',
                       ),
-                      const ProfileBoxes(
+                      ProfileBox(
                         path: "assets/images/cm5.jpeg",
-                        carrera: "Gastronomia",
+                        carrera: "${loggedUser.score ?? ''}",
                       ),
-                      const ProfileBoxes(
+                      ProfileBox(
                         path: "assets/images/cm6.jpeg",
-                        carrera: "Turismo",
+                        carrera: loggedUser.entrySemester ?? '',
                       ),
-                      const ProfileBoxes(
+                      ProfileBox(
                         path: "assets/images/cm8.jpeg",
-                        carrera: "Economia",
+                        carrera: getCarrera(),
                       ),
                     ],
                   ),
@@ -154,57 +155,12 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  // ignore: non_constant_identifier_names
-  Center MyProfile() {
-    return Center(
-      child: Container(
-        width: 100,
-        height: 100,
-        decoration: const BoxDecoration(
-          color: Colors.blue,
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(
-          Icons.person,
-          size: 65,
-        ),
-      ),
-    );
-  }
-}
-
-class ProfileBoxes extends StatelessWidget {
-  final String path;
-  final String carrera;
-  const ProfileBoxes({super.key, required this.path, required this.carrera});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 85,
-          height: 85,
-          decoration: BoxDecoration(
-            color: Colors.redAccent,
-            borderRadius: BorderRadius.circular(20),
-            image: DecorationImage(
-              image: AssetImage(
-                path,
-              ),
-              fit: BoxFit.fill,
-            ),
-          ),
-        ),
-        Text(
-          carrera,
-          maxLines: 4,
-          style: const TextStyle(
-            fontSize: 13,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-      ],
-    );
+  String getCarrera() {
+    if (loggedUser.assesor == true) {
+      return 'Estudiante y asesor';
+    } else if (loggedUser.assesor == false) {
+      return 'Estudiante';
+    }
+    return '';
   }
 }

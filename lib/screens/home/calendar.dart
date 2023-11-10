@@ -9,8 +9,7 @@ class Calendar extends StatefulWidget {
   const Calendar({super.key, required this.user});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CalendarState createState() => _CalendarState();
+  State<Calendar> createState() => _CalendarState();
 }
 
 class _CalendarState extends State<Calendar> {
