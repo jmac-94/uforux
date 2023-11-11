@@ -18,6 +18,22 @@ class BodyData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        isImage
+            ? Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 20,
+                  ),
+                  child: Text(
+                    comment.text,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )
+            : const SizedBox(),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadiusDirectional.circular(12),
@@ -57,22 +73,6 @@ class BodyData extends StatelessWidget {
                   ),
                 ),
         ),
-        isImage
-            ? Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 20,
-                  ),
-                  child: Text(
-                    comment.text,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              )
-            : const SizedBox(),
         const SizedBox(
           height: 10,
         ),
