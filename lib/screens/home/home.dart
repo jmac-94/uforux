@@ -170,7 +170,7 @@ class _HomeState extends State<Home> {
                             AsyncSnapshot<AppUser> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
+                            return Container();
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
@@ -243,7 +243,7 @@ class _HomeState extends State<Home> {
                         },
                       );
                     },
-                    separatorBuilder: (context, index) => const Divider(),
+                    separatorBuilder: (context, index) => Container(),
                   );
                 }
               },

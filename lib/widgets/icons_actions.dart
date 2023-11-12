@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
@@ -23,6 +22,13 @@ class IconsActions extends StatefulWidget {
 
 class _IconsActionsState extends State<IconsActions> {
   bool isLiked = false;
+  late int commentNum;
+
+  @override
+  void initState() {
+    super.initState();
+    commentNum = getCommentsLen();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,21 +61,24 @@ class _IconsActionsState extends State<IconsActions> {
           children: [
             IconButton(
               onPressed: () async {
-                const String text = 'Este es mi primer subcomentario.';
+                setState(() {
+                  commentNum++;
+                });
+                // const String text = 'Este es mi primer subcomentario.';
 
                 // crear el subcomment
                 final String userId = widget.homeController.userId;
-                Comment subcomment = Comment.fromJson({
+                /*  Comment subcomment = Comment.fromJson({
                   'id': widget.uuid.v1(),
                   'userId': userId,
                   'text': text,
                   'ups': 0,
                   'createdAt': Timestamp.now(),
                   'attachments': [],
-                });
-
-                await widget.homeController
-                    .submitSubcomment(widget.comment, subcomment);
+                });*/
+                commentsInfo(context);
+                // await widget.homeController
+                //    .submitSubcomment(widget.comment, subcomment);
               },
               icon: const Icon(
                 Icons.comment,
@@ -80,7 +89,7 @@ class _IconsActionsState extends State<IconsActions> {
               ),
             ),
             Text(
-              getCommentsLen(),
+              commentNum.toString(),
               style: const TextStyle(fontSize: 12),
             ),
           ],
@@ -89,9 +98,7 @@ class _IconsActionsState extends State<IconsActions> {
         Row(
           children: [
             IconButton(
-              onPressed: () {
-                commentsInfo(context);
-              },
+              onPressed: () {},
               icon: const Icon(
                 Icons.more_horiz,
                 size: 25,
@@ -114,8 +121,8 @@ class _IconsActionsState extends State<IconsActions> {
           insetPadding: const EdgeInsets.all(0),
           child: SafeArea(
             child: Container(
-              width: MediaQuery.of(context).size.width * 1.3,
-              height: MediaQuery.of(context).size.height * 0.8,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
               ),
@@ -126,20 +133,31 @@ class _IconsActionsState extends State<IconsActions> {
                       child: Hero(
                         tag: 'CommentsForum',
                         child: Scaffold(
-                          appBar: AppBar(
-                            title: const Text('Hero Dialog'),
-                            automaticallyImplyLeading: false,
-                          ),
-                          body: const Center(
-                            child: Text(
-                              'Hello, World!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 32.0,
-                              ),
+                            appBar: AppBar(
+                              title: const Text('Comments'),
+                              automaticallyImplyLeading: false,
+                              actions: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(Icons.close),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
+                            body: ListView.separated(
+                              itemBuilder: (context, index) {
+                                final Comment comment = widget
+                                    .comment.comments!.values
+                                    .toList()[index];
+                                return ListTile(
+                                  title: Text(comment.text + index.toString()),
+                                );
+                              },
+                              separatorBuilder: (context, index) =>
+                                  const Divider(),
+                              itemCount: commentNum - 1,
+                            )),
                       ),
                     ),
                   ),
@@ -152,12 +170,12 @@ class _IconsActionsState extends State<IconsActions> {
     );
   }
 
-  String getCommentsLen() {
+  int getCommentsLen() {
     final Map<String, Comment>? comments = widget.comment.comments;
     if (comments != null) {
-      return comments.length.toString();
+      return comments.length;
     } else {
-      return '0';
+      return 0;
     }
   }
 }

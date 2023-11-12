@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
                   const ProfilePicture(),
                   const SizedBox(
@@ -64,13 +64,13 @@ class _ProfileState extends State<Profile> {
                       TypewriterAnimatedText(
                         'Hi ${loggedUser.username}!',
                         textStyle: const TextStyle(
-                          fontSize: 32.0,
+                          fontSize: 28.0,
                           fontWeight: FontWeight.bold,
                         ),
                         speed: const Duration(milliseconds: 200),
                       ),
                     ],
-                    totalRepeatCount: 4,
+                    totalRepeatCount: 2,
                     pause: const Duration(milliseconds: 1000),
                     displayFullTextOnTap: true,
                     stopPauseOnTap: true,

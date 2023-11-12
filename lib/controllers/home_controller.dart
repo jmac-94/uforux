@@ -71,8 +71,6 @@ class HomeController {
         final currentLength = comments.length;
         final nextFetchLimit = isRefresh ? perPage : currentLength + perPage;
 
-        dPrint('fetchComments: $commentsData');
-
         if (nextFetchLimit >= commentsData.length) {
           comments = commentsData
               .map((key, value) => MapEntry(key, Comment.fromJson(value)));
@@ -95,11 +93,44 @@ class HomeController {
       hasMoreData = false;
     } finally {
       isLoading = false;
-      initialFetchDone =
-          true; // Marca que la primera carga de datos se ha completado.
+      // Marca que la primera carga de datos se ha completado.
+      initialFetchDone = true;
+    }
+  }
+  // Unique comment
+
+  Future<void> fetchComment({bool isRefresh = false, String id = ''}) async {
+    if (isLoading) return;
+
+    isLoading = true;
+
+    // Si es una operación de refresco, reiniciar la lista de comentarios y la bandera de más datos.
+    if (isRefresh) {
+      comments.clear();
+      hasMoreData = true;
+    }
+
+    try {
+      final querySnapshot = await getGeneralForum();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final documentSnapshot = querySnapshot.docs.first;
+        final data = documentSnapshot.data();
+        final Map<String, dynamic> commentData = data['comments'][id] ?? {};
+
+        final Comment comment = Comment.fromJson(commentData);
+        comments[comment.id] = comment;
+      }
+    } catch (e) {
+      dPrint(e);
+    } finally {
+      isLoading = false;
+      // Marca que la primera carga de datos se ha completado.
+      initialFetchDone = true;
     }
   }
 
+  /// Hace un submit de un comentario :3
   Future<void> submitComment(String text,
       {List<String> attachments = const []}) async {
     if (text.trim().isEmpty) return;
