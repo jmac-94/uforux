@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
-import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uuid/uuid.dart';
 
-class IconsActions extends StatelessWidget {
+class IconsActions extends StatefulWidget {
   final bool isImage;
   final Comment comment;
   final HomeController homeController;
@@ -19,6 +18,13 @@ class IconsActions extends StatelessWidget {
   });
 
   @override
+  State<IconsActions> createState() => _IconsActionsState();
+}
+
+class _IconsActionsState extends State<IconsActions> {
+  bool isLiked = false;
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -26,16 +32,22 @@ class IconsActions extends StatelessWidget {
         Row(
           children: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.local_fire_department,
+              onPressed: () {
+                setState(() {
+                  isLiked = !isLiked;
+                });
+              },
+              icon: Icon(
+                isLiked
+                    ? Icons.local_fire_department
+                    : Icons.local_fire_department_outlined,
                 size: 25,
               ),
               constraints: const BoxConstraints.tightFor(
                 width: 35,
               ),
             ),
-            const Text('594', style: TextStyle(fontSize: 12)),
+            Text('${widget.comment.ups}', style: const TextStyle(fontSize: 12)),
           ],
         ),
         const SizedBox(width: 15),
@@ -43,14 +55,12 @@ class IconsActions extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () async {
-                dPrint(comment.id);
-                // texto para subcomment
                 const String text = 'Este es mi primer subcomentario.';
 
                 // crear el subcomment
-                final String userId = homeController.userId;
+                final String userId = widget.homeController.userId;
                 Comment subcomment = Comment.fromJson({
-                  'id': uuid.v1(),
+                  'id': widget.uuid.v1(),
                   'userId': userId,
                   'text': text,
                   'ups': 0,
@@ -58,7 +68,8 @@ class IconsActions extends StatelessWidget {
                   'attachments': [],
                 });
 
-                await homeController.submitSubcomment(comment, subcomment);
+                await widget.homeController
+                    .submitSubcomment(widget.comment, subcomment);
               },
               icon: const Icon(
                 Icons.comment,
@@ -68,9 +79,9 @@ class IconsActions extends StatelessWidget {
                 width: 37,
               ),
             ),
-            const Text(
-              '32',
-              style: TextStyle(fontSize: 12),
+            Text(
+              getCommentsLen(),
+              style: const TextStyle(fontSize: 12),
             ),
           ],
         ),
@@ -88,10 +99,6 @@ class IconsActions extends StatelessWidget {
               constraints: const BoxConstraints.tightFor(
                 width: 37,
               ),
-            ),
-            const Text(
-              '2',
-              style: TextStyle(fontSize: 12),
             ),
           ],
         ),
@@ -143,5 +150,14 @@ class IconsActions extends StatelessWidget {
         );
       },
     );
+  }
+
+  String getCommentsLen() {
+    final Map<String, Comment>? comments = widget.comment.comments;
+    if (comments != null) {
+      return comments.length.toString();
+    } else {
+      return '0';
+    }
   }
 }
