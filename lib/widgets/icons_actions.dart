@@ -1,3 +1,4 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
@@ -33,8 +34,11 @@ class _IconsActionsState extends State<IconsActions> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        const SizedBox(
+          width: 10,
+        ),
         Row(
           children: [
             IconButton(
@@ -94,7 +98,7 @@ class _IconsActionsState extends State<IconsActions> {
             ),
           ],
         ),
-        const SizedBox(width: 15),
+        const Spacer(),
         Row(
           children: [
             IconButton(
@@ -109,6 +113,9 @@ class _IconsActionsState extends State<IconsActions> {
             ),
           ],
         ),
+        const SizedBox(
+          width: 15,
+        ),
       ],
     );
   }
@@ -117,23 +124,30 @@ class _IconsActionsState extends State<IconsActions> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          insetPadding: const EdgeInsets.all(0),
-          child: SafeArea(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Center(
-                      child: Hero(
-                        tag: 'CommentsForum',
-                        child: Scaffold(
+        return Column(
+          children: <Widget>[
+            Expanded(
+              child: Center(
+                child: Hero(
+                  tag: 'CommentsForum',
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 1,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Image.asset(
+                              'assets/images/clouds.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Scaffold(
+                            backgroundColor: Colors.transparent,
                             appBar: AppBar(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
                               title: const Text('Comments'),
                               automaticallyImplyLeading: false,
                               actions: [
@@ -145,26 +159,51 @@ class _IconsActionsState extends State<IconsActions> {
                                 ),
                               ],
                             ),
-                            body: ListView.separated(
-                              itemBuilder: (context, index) {
-                                final Comment comment = widget
-                                    .comment.comments!.values
-                                    .toList()[index];
-                                return ListTile(
-                                  title: Text(comment.text + index.toString()),
-                                );
-                              },
-                              separatorBuilder: (context, index) =>
-                                  const Divider(),
-                              itemCount: commentNum - 1,
-                            )),
+                            body: Column(
+                              children: [
+                                SizedBox(
+                                  height: 200,
+                                  width: 400,
+                                  child: Image.network(
+                                    'https://picsum.photos/200/300?random=${faker.randomGenerator.integer(1000)}',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const Text(
+                                  'Loren ipsum dolor sit amet, consectetur  elit.',
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const Divider(),
+                                Expanded(
+                                  child: ListView.separated(
+                                    itemBuilder: (context, index) {
+                                      final Comment comment = widget
+                                          .comment.comments!.values
+                                          .toList()[index];
+                                      return ListTile(
+                                        title: Text(
+                                            comment.text + index.toString()),
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(),
+                                    itemCount: commentNum - 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         );
       },
     );

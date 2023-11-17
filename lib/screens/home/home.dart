@@ -185,7 +185,6 @@ class _HomeState extends State<Home> {
                                 padding: const EdgeInsets.all(10.0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[100],
                                     borderRadius: BorderRadius.circular(12),
                                     boxShadow: [
                                       BoxShadow(
@@ -196,6 +195,16 @@ class _HomeState extends State<Home> {
                                             0, 1), // changes position of shadow
                                       ),
                                     ],
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.grey[
+                                            100]!, // Comienza con un tono más claro de gris
+                                        Colors.grey[
+                                            100]!, // Termina con un tono más oscuro de gris
+                                      ],
+                                    ),
                                   ),
                                   child: Column(
                                     children: [
