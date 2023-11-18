@@ -2,14 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:uforuxpi3/models/comment.dart';
 
 class BodyData extends StatelessWidget {
-  final String imageUrl2;
+  final String image;
   final bool isImage;
   final String text;
   final Comment comment;
 
   const BodyData(
       {super.key,
-      required this.imageUrl2,
+      required this.image,
       required this.isImage,
       required this.text,
       required this.comment});
@@ -48,7 +48,7 @@ class BodyData extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
-                        imageUrl2,
+                        image,
                         height: 250,
                         width: 270,
                         fit: BoxFit.cover,

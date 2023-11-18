@@ -1,8 +1,6 @@
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
-import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uuid/uuid.dart';
 
 class IconsActions extends StatefulWidget {
@@ -37,9 +35,11 @@ class _IconsActionsState extends State<IconsActions> {
     bool userLikeStatus =
         await widget.homeController.fetchUserLikeStatus(widget.comment.id);
 
-    setState(() {
-      isLiked = userLikeStatus;
-    });
+    if (mounted) {
+      setState(() {
+        isLiked = userLikeStatus;
+      });
+    }
   }
 
   @override
@@ -81,7 +81,7 @@ class _IconsActionsState extends State<IconsActions> {
             IconButton(
               onPressed: () async {
                 setState(() {
-                  commentNum++;
+                  // commentNum++;
                 });
                 // const String text = 'Este es mi primer subcomentario.';
 
@@ -93,7 +93,7 @@ class _IconsActionsState extends State<IconsActions> {
                   'text': text,
                   'ups': 0,
                   'createdAt': Timestamp.now(),
-                  'attachments': [],
+                  'attachments': {},
                 });*/
                 commentsInfo(context);
                 // await widget.homeController
@@ -210,7 +210,8 @@ class _IconsActionsState extends State<IconsActions> {
                                 },
                                 separatorBuilder: (context, index) =>
                                     const Divider(),
-                                itemCount: commentNum - 1,
+                                itemCount: 0,
+                                // itemCount: commentNum - 1,
                               ),
                             ),
                           ],

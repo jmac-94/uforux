@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/database.dart';
@@ -9,6 +8,13 @@ import 'package:uuid/uuid.dart';
 
 import 'package:uforuxpi3/models/comment.dart';
 import 'package:uforuxpi3/util/dprint.dart';
+
+class Pair<F, S> {
+  final F first;
+  final S second;
+
+  Pair(this.first, this.second);
+}
 
 class HomeController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -53,7 +59,6 @@ class HomeController {
 
     isLoading = true;
 
-    // Si es una operación de refresco, reiniciar la lista de comentarios y la bandera de más datos.
     if (isRefresh) {
       comments.clear();
       hasMoreData = true;
@@ -67,7 +72,6 @@ class HomeController {
         final data = documentSnapshot.data();
         final Map<String, dynamic> commentsData = data['comments'] ?? {};
 
-        // Determina el rango de comentarios a obtener
         final currentLength = comments.length;
         final nextFetchLimit = isRefresh ? perPage : currentLength + perPage;
 
@@ -93,18 +97,15 @@ class HomeController {
       hasMoreData = false;
     } finally {
       isLoading = false;
-      // Marca que la primera carga de datos se ha completado.
       initialFetchDone = true;
     }
   }
-  // Unique comment
 
   Future<void> fetchComment({bool isRefresh = false, String id = ''}) async {
     if (isLoading) return;
 
     isLoading = true;
 
-    // Si es una operación de refresco, reiniciar la lista de comentarios y la bandera de más datos.
     if (isRefresh) {
       comments.clear();
       hasMoreData = true;
@@ -125,23 +126,30 @@ class HomeController {
       dPrint(e);
     } finally {
       isLoading = false;
-      // Marca que la primera carga de datos se ha completado.
       initialFetchDone = true;
     }
   }
 
-  /// Hace un submit de un comentario :3
-  Future<void> submitComment(String text,
-      {List<String> attachments = const []}) async {
-    if (text.trim().isEmpty) return;
-
+  // Map<String, List<Pair<String, File>>> files
+  // Map de key = Type
+  // value = Lista de pairs(filename, file)
+  Future<void> submitComment(
+      String text, Map<String, List<Pair<String, File>>>? filesMap) async {
     try {
+      if (text.trim().isEmpty) return;
+
       final querySnapshot = await getGeneralForum();
 
       if (querySnapshot.docs.isNotEmpty) {
         final forumDocumentSnapshot = querySnapshot.docs.first;
+
+        final String commentId = uuid.v1();
+
+        final Map<String, List<String>> attachments =
+            await submitFiles(commentId, filesMap);
+
         final newComment = Comment(
-          id: uuid.v1(),
+          id: commentId,
           userId: userId,
           text: text,
           ups: 0,
@@ -149,10 +157,8 @@ class HomeController {
           attachments: attachments,
         );
 
-        // Convert the new comment to JSON
         Map<String, dynamic> jsonComment = newComment.toJson();
 
-        // Get the existing comments
         Map<String, dynamic> commentsData =
             forumDocumentSnapshot.data()['comments'] ?? {};
 
@@ -172,33 +178,55 @@ class HomeController {
     }
   }
 
-  Future<String?> uploadFile(File file, String path) async {
+  // Map<String, List<Pair<String, File>>> files
+  // Map de key = Type
+  // value = Lista de pairs(filename, file)
+  Future<Map<String, List<String>>> submitFiles(
+      String commentId, Map<String, List<Pair<String, File>>>? filesMap) async {
     try {
-      final ref = _storage.ref().child(path);
-      final result = await ref.putFile(file);
-      final fileUrl = await result.ref.getDownloadURL();
-      return fileUrl;
+      Map<String, List<String>> attachments = {};
+
+      if (filesMap != null) {
+        for (var entry in filesMap.entries) {
+          for (var pair in entry.value) {
+            String? filePath =
+                await submitFile(commentId, pair.first, pair.second);
+
+            if (filePath != null) {
+              if (attachments.containsKey(entry.key)) {
+                attachments[entry.key]!.add(filePath);
+              } else {
+                attachments[entry.key] = [filePath];
+              }
+            }
+          }
+        }
+      }
+
+      return attachments;
     } catch (e) {
       dPrint(e);
-      return null;
+      return {};
     }
   }
 
-  Future<void> selectAndUploadFile(String text) async {
-    final result = await FilePicker.platform.pickFiles();
+  Future<String?> submitFile(
+      String commentId, String fileName, File file) async {
+    try {
+      final querySnapshot = await getGeneralForum();
+      final documentSnapshot = querySnapshot.docs.first;
+      final String forumId = documentSnapshot.id;
 
-    if (result != null) {
-      // Asumimos que se selecciona un solo archivo
-      File file = File(result.files.single.path!);
-      String fileName = result.files.single.name;
-
-      // CAMBIAR ESTE FILEPATH POR FAVOR
       String filePath =
-          'forums/forum_id/comments/comment_id/documents/$fileName';
-      String? fileUrl = await uploadFile(file, filePath);
-      if (fileUrl != null) {
-        submitComment(text, attachments: [fileUrl]);
-      }
+          'forums/$forumId/comments/$commentId/documents/$fileName';
+
+      final ref = _storage.ref().child(filePath);
+      await ref.putFile(file);
+
+      return filePath;
+    } catch (e) {
+      dPrint(e);
+      return null;
     }
   }
 

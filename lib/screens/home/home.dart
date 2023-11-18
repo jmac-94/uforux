@@ -4,9 +4,26 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
+import 'package:uforuxpi3/models/comment.dart';
 import 'package:uforuxpi3/widgets/body_data.dart';
 import 'package:uforuxpi3/widgets/forum_header.dart';
 import 'package:uforuxpi3/widgets/icons_actions.dart';
+
+class CommentData {
+  final Comment comment;
+  final String realTime;
+  final String profilePhoto;
+  final String image;
+  final bool isImage;
+
+  CommentData({
+    required this.comment,
+    required this.realTime,
+    required this.profilePhoto,
+    required this.image,
+    required this.isImage,
+  });
+}
 
 class Home extends StatefulWidget {
   final AppUser user;
@@ -36,6 +53,33 @@ class _HomeState extends State<Home> {
         _homeController.hasMoreData) {
       _homeController.fetchComments();
     }
+  }
+
+  CommentData getCommentData(int index) {
+    var commentsList = _homeController.comments.values.toList();
+    var comment = commentsList[index];
+
+    final realTime = timeago.format(comment.createdAt.toDate());
+
+    final randomNumber = faker.randomGenerator.integer(1000);
+
+    final profilePhoto = 'https://picsum.photos/200/300?random=$randomNumber';
+
+    String? image;
+    bool hasImage = false;
+    if (comment.attachments['images'] != null &&
+        comment.attachments['images']!.isNotEmpty) {
+      image = comment.attachments['images']?.first;
+      hasImage = true;
+    }
+
+    return CommentData(
+      comment: comment,
+      realTime: realTime,
+      profilePhoto: profilePhoto,
+      image: image ?? '',
+      isImage: false,
+    );
   }
 
   @override
@@ -77,44 +121,6 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(
-              Icons.add_comment,
-            ),
-            onPressed: () {
-              TextEditingController commentController = TextEditingController();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Nuevo Comentario'),
-                    content: TextField(
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        hintText: 'Escribe tu comentario aquí',
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Cancelar'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Enviar'),
-                        onPressed: () {
-                          String text = commentController.text;
-                          Navigator.of(context).pop();
-                          _homeController.submitComment(text);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
           backgroundColor: Colors.transparent,
           body: RefreshIndicator(
             onRefresh: () async {
@@ -148,21 +154,8 @@ class _HomeState extends State<Home> {
                         }
                       }
 
-                      // ---------- COMMENTARIES DATA------------------------------------------
-                      var commentsList =
-                          _homeController.comments.values.toList();
-                      var comment = commentsList[index];
-
-                      final realTime =
-                          timeago.format(comment.createdAt.toDate());
-                      final randomNumber = faker.randomGenerator.integer(1000);
-                      final imageUrl =
-                          'https://picsum.photos/200/300?random=$randomNumber';
-                      final randomNumber2 = faker.randomGenerator.integer(1000);
-                      final imageUrl2 =
-                          'https://picsum.photos/200/300?random=$randomNumber2';
-                      final isImage = faker.randomGenerator.boolean();
-                      // ----------------------------------------------------------------------
+                      var commentData = getCommentData(index);
+                      var comment = commentData.comment;
 
                       return FutureBuilder<AppUser>(
                         future: _homeController.fetchAppUser(comment.userId),
@@ -224,19 +217,19 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       ForumHeader(
-                                        imageUrl: imageUrl,
+                                        profilePhoto: commentData.profilePhoto,
                                         name: name,
-                                        realTime: realTime,
+                                        realTime: commentData.realTime,
                                       ),
                                       const SizedBox(height: 5),
                                       BodyData(
-                                        imageUrl2: imageUrl2,
-                                        isImage: isImage,
+                                        image: commentData.image,
+                                        isImage: commentData.isImage,
                                         text: comment.text,
                                         comment: comment,
                                       ),
                                       IconsActions(
-                                        isImage: isImage,
+                                        isImage: commentData.isImage,
                                         comment: comment,
                                         homeController: _homeController,
                                       ),
@@ -257,6 +250,44 @@ class _HomeState extends State<Home> {
                 }
               },
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(
+              Icons.add_comment,
+            ),
+            onPressed: () {
+              TextEditingController commentController = TextEditingController();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Nuevo Comentario'),
+                    content: TextField(
+                      controller: commentController,
+                      decoration: const InputDecoration(
+                        hintText: 'Escribe tu comentario aquí',
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Cancelar'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Enviar'),
+                        onPressed: () {
+                          String text = commentController.text;
+                          Navigator.of(context).pop();
+                          _homeController.submitComment(text, null);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ),
       ],

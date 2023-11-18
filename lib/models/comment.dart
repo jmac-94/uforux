@@ -6,7 +6,7 @@ class Comment {
   String text;
   int ups;
   final Timestamp createdAt;
-  final List<String> attachments;
+  final Map<String, List<String>> attachments;
   Map<String, Comment>? comments;
 
   Comment({
@@ -38,6 +38,15 @@ class Comment {
   }
 
   static Comment fromJson(Map<String, dynamic> json) {
+    Map<String, List<String>> attachments = {};
+
+    if (json['attachments'] != null) {
+      Map<String, dynamic> attachmentsJson = json['attachments'];
+      attachmentsJson.forEach((key, value) {
+        attachments[key] = List<String>.from(value);
+      });
+    }
+
     if (json.containsKey('comments')) {
       final Map<String, dynamic> jsonComments = json['comments'];
 
@@ -50,9 +59,7 @@ class Comment {
         text: json['text'],
         ups: json['ups'],
         createdAt: json['createdAt'] as Timestamp,
-        attachments: (json['attachments'] as List<dynamic>)
-            .map((a) => a as String)
-            .toList(),
+        attachments: attachments,
         comments: c,
       );
     }
@@ -63,9 +70,7 @@ class Comment {
       text: json['text'],
       ups: json['ups'],
       createdAt: json['createdAt'] as Timestamp,
-      attachments: (json['attachments'] as List<dynamic>)
-          .map((a) => a as String)
-          .toList(),
+      attachments: attachments,
     );
   }
 }

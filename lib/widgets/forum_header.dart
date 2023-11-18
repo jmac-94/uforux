@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class ForumHeader extends StatelessWidget {
   const ForumHeader({
     super.key,
-    required this.imageUrl,
+    required this.profilePhoto,
     required this.name,
     required this.realTime,
   });
 
-  final String imageUrl;
+  final String profilePhoto;
   final String name;
   final String realTime;
 
@@ -31,7 +31,7 @@ class ForumHeader extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(28.0),
             child: Image.network(
-              imageUrl,
+              profilePhoto,
               width: 25,
               height: 25,
               fit: BoxFit.cover,
