@@ -123,104 +123,95 @@ class _IconsActionsState extends State<IconsActions> {
   void commentsInfo(BuildContext context) {
     showDialog(
       context: context,
+      useSafeArea: false,
       builder: (BuildContext context) {
-        return Column(
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Hero(
-                  tag: 'CommentsForum',
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 1,
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Image.asset(
-                              'assets/images/clouds.jpg',
-                              fit: BoxFit.cover,
-                            ),
+        return SafeArea(
+          bottom: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: Hero(
+                tag: 'CommentsForum',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Material(
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: Image.asset(
+                            'assets/images/clouds.jpg',
+                            fit: BoxFit.cover,
                           ),
-                          Scaffold(
-                            backgroundColor: Colors.transparent,
-                            appBar: AppBar(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              title: const Text('Comments'),
-                              automaticallyImplyLeading: false,
-                              actions: [
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: const Icon(Icons.close),
-                                ),
-                              ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 200,
+                              width: double.infinity,
+                              child: Image.network(
+                                'https://picsum.photos/200/300?random=${faker.randomGenerator.integer(1000)}',
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            body: Column(
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Loren ipsum dolor sit amet, consectetur adipiscing elit.',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Row(
                               children: [
-                                SizedBox(
-                                  height: 200,
-                                  width: 400,
-                                  child: Image.network(
-                                    'https://picsum.photos/200/300?random=${faker.randomGenerator.integer(1000)}',
-                                    fit: BoxFit.contain,
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.local_fire_department_outlined,
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'Loren ipsum dolor sit amet, consectetur  elit.',
-                                    style: TextStyle(
-                                      fontSize: 30,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                          Icons.local_fire_department_outlined),
-                                    ),
-                                    const Spacer(),
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.more_horiz),
-                                    ),
-                                  ],
-                                ),
-                                const Divider(),
-                                Expanded(
-                                  child: ListView.separated(
-                                    itemBuilder: (context, index) {
-                                      final Comment comment = widget
-                                          .comment.comments!.values
-                                          .toList()[index];
-                                      return ListTile(
-                                        title: Text(
-                                            comment.text + index.toString()),
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) =>
-                                        const Divider(),
-                                    itemCount: commentNum - 1,
-                                  ),
+                                const Spacer(),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.more_horiz),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
+                            const Divider(),
+                            Flexible(
+                              child: ListView.separated(
+                                itemBuilder: (context, index) {
+                                  final Comment comment = widget
+                                      .comment.comments!.values
+                                      .toList()[index];
+                                  return ListTile(
+                                    title:
+                                        Text(comment.text + index.toString()),
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const Divider(),
+                                itemCount: commentNum - 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          ],
+          ),
         );
       },
     );
