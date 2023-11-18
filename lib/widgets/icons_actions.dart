@@ -135,7 +135,9 @@ class _IconsActionsState extends State<IconsActions> {
               child: Hero(
                 tag: 'CommentsForum',
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
                   child: Material(
                     child: Stack(
                       children: [
@@ -151,14 +153,14 @@ class _IconsActionsState extends State<IconsActions> {
                               height: 200,
                               width: double.infinity,
                               child: Image.network(
-                                'https://picsum.photos/200/300?random=${faker.randomGenerator.integer(1000)}',
+                                'https://lastfm.freetls.fastly.net/i/u/ar0/9e3232f437c90e5ece62dd0b5df2950b.jpg',
                                 fit: BoxFit.cover,
                               ),
                             ),
                             const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
-                                'Loren ipsum dolor sit amet, consectetur adipiscing elit.',
+                                'Ayuda!! nesecito ayuda en ADA ayudaa.',
                                 style: TextStyle(
                                   fontSize: 24,
                                 ),
@@ -167,13 +169,13 @@ class _IconsActionsState extends State<IconsActions> {
                             ),
                             Row(
                               children: [
+                                const Spacer(),
                                 IconButton(
                                   onPressed: () {},
                                   icon: const Icon(
                                     Icons.local_fire_department_outlined,
                                   ),
                                 ),
-                                const Spacer(),
                                 IconButton(
                                   onPressed: () {},
                                   icon: const Icon(Icons.more_horiz),
@@ -188,8 +190,7 @@ class _IconsActionsState extends State<IconsActions> {
                                       .comment.comments!.values
                                       .toList()[index];
                                   return ListTile(
-                                    title:
-                                        Text(comment.text + index.toString()),
+                                    title: Text(comment.text),
                                   );
                                 },
                                 separatorBuilder: (context, index) =>
