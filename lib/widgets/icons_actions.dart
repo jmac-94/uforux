@@ -2,6 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
+import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uuid/uuid.dart';
 
 class IconsActions extends StatefulWidget {
@@ -29,6 +30,16 @@ class _IconsActionsState extends State<IconsActions> {
   void initState() {
     super.initState();
     commentNum = getCommentsLen();
+    fetchUserLikeStatus();
+  }
+
+  void fetchUserLikeStatus() async {
+    bool userLikeStatus =
+        await widget.homeController.fetchUserLikeStatus(widget.comment.id);
+
+    setState(() {
+      isLiked = userLikeStatus;
+    });
   }
 
   @override
@@ -42,10 +53,14 @@ class _IconsActionsState extends State<IconsActions> {
         Row(
           children: [
             IconButton(
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
                   isLiked = !isLiked;
+                  widget.comment.ups =
+                      isLiked ? widget.comment.ups + 1 : widget.comment.ups - 1;
                 });
+                await widget.homeController
+                    .updateCommentLikes(widget.comment.id, isLiked);
               },
               icon: Icon(
                 isLiked
@@ -71,7 +86,7 @@ class _IconsActionsState extends State<IconsActions> {
                 // const String text = 'Este es mi primer subcomentario.';
 
                 // crear el subcomment
-                final String userId = widget.homeController.userId;
+                // final String userId = widget.homeController.userId;
                 /*  Comment subcomment = Comment.fromJson({
                   'id': widget.uuid.v1(),
                   'userId': userId,
@@ -169,11 +184,11 @@ class _IconsActionsState extends State<IconsActions> {
                                     fit: BoxFit.contain,
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    'Loren ipsum dolor sit amet, consectetur  elit.',
-                                    style: TextStyle(
+                                    widget.comment.text,
+                                    style: const TextStyle(
                                       fontSize: 30,
                                     ),
                                     textAlign: TextAlign.center,
@@ -182,7 +197,9 @@ class _IconsActionsState extends State<IconsActions> {
                                 Row(
                                   children: [
                                     IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        dPrint('Hola');
+                                      },
                                       icon: const Icon(
                                           Icons.local_fire_department_outlined),
                                     ),

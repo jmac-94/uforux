@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Comment {
   final String id;
   final String userId;
-  final String text;
-  final int ups;
+  String text;
+  int ups;
   final Timestamp createdAt;
   final List<String> attachments;
   Map<String, Comment>? comments;

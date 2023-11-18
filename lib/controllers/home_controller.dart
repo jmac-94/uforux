@@ -237,4 +237,59 @@ class HomeController {
     final Map<String, dynamic> userJson = await databaseService.getUserData();
     return AppUser.fromJson(userJson);
   }
+
+  Future<void> updateCommentLikes(String commentId, bool isLiked) async {
+    try {
+      final querySnapshot = await getGeneralForum();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final forumDocumentSnapshot = querySnapshot.docs.first;
+        Map<String, dynamic> commentsData =
+            forumDocumentSnapshot.data()['comments'] ?? {};
+
+        Comment comment = Comment.fromJson(commentsData[commentId]);
+        comment.ups = isLiked ? comment.ups + 1 : comment.ups - 1;
+        commentsData[commentId] = comment.toJson();
+
+        await _firestore
+            .collection('forums')
+            .doc(forumDocumentSnapshot.id)
+            .update({
+          'comments': commentsData,
+        });
+
+        comments[commentId] = comment;
+
+        if (isLiked) {
+          await _firestore.collection('user_likes').doc(userId).set({
+            'liked_comments': {commentId: true}
+          }, SetOptions(merge: true));
+        } else {
+          await _firestore.collection('user_likes').doc(userId).update({
+            'liked_comments.$commentId': FieldValue.delete(),
+          });
+        }
+      }
+    } catch (e) {
+      dPrint(e);
+    }
+  }
+
+  Future<bool> fetchUserLikeStatus(String commentId) async {
+    try {
+      final docSnapshot =
+          await _firestore.collection('user_likes').doc(userId).get();
+
+      if (docSnapshot.exists) {
+        Map<String, dynamic> likedComments =
+            docSnapshot.data()?['liked_comments'] ?? {};
+        return likedComments.containsKey(commentId);
+      }
+
+      return false;
+    } catch (e) {
+      dPrint(e);
+      return false;
+    }
+  }
 }
