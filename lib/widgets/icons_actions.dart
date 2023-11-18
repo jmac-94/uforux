@@ -166,15 +166,32 @@ class _IconsActionsState extends State<IconsActions> {
                                   width: 400,
                                   child: Image.network(
                                     'https://picsum.photos/200/300?random=${faker.randomGenerator.integer(1000)}',
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
-                                const Text(
-                                  'Loren ipsum dolor sit amet, consectetur  elit.',
-                                  style: TextStyle(
-                                    fontSize: 30,
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Loren ipsum dolor sit amet, consectetur  elit.',
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                          Icons.local_fire_department_outlined),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.more_horiz),
+                                    ),
+                                  ],
                                 ),
                                 const Divider(),
                                 Expanded(

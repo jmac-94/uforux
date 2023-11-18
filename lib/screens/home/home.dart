@@ -199,10 +199,8 @@ class _HomeState extends State<Home> {
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                       colors: [
-                                        Colors.grey[
-                                            100]!, // Comienza con un tono más claro de gris
-                                        Colors.grey[
-                                            100]!, // Termina con un tono más oscuro de gris
+                                        Colors.grey[100]!,
+                                        Colors.grey[100]!,
                                       ],
                                     ),
                                   ),
@@ -242,7 +240,9 @@ class _HomeState extends State<Home> {
                                         comment: comment,
                                         homeController: _homeController,
                                       ),
-                                      const SizedBox(height: 10),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
                                     ],
                                   ),
                                 ),

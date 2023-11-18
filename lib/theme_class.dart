@@ -22,7 +22,7 @@ class ThemeClass {
       unselectedItemColor: Colors.grey,
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.white,
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
