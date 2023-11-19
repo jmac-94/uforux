@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:uforuxpi3/controllers/home_controller.dart';
@@ -37,6 +40,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
   late HomeController _homeController;
+
+  TextEditingController commentController = TextEditingController();
+  Map<String, List<Pair<String, File>>>? files = {};
 
   @override
   void initState() {
@@ -256,43 +262,196 @@ class _HomeState extends State<Home> {
               Icons.add_comment,
             ),
             onPressed: () {
-              TextEditingController commentController = TextEditingController();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Nuevo Comentario'),
-                    content: TextField(
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        hintText: 'Escribe tu comentario aquí',
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Cancelar'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Enviar'),
-                        onPressed: () {
-                          String text = commentController.text;
-                          Navigator.of(context).pop();
-                          _homeController.submitComment(text, null);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+              _showDialog();
             },
           ),
         ),
       ],
     );
   }
+
+  void _showDialog() {
+    TextEditingController commentController = TextEditingController();
+    Map<String, List<Pair<String, File>>> filesMap = {};
+    List<String> uploadedFileNames =
+        []; // List to store names of uploaded files
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          // Use StatefulBuilder to update the dialog content
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Nuevo Comentario'),
+              content: SingleChildScrollView(
+                // Use SingleChildScrollView to handle overflow
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // To avoid dialog expansion
+                  children: [
+                    TextField(
+                      controller: commentController,
+                      decoration: const InputDecoration(
+                        hintText: 'Escribe tu comentario aquí',
+                      ),
+                    ),
+                    ElevatedButton(
+                      child: const Text('Añadir archivos'),
+                      onPressed: () async {
+                        FilePickerResult? result = await FilePicker.platform
+                            .pickFiles(allowMultiple: true);
+
+                        if (result != null) {
+                          for (var pickedFile in result.files) {
+                            String path = pickedFile.path!;
+                            File file = File(path);
+                            String extension = pickedFile.extension!;
+                            String name = pickedFile.name;
+                            uploadedFileNames
+                                .add(name); // Add file name to the list
+
+                            String type;
+                            if (extension == 'pdf') {
+                              type = 'documents';
+                            } else if ([
+                              'jpg',
+                              'jpeg',
+                              'png',
+                              'gif',
+                              'bmp',
+                              'webp'
+                            ].contains(extension)) {
+                              type = 'images';
+                            } else {
+                              continue; // Skip files with unsupported extensions
+                            }
+
+                            if (filesMap.containsKey(type)) {
+                              filesMap[type]!.add(Pair(name, file));
+                            } else {
+                              filesMap[type] = [Pair(name, file)];
+                            }
+                          }
+                          setState(
+                              () {}); // Update the UI to show uploaded file names
+                        } else {
+                          // User canceled the picker
+                        }
+                      },
+                    ),
+                    // Display uploaded file names
+                    if (uploadedFileNames.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: uploadedFileNames.map((fileName) {
+                            return Text(
+                              fileName,
+                              style: const TextStyle(fontSize: 16),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Enviar'),
+                  onPressed: () {
+                    String text = commentController.text;
+                    Navigator.of(context).pop();
+                    _homeController.submitComment(text, filesMap);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // void _showDialog() {
+  //   TextEditingController commentController = TextEditingController();
+  //   Map<String, List<Pair<String, File>>> filesMap = {};
+
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('Nuevo Comentario'),
+  //         content: Column(
+  //           children: [
+  //             TextField(
+  //               controller: commentController,
+  //               decoration: const InputDecoration(
+  //                 hintText: 'Escribe tu comentario aquí',
+  //               ),
+  //             ),
+  //             ElevatedButton(
+  //               child: const Text('Añadir archivos'),
+  //               onPressed: () async {
+  //                 FilePickerResult? result =
+  //                     await FilePicker.platform.pickFiles(allowMultiple: true);
+
+  //                 if (result != null) {
+  //                   for (var pickedFile in result.files) {
+  //                     String path = pickedFile.path!;
+  //                     File file = File(path);
+  //                     String extension = pickedFile.extension!;
+  //                     String name = pickedFile.name;
+
+  //                     String type;
+  //                     if (extension == 'pdf') {
+  //                       type = 'documents';
+  //                     } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']
+  //                         .contains(extension)) {
+  //                       type = 'images';
+  //                     } else {
+  //                       continue; // Skip files with unsupported extensions
+  //                     }
+
+  //                     if (filesMap.containsKey(type)) {
+  //                       filesMap[type]!.add(Pair(name, file));
+  //                     } else {
+  //                       filesMap[type] = [Pair(name, file)];
+  //                     }
+  //                   }
+  //                 } else {
+  //                   // User canceled the picker
+  //                 }
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: const Text('Cancelar'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: const Text('Enviar'),
+  //             onPressed: () {
+  //               String text = commentController.text;
+  //               Navigator.of(context).pop();
+  //               _homeController.submitComment(text, filesMap);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   void dispose() {

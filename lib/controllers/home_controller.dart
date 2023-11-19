@@ -189,14 +189,15 @@ class HomeController {
       if (filesMap != null) {
         for (var entry in filesMap.entries) {
           for (var pair in entry.value) {
+            String type = entry.key;
             String? filePath =
-                await submitFile(commentId, pair.first, pair.second);
+                await submitFile(commentId, type, pair.first, pair.second);
 
             if (filePath != null) {
               if (attachments.containsKey(entry.key)) {
-                attachments[entry.key]!.add(filePath);
+                attachments[type]!.add(filePath);
               } else {
-                attachments[entry.key] = [filePath];
+                attachments[type] = [filePath];
               }
             }
           }
@@ -211,14 +212,13 @@ class HomeController {
   }
 
   Future<String?> submitFile(
-      String commentId, String fileName, File file) async {
+      String commentId, String type, String fileName, File file) async {
     try {
       final querySnapshot = await getGeneralForum();
       final documentSnapshot = querySnapshot.docs.first;
       final String forumId = documentSnapshot.id;
 
-      String filePath =
-          'forums/$forumId/comments/$commentId/documents/$fileName';
+      String filePath = 'forums/$forumId/comments/$commentId/$type/$fileName';
 
       final ref = _storage.ref().child(filePath);
       await ref.putFile(file);
