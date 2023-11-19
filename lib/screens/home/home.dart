@@ -8,6 +8,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/models/comment.dart';
+import 'package:uforuxpi3/structures/pair.dart';
 import 'package:uforuxpi3/widgets/body_data.dart';
 import 'package:uforuxpi3/widgets/forum_header.dart';
 import 'package:uforuxpi3/widgets/icons_actions.dart';
