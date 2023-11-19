@@ -4,14 +4,14 @@ import 'package:uforuxpi3/models/comment.dart';
 import 'package:uuid/uuid.dart';
 
 class IconsActions extends StatefulWidget {
-  final bool isImage;
+  final bool hasImage;
   final Comment comment;
   final HomeController homeController;
   final uuid = const Uuid();
 
   const IconsActions({
     super.key,
-    required this.isImage,
+    required this.hasImage,
     required this.comment,
     required this.homeController,
   });

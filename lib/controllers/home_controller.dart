@@ -2,19 +2,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/database.dart';
+import 'package:uforuxpi3/structures/pair.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:uforuxpi3/models/comment.dart';
 import 'package:uforuxpi3/util/dprint.dart';
-
-class Pair<F, S> {
-  final F first;
-  final S second;
-
-  Pair(this.first, this.second);
-}
 
 class HomeController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -320,4 +315,60 @@ class HomeController {
       return false;
     }
   }
+
+  Future<Image> getImage(String imagePath) async {
+    final ref = _storage.ref().child(imagePath);
+    final url = await ref.getDownloadURL();
+    return Image.network(url);
+  }
+
+  Future<String> getImageUrl(String imagePath) async {
+    final ref = _storage.ref().child(imagePath);
+    final url = await ref.getDownloadURL();
+    return url;
+  }
+
+  // Future<void> downloadFile(String firebaseFilePath) async {
+  //   final status = await Permission.storage.request();
+
+  //   if (status.isGranted) {
+  //     try {
+  //       final url = await getImageUrl(firebaseFilePath);
+
+  //       final dio = Dio();
+  //       final dir =
+  //           '${(await getApplicationDocumentsDirectory()).path}/Download';
+  //       final fileName = firebaseFilePath.split('/').last;
+  //       final mobileFilePath = '$dir/$fileName';
+
+  //       await dio.download(url, mobileFilePath);
+  //     } catch (e) {
+  //       dPrint('Download error: $e');
+  //     }
+  //   } else {
+  //     dPrint('Storage permission not granted');
+  //   }
+  // }
+
+  // Future<void> downloadImage(String imagePath) async {
+  //   final status = await Permission.storage.request();
+
+  //   if (status.isGranted) {
+  //     try {
+  //       final url = await getImageUrl(imagePath);
+
+  //       final dio = Dio();
+  //       final dir = await ExtStorage.getExternalStoragePublicDirectory(
+  //           ExtStorage.DIRECTORY_DOWNLOADS);
+  //       final fileName = imagePath.split('/').last;
+  //       final filePath = '$dir/$fileName';
+
+  //       await dio.download(url, filePath);
+  //     } catch (e) {
+  //       dPrint('Download error: $e');
+  //     }
+  //   } else {
+  //     dPrint('Storage permission not granted');
+  //   }
+  // }
 }

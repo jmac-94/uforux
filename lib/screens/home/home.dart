@@ -17,14 +17,14 @@ class CommentData {
   final String realTime;
   final String profilePhoto;
   final String image;
-  final bool isImage;
+  final bool hasImage;
 
   CommentData({
     required this.comment,
     required this.realTime,
     required this.profilePhoto,
     required this.image,
-    required this.isImage,
+    required this.hasImage,
   });
 }
 
@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
     bool hasImage = false;
     if (comment.attachments['images'] != null &&
         comment.attachments['images']!.isNotEmpty) {
-      image = comment.attachments['images']?.first;
+      image = comment.attachments['images']?[0];
       hasImage = true;
     }
 
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
       realTime: realTime,
       profilePhoto: profilePhoto,
       image: image ?? '',
-      isImage: false,
+      hasImage: hasImage,
     );
   }
 
@@ -230,12 +230,13 @@ class _HomeState extends State<Home> {
                                       const SizedBox(height: 5),
                                       BodyData(
                                         image: commentData.image,
-                                        isImage: commentData.isImage,
+                                        hasImage: commentData.hasImage,
                                         text: comment.text,
                                         comment: comment,
+                                        homeController: _homeController,
                                       ),
                                       IconsActions(
-                                        isImage: commentData.isImage,
+                                        hasImage: commentData.hasImage,
                                         comment: comment,
                                         homeController: _homeController,
                                       ),
@@ -378,80 +379,6 @@ class _HomeState extends State<Home> {
       },
     );
   }
-
-  // void _showDialog() {
-  //   TextEditingController commentController = TextEditingController();
-  //   Map<String, List<Pair<String, File>>> filesMap = {};
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Nuevo Comentario'),
-  //         content: Column(
-  //           children: [
-  //             TextField(
-  //               controller: commentController,
-  //               decoration: const InputDecoration(
-  //                 hintText: 'Escribe tu comentario aquí',
-  //               ),
-  //             ),
-  //             ElevatedButton(
-  //               child: const Text('Añadir archivos'),
-  //               onPressed: () async {
-  //                 FilePickerResult? result =
-  //                     await FilePicker.platform.pickFiles(allowMultiple: true);
-
-  //                 if (result != null) {
-  //                   for (var pickedFile in result.files) {
-  //                     String path = pickedFile.path!;
-  //                     File file = File(path);
-  //                     String extension = pickedFile.extension!;
-  //                     String name = pickedFile.name;
-
-  //                     String type;
-  //                     if (extension == 'pdf') {
-  //                       type = 'documents';
-  //                     } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']
-  //                         .contains(extension)) {
-  //                       type = 'images';
-  //                     } else {
-  //                       continue; // Skip files with unsupported extensions
-  //                     }
-
-  //                     if (filesMap.containsKey(type)) {
-  //                       filesMap[type]!.add(Pair(name, file));
-  //                     } else {
-  //                       filesMap[type] = [Pair(name, file)];
-  //                     }
-  //                   }
-  //                 } else {
-  //                   // User canceled the picker
-  //                 }
-  //               },
-  //             ),
-  //           ],
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: const Text('Cancelar'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: const Text('Enviar'),
-  //             onPressed: () {
-  //               String text = commentController.text;
-  //               Navigator.of(context).pop();
-  //               _homeController.submitComment(text, filesMap);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   void dispose() {
