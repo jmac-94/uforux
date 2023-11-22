@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/services/database.dart';
-import 'package:uforuxpi3/widgets/profile_box.dart';
-import 'package:uforuxpi3/widgets/profile_picture.dart';
+import 'package:uforuxpi3/widgets/profileW/profile_box.dart';
+import 'package:uforuxpi3/widgets/loginW/profile_picture.dart';
 
 class Profile extends StatefulWidget {
   final AppUser user;

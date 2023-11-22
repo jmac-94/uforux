@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
-import 'package:uforuxpi3/theme_class.dart';
+import 'package:uforuxpi3/widgets/mainW/theme_class.dart';
 import 'package:uforuxpi3/util/const.dart';
 import 'package:uforuxpi3/screens/wrapper.dart';
 

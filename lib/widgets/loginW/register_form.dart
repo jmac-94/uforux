@@ -3,19 +3,20 @@ import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/util/const.dart';
 import 'package:uforuxpi3/util/extensions.dart';
 import 'package:uforuxpi3/util/validations.dart';
-import 'package:uforuxpi3/widgets/custom_button.dart';
-import 'package:uforuxpi3/widgets/custom_text_field.dart';
+import 'package:uforuxpi3/widgets/loginW/custom_button.dart';
+import 'package:uforuxpi3/widgets/loginW/custom_text_field.dart';
+import 'package:uforuxpi3/widgets/loginW/dropdown_button_more_width.dart';
 
-class SignInForm extends StatefulWidget {
+class RegisterForm extends StatefulWidget {
   final Function toggleView;
 
-  const SignInForm({super.key, required this.toggleView});
+  const RegisterForm({super.key, required this.toggleView});
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   final _auth = AuthService();
 
@@ -23,7 +24,11 @@ class _SignInFormState extends State<SignInForm> {
   String error = '';
 
   String email = '';
+  String username = '';
   String password = '';
+  String entrySemester = '';
+  bool assesor = false;
+  String degree = '';
 
   @override
   Widget build(BuildContext context) {
@@ -43,35 +48,15 @@ class _SignInFormState extends State<SignInForm> {
         Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
-          child: buildSignInForm(),
+          child: buildRegisterForm(),
         ),
-        Column(
-          children: [
-            const SizedBox(height: 10.0),
-            Align(
-              alignment: Alignment.center,
-              child: TextButton(
-                onPressed: () {}, // falta agregar ventana.
-                //formMode = FormMode.FORGOT_PASSWORD;
-                // setState(() {}
-                child: const Text(
-                  '¿Olvidó la contraseña?',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 234, 233, 233),
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ).fadeInList(3, false),
         const SizedBox(height: 20.0),
-        buildSignInButton(),
+        buildRegisterButton(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'No tienes una cuenta?',
+              '¿Ya tienes una cuenta?',
               style: TextStyle(
                 color: Color.fromARGB(255, 234, 233, 233),
                 fontSize: 15,
@@ -79,13 +64,13 @@ class _SignInFormState extends State<SignInForm> {
             ),
             TextButton(
               onPressed: () {
-                // cambiar vista a registro
+                // cambiar vista a signin
                 setState(() {
                   widget.toggleView();
                 });
               },
               child: const Text(
-                'Regístrate',
+                'Iniciar sesión',
                 style: TextStyle(
                   color: Color.fromARGB(255, 0, 4, 14),
                   fontStyle: FontStyle.italic,
@@ -104,7 +89,7 @@ class _SignInFormState extends State<SignInForm> {
     );
   }
 
-  buildSignInForm() {
+  buildRegisterForm() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -113,7 +98,7 @@ class _SignInFormState extends State<SignInForm> {
           hintText: "Correo",
           textInputAction: TextInputAction.next,
           validateFunction: Validations.validateEmail,
-          onSaved: (String? val) {
+          onChange: (String? val) {
             email = val ?? '';
           },
         ).fadeInList(1, false),
@@ -122,13 +107,53 @@ class _SignInFormState extends State<SignInForm> {
             const SizedBox(height: 20.0),
             CustomTextField(
               enabled: !loading,
+              hintText: "Nombre de usuario",
+              textInputAction: TextInputAction.next,
+              validateFunction: Validations.validateUsername,
+              onChange: (String? val) {
+                username = val ?? '';
+              },
+            ),
+            const SizedBox(height: 20.0),
+            CustomTextField(
+              enabled: !loading,
               hintText: "Contraseña",
               textInputAction: TextInputAction.done,
               validateFunction: Validations.validatePassword,
-              submitAction: signIn,
               obscureText: true,
-              onSaved: (String? val) {
+              onChange: (String? val) {
                 password = val ?? '';
+              },
+            ),
+            const SizedBox(height: 20.0),
+            CustomTextField(
+              enabled: !loading,
+              hintText: "Ciclo de ingreso",
+              textInputAction: TextInputAction.done,
+              validateFunction: Validations.validateSemester,
+              textInputType: TextInputType.datetime,
+              onChange: (String? val) {
+                entrySemester = val ?? '';
+              },
+            ),
+            const SizedBox(height: 20.0),
+            CustomDropdownField(
+              items: const ['Sí', 'No'],
+              hintText: '¿Eres asesor?',
+              onChanged: (value) {},
+              validator: Validations.validateYesOrNo,
+              onSaved: (value) {
+                assesor = value == 'Sí';
+              },
+            ),
+            const SizedBox(height: 20.0),
+            CustomDropdownField(
+              items: degrees,
+              hintText: 'Carrera',
+              onChanged: (value) {},
+              validator: Validations.validateDegree,
+              onSaved: (value) {
+                degree = value ?? '';
               },
             ),
           ],
@@ -137,23 +162,29 @@ class _SignInFormState extends State<SignInForm> {
     );
   }
 
-  buildSignInButton() {
+  buildRegisterButton() {
     return loading
         ? const Center(child: CircularProgressIndicator())
         : CustomButton(
-            label: "Iniciar Sesión",
-            onPressed: signIn,
+            label: "Registrarse",
+            onPressed: register,
           ).fadeInList(4, false);
   }
 
-  Future<void> signIn() async {
+  Future<void> register() async {
     _formKey.currentState!.save();
     if (_formKey.currentState!.validate()) {
-      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+      dynamic result = await _auth.registerWithEmailAndPassword(
+          email: email,
+          username: username,
+          password: password,
+          entrySemester: entrySemester,
+          assesor: assesor,
+          degree: degree);
+
       if (result == null) {
         setState(() {
-          error =
-              'No se pudo iniciar sesión. Por favor ingrese un correo o contraseña válidos.';
+          error = 'Please supply valid email or password';
         });
       }
     }

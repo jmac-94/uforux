@@ -42,33 +42,31 @@ class BodyData extends StatelessWidget {
             borderRadius: BorderRadiusDirectional.circular(12),
           ),
           child: hasImage
-              ? Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 8.0,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: FutureBuilder<String>(
-                        future: homeController.getImageUrl(image),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            return Image.network(
-                              snapshot.data!,
-                              height: 250,
-                              width: 270,
-                              fit: BoxFit.cover,
-                            );
-                          }
-                        },
-                      ),
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 8.0,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: FutureBuilder<String>(
+                      future: homeController.getImageUrl(image),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return Image.network(
+                            snapshot.data!,
+                            height: 250,
+                            width: 270,
+                            fit: BoxFit.cover,
+                          );
+                        }
+                      },
                     ),
                   ),
                 )

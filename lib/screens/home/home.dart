@@ -7,32 +7,19 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
-import 'package:uforuxpi3/models/comment.dart';
+import 'package:uforuxpi3/models/comment_data.dart';
 import 'package:uforuxpi3/structures/pair.dart';
-import 'package:uforuxpi3/widgets/body_data.dart';
-import 'package:uforuxpi3/widgets/forum_header.dart';
-import 'package:uforuxpi3/widgets/icons_actions.dart';
-
-class CommentData {
-  final Comment comment;
-  final String realTime;
-  final String profilePhoto;
-  final String image;
-  final bool hasImage;
-
-  CommentData({
-    required this.comment,
-    required this.realTime,
-    required this.profilePhoto,
-    required this.image,
-    required this.hasImage,
-  });
-}
+import 'package:uforuxpi3/widgets/homeW/body_data.dart';
+import 'package:uforuxpi3/widgets/homeW/forum_header.dart';
+import 'package:uforuxpi3/widgets/homeW/icons_actions.dart';
 
 class Home extends StatefulWidget {
   final AppUser user;
 
-  const Home({super.key, required this.user});
+  const Home({
+    super.key,
+    required this.user,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -40,40 +27,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
-  late HomeController _homeController;
-
   TextEditingController commentController = TextEditingController();
+  late HomeController _homeController;
   Map<String, List<Pair<String, File>>>? files = {};
-
-  @override
-  void initState() {
-    super.initState();
-
-    _scrollController.addListener(_scrollListener);
-
-    _homeController = HomeController(widget.user.id);
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        _homeController.hasMoreData) {
-      _homeController.fetchComments();
-    }
-  }
 
   CommentData getCommentData(int index) {
     var commentsList = _homeController.comments.values.toList();
     var comment = commentsList[index];
-
     final realTime = timeago.format(comment.createdAt.toDate());
-
-    final randomNumber = faker.randomGenerator.integer(1000);
-
-    final profilePhoto = 'https://picsum.photos/200/300?random=$randomNumber';
-
+    const profilePhoto =
+        'https://pbs.twimg.com/profile_images/1508500949400129537/4gQ4z4Na_400x400.jpg';
     String? image;
     bool hasImage = false;
+
     if (comment.attachments['images'] != null &&
         comment.attachments['images']!.isNotEmpty) {
       image = comment.attachments['images']?[0];
@@ -89,14 +55,38 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        _homeController.hasMoreData) {
+      _homeController.fetchComments();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    _homeController = HomeController(widget.user.id);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Positioned.fill(
-          child: Image.asset(
-            'assets/images/clouds.jpg',
-            fit: BoxFit.cover,
+          // child: Image.asset(
+          //   'assets/images/clouds.jpg',
+          //   fit: BoxFit.cover,
+          // ),
+          child: Container(
+            color: Colors.white,
           ),
         ),
         Scaffold(
@@ -106,23 +96,14 @@ class _HomeState extends State<Home> {
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
               title: const Text('Foro general'),
+              centerTitle: false,
               actions: [
                 IconButton(
-                  icon: const Icon(
-                    Icons.low_priority,
-                  ),
+                  icon: const Icon(Icons.search),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: const Icon(
-                    Icons.search,
-                  ),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.notification_add_outlined,
-                  ),
+                  icon: const Icon(Icons.notifications),
                   onPressed: () {},
                 ),
               ],
@@ -141,9 +122,13 @@ class _HomeState extends State<Home> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting &&
                     !_homeController.initialFetchDone) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
                 } else {
                   return ListView.separated(
                     controller: _scrollController,
@@ -199,7 +184,8 @@ class _HomeState extends State<Home> {
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                       colors: [
-                                        Colors.grey[100]!,
+                                        const Color.fromARGB(
+                                            255, 184, 224, 242),
                                         Colors.grey[100]!,
                                       ],
                                     ),
@@ -217,7 +203,7 @@ class _HomeState extends State<Home> {
                                             'Because you follow CS',
                                             style: TextStyle(
                                               fontSize: 10,
-                                              fontWeight: FontWeight.w100,
+                                              fontWeight: FontWeight.w300,
                                               color: Colors.red,
                                             ),
                                           ),
@@ -275,21 +261,18 @@ class _HomeState extends State<Home> {
   void _showDialog() {
     TextEditingController commentController = TextEditingController();
     Map<String, List<Pair<String, File>>> filesMap = {};
-    List<String> uploadedFileNames =
-        []; // List to store names of uploaded files
+    List<String> uploadedFileNames = [];
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          // Use StatefulBuilder to update the dialog content
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text('Nuevo Comentario'),
+              title: const Text('Nuevo foro'),
               content: SingleChildScrollView(
-                // Use SingleChildScrollView to handle overflow
                 child: Column(
-                  mainAxisSize: MainAxisSize.min, // To avoid dialog expansion
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: commentController,
@@ -302,16 +285,13 @@ class _HomeState extends State<Home> {
                       onPressed: () async {
                         FilePickerResult? result = await FilePicker.platform
                             .pickFiles(allowMultiple: true);
-
                         if (result != null) {
                           for (var pickedFile in result.files) {
                             String path = pickedFile.path!;
                             File file = File(path);
                             String extension = pickedFile.extension!;
                             String name = pickedFile.name;
-                            uploadedFileNames
-                                .add(name); // Add file name to the list
-
+                            uploadedFileNames.add(name);
                             String type;
                             if (extension == 'pdf') {
                               type = 'documents';
@@ -325,34 +305,31 @@ class _HomeState extends State<Home> {
                             ].contains(extension)) {
                               type = 'images';
                             } else {
-                              continue; // Skip files with unsupported extensions
+                              continue;
                             }
-
                             if (filesMap.containsKey(type)) {
                               filesMap[type]!.add(Pair(name, file));
                             } else {
                               filesMap[type] = [Pair(name, file)];
                             }
                           }
-                          setState(
-                              () {}); // Update the UI to show uploaded file names
-                        } else {
-                          // User canceled the picker
-                        }
+                          setState(() {});
+                        } else {}
                       },
                     ),
-                    // Display uploaded file names
                     if (uploadedFileNames.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: uploadedFileNames.map((fileName) {
-                            return Text(
-                              fileName,
-                              style: const TextStyle(fontSize: 16),
-                            );
-                          }).toList(),
+                          children: uploadedFileNames.map(
+                            (fileName) {
+                              return Text(
+                                fileName,
+                                style: const TextStyle(fontSize: 16),
+                              );
+                            },
+                          ).toList(),
                         ),
                       ),
                   ],
@@ -379,11 +356,5 @@ class _HomeState extends State<Home> {
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }

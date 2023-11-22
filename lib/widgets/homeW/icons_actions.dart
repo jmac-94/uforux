@@ -42,6 +42,15 @@ class _IconsActionsState extends State<IconsActions> {
     }
   }
 
+  int getCommentsLen() {
+    final Map<String, Comment>? comments = widget.comment.comments;
+    if (comments != null) {
+      return comments.length;
+    } else {
+      return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -80,24 +89,8 @@ class _IconsActionsState extends State<IconsActions> {
           children: [
             IconButton(
               onPressed: () async {
-                setState(() {
-                  // commentNum++;
-                });
-                // const String text = 'Este es mi primer subcomentario.';
-
-                // crear el subcomment
-                // final String userId = widget.homeController.userId;
-                /*  Comment subcomment = Comment.fromJson({
-                  'id': widget.uuid.v1(),
-                  'userId': userId,
-                  'text': text,
-                  'ups': 0,
-                  'createdAt': Timestamp.now(),
-                  'attachments': {},
-                });*/
+                setState(() {});
                 commentsInfo(context);
-                // await widget.homeController
-                //    .submitSubcomment(widget.comment, subcomment);
               },
               icon: const Icon(
                 Icons.comment,
@@ -135,6 +128,7 @@ class _IconsActionsState extends State<IconsActions> {
     );
   }
 
+  // SubComentarios
   void commentsInfo(BuildContext context) {
     showDialog(
       context: context,
@@ -221,6 +215,7 @@ class _IconsActionsState extends State<IconsActions> {
                             Navigator.pop(context);
                           },
                           icon: const Icon(Icons.close),
+                          color: Colors.white,
                         ),
                       ],
                     ),
@@ -232,14 +227,5 @@ class _IconsActionsState extends State<IconsActions> {
         );
       },
     );
-  }
-
-  int getCommentsLen() {
-    final Map<String, Comment>? comments = widget.comment.comments;
-    if (comments != null) {
-      return comments.length;
-    } else {
-      return 0;
-    }
   }
 }
