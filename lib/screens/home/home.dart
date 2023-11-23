@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -270,6 +268,7 @@ class _HomeState extends State<Home> {
           builder: (context, setState) {
             return AlertDialog(
               title: const Text('Nuevo foro'),
+              icon: const Icon(Icons.add_home_rounded),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
