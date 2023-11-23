@@ -65,13 +65,6 @@ class _ProfileState extends State<Profile> {
                             ),
                             child: Row(
                               children: [
-                                // const Text(
-                                //   'Perfil',
-                                //   style: TextStyle(
-                                //     fontSize: 30,
-                                //     fontWeight: FontWeight.bold,
-                                //   ),
-                                // ),
                                 const Spacer(),
                                 IconButton(
                                   onPressed: () async {
@@ -125,38 +118,140 @@ class _ProfileState extends State<Profile> {
                           ),
                         ],
                       ),
+                      Center(
+                        child: Text(
+                          loggedUser.username ?? '',
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 10,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Text(
-                              loggedUser.username ?? '',
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'About me:',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  loggedUser.degree ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Text(
+                                  loggedUser.entrySemester ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Text(
+                                  getCarrera(),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              loggedUser.degree ?? '',
-                              style: const TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              loggedUser.entrySemester ?? '',
-                              style: const TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              getCarrera(),
-                              style: const TextStyle(
-                                fontSize: 12,
-                              ),
+                            const Spacer(),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Seguidores',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        const Text.rich(
+                                          TextSpan(
+                                            text: '23',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            // Aquí puedes agregar más TextSpans si necesitas más partes con estilo diferente
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Siguiendo',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        const Text.rich(
+                                          TextSpan(
+                                            text: '10',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            // Y de nuevo, más TextSpans si necesitas más personalizaciones
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                        color:
+                                            Colors.grey[300]!), // Border color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 8),
+                                    child: Text(
+                                      'Editar perfil',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
