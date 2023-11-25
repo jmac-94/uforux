@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
+import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uuid/uuid.dart';
 
 class IconsActions extends StatefulWidget {
@@ -150,12 +151,12 @@ class _IconsActionsState extends State<IconsActions> {
                   child: Material(
                     child: Stack(
                       children: [
-                        Positioned.fill(
-                          child: Image.asset(
-                            'assets/images/clouds.jpg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        // Positioned.fill(
+                        //   child: Image.asset(
+                        //     'assets/images/clouds.jpg',
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // ),
                         Column(
                           children: [
                             SizedBox(
@@ -183,6 +184,18 @@ class _IconsActionsState extends State<IconsActions> {
                                   onPressed: () {},
                                   icon: const Icon(
                                     Icons.local_fire_department_outlined,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) =>
+                                          const CommentSection(),
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.comment,
                                   ),
                                 ),
                                 IconButton(
@@ -226,6 +239,55 @@ class _IconsActionsState extends State<IconsActions> {
           ),
         );
       },
+    );
+  }
+}
+
+class CommentSection extends StatefulWidget {
+  const CommentSection({super.key});
+
+  @override
+  _CommentSectionState createState() => _CommentSectionState();
+}
+
+class _CommentSectionState extends State<CommentSection> {
+  final TextEditingController _commentController = TextEditingController();
+
+  void _sendComment() {
+    String commentText = _commentController.text;
+
+    dPrint("Comentario enviado: $commentText");
+    _commentController.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      reverse: true,
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _commentController,
+                  decoration: const InputDecoration(
+                    hintText: 'Escribe un comentario...',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: _sendComment,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

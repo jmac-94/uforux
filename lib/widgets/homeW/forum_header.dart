@@ -47,14 +47,14 @@ class ForumHeader extends StatelessWidget {
             ),
           ),
           const Text(
-            'del curso de ',
+            'desde ',
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w200,
             ),
           ),
           const Text(
-            'MATH',
+            '#MATH',
             style: TextStyle(
               fontSize: 11,
               color: Colors.blueAccent,
