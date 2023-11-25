@@ -18,154 +18,203 @@ class _BooksState extends State<Books> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          title: const Text(
-            'Lo mas visto',
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w700,
-                color: Colors.black),
-            textAlign: TextAlign.left,
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                CardBook(
-                  color: Colors.red,
-                  image:
-                      'https://images.unsplash.com/photo-1414609245224-afa02bfb3fda?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D',
-                  icon: Icons.favorite,
-                ),
-                CardBook(
-                  color: Colors.blue,
-                  image:
-                      'https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D',
-                  icon: Icons.library_add_check_sharp,
-                ),
-                CardBook(
-                  color: Colors.green,
-                  image:
-                      'https://images.unsplash.com/photo-1700675654200-21fc4d1ca590?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                  icon: Icons.library_add_check_sharp,
+    return Stack(
+      children: [
+        // Positioned.fill(
+        //   child: Image.network(
+        //     'https://images.unsplash.com/photo-1498462335304-e7263fe3925a?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        //     fit: BoxFit.cover,
+        //   ),
+        // ),
+        SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              centerTitle: false,
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              title: const Text(
+                'Cursos',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black),
+                textAlign: TextAlign.left,
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {},
                 ),
               ],
             ),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 14.0,
-                  vertical: 5.0,
-                ),
-                child: Text(
-                  'Tendencias',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            body: Column(
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.grey[600],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'ARTICLE 1',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w700,
+                SizedBox(
+                  height: 220,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: const [
+                      SizedBox(width: 10.0),
+                      CardBook(
+                        color: Colors.red,
+                        image:
+                            'https://images.unsplash.com/photo-1581092583537-20d51b4b4f1b?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        tittle: 'Ingenieria civil',
                       ),
-                    ),
+                      SizedBox(width: 10.0),
+                      CardBook(
+                        color: Colors.blue,
+                        image:
+                            'https://images.unsplash.com/photo-1486825586573-7131f7991bdd?q=80&w=3238&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        tittle: 'Ingenieria quimica',
+                      ),
+                      SizedBox(width: 10.0),
+                      CardBook(
+                        color: Colors.green,
+                        image:
+                            'https://images.unsplash.com/photo-1551033406-611cf9a28f67?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        tittle: 'Ciencias de la computacion',
+                      ),
+                      SizedBox(width: 10.0),
+                      CardBook(
+                        color: Colors.green,
+                        image:
+                            'https://images.unsplash.com/photo-1581092163144-b7ae3c00adbc?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        tittle: 'Ingenieria Ambiental',
+                      ),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.grey[600],
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.0,
+                      vertical: 5.0,
                     ),
-                    child: const Center(
-                      child: Text(
-                        'ARTICLE 2',
-                        style: TextStyle(
-                          color: Colors.white,
+                    child: Text(
+                      'Tendencias',
+                      style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                          color: Colors.black),
                     ),
                   ),
                 ),
-              ],
-            ),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 14.0,
-                  vertical: 10.0,
+                SizedBox(
+                  height: 50,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      const SizedBox(width: 10.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.grey[500],
+                        ),
+                        child: Center(
+                          child: Text(
+                            '#Ayuda en ADA',
+                            style: TextStyle(
+                              color: Colors.yellow[300],
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.grey[500],
+                        ),
+                        child: Center(
+                          child: Text(
+                            '#Mejoras en espacios Abiertos',
+                            style: TextStyle(
+                              color: Colors.yellow[300],
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.grey[500],
+                        ),
+                        child: Center(
+                          child: Text(
+                            '#Finales ADA',
+                            style: TextStyle(
+                              color: Colors.yellow[300],
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Text(
-                  'Tal vez te guste',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 14.0,
                       vertical: 10.0,
                     ),
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.red,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}'),
-                      ),
+                    child: Text(
+                      'Eventos',
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black),
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 14.0,
+                          vertical: 10.0,
+                        ),
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.red,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                                'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}'),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

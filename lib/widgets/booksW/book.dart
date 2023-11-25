@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 class CardBook extends StatelessWidget {
   final Color color;
   final String image;
-  final IconData icon;
+  final String tittle;
+
   const CardBook({
     super.key,
     required this.color,
     required this.image,
-    required this.icon,
+    required this.tittle,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.3,
@@ -27,21 +28,17 @@ class CardBook extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: color,
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.3,
+          height: 30,
+          child: Text(
+            tittle,
+            style: const TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.w600,
             ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 20.0,
-            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
           ),
         ),
       ],
