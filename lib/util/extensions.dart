@@ -17,3 +17,13 @@ extension AnimatedWidgetExtension on Widget {
     );
   }
 }
+
+extension StringExtensions on String {
+  String capitalize() {
+    return split(' ')
+        .map((word) => word.isEmpty
+            ? word
+            : "${word[0].toUpperCase()}${word.substring(1)}")
+        .join(' ');
+  }
+}

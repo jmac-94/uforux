@@ -3,6 +3,7 @@ import 'package:faker/faker.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/services/database.dart';
+import 'package:uforuxpi3/util/extensions.dart';
 
 class Profile extends StatefulWidget {
   final AppUser user;
@@ -97,8 +98,7 @@ class _ProfileState extends State<Profile> {
                                   vertical: 7,
                                 ),
                                 child: Text(
-                                  
-                                  loggedUser.username.str ?? '',
+                                  loggedUser.username.toString().capitalize(),
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class _ProfileState extends State<Profile> {
                               ),
                               Text(
                                 //${loggedUser.entrySemester ?? ''} -
-                                loggedUser.degree ?? '',
+                                loggedUser.degree.toString().capitalize(),
                                 style: const TextStyle(
                                   fontSize: 15,
                                 ),
@@ -339,10 +339,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-// extension StringExtensions on String { 
-//   String capitalize() { 
-//       String capitalizedString = this.myString.split(' ').map((word) => word.capitalize()).join(' '); 
-//     return capitalizedString; 
-//   } 
-// }
