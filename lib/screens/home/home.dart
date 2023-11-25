@@ -79,13 +79,13 @@ class _HomeState extends State<Home> {
     return Stack(
       children: [
         Positioned.fill(
-          // child: Image.asset(
-          //   'assets/images/clouds.jpg',
-          //   fit: BoxFit.cover,
-          // ),
-          child: Container(
-            color: Colors.white,
+          child: Image.asset(
+            'assets/images/clouds.jpg',
+            fit: BoxFit.cover,
           ),
+          // child: Container(
+          //   color: Colors.white,
+          // ),
         ),
         Scaffold(
           appBar: PreferredSize(
@@ -93,13 +93,16 @@ class _HomeState extends State<Home> {
             child: AppBar(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
-              title: const Text('Foro general'),
+              title: const Text(
+                'Foro general',
+              ),
+              titleTextStyle: const TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
               centerTitle: false,
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {},
-                ),
                 IconButton(
                   icon: const Icon(Icons.notifications),
                   onPressed: () {},
@@ -165,25 +168,18 @@ class _HomeState extends State<Home> {
                             return Hero(
                               tag: 'CommentsForum',
                               child: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: const Offset(
-                                            0, 1), // changes position of shadow
-                                      ),
-                                    ],
                                     gradient: LinearGradient(
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                       colors: [
-                                        const Color.fromARGB(
-                                            255, 184, 224, 242),
+                                        Colors.grey[200]!,
                                         Colors.grey[100]!,
                                       ],
                                     ),
