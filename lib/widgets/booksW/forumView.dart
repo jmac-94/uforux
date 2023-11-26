@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:faker/faker.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -91,12 +92,34 @@ class DetailScreen extends StatelessWidget {
                 Tab(text: 'Members'),
               ],
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
-                  Center(child: Text('All Discussions Content')),
-                  Center(child: Text('Wikipedia Content')),
-                  Center(child: Text('Members Content')),
+                  Center(
+                    child: Flexible(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: List.generate(
+                          10,
+                          (index) => Container(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 2,
+                            ),
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                            ),
+                            child: Image.network(
+                              'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Center(child: Text('Wikipedia Content')),
+                  const Center(child: Text('Members Content')),
                 ],
               ),
             ),
