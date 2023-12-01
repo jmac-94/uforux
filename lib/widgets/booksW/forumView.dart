@@ -118,8 +118,12 @@ class DetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Center(child: Text('Wikipedia Content')),
-                  const Center(child: Text('Members Content')),
+                  const Center(
+                    child: Text('Wikipedia Content'),
+                  ),
+                  const Center(
+                    child: Text('Members Content'),
+                  ),
                 ],
               ),
             ),

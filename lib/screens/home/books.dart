@@ -113,13 +113,13 @@ class _BooksState extends State<Books> {
                         height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.grey[500],
+                          color: Colors.black,
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '#Ayuda en ADA',
                             style: TextStyle(
-                              color: Colors.yellow[300],
+                              color: Colors.white,
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
                             ),
@@ -132,13 +132,13 @@ class _BooksState extends State<Books> {
                         height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.grey[500],
+                          color: Colors.black,
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '#Mejoras en espacios Abiertos',
                             style: TextStyle(
-                              color: Colors.yellow[300],
+                              color: Colors.white,
                               fontSize: 15.0,
                               fontWeight: FontWeight.w500,
                             ),
@@ -153,13 +153,13 @@ class _BooksState extends State<Books> {
                         height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.grey[500],
+                          color: Colors.black,
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '#Finales ADA',
                             style: TextStyle(
-                              color: Colors.yellow[300],
+                              color: Colors.white,
                               fontSize: 15.0,
                               fontWeight: FontWeight.w500,
                             ),

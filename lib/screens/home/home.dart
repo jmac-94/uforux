@@ -187,9 +187,6 @@ class _HomeState extends State<Home> {
                                     comment: comment,
                                     homeController: _homeController,
                                   ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
                                 ],
                               ),
                             );
@@ -198,7 +195,7 @@ class _HomeState extends State<Home> {
                       );
                     },
                     separatorBuilder: (context, index) => const Divider(
-                      thickness: 1,
+                      thickness: 0,
                     ),
                   );
                 }

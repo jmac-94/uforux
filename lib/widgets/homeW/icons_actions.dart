@@ -58,7 +58,7 @@ class _IconsActionsState extends State<IconsActions> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(
-          width: 10,
+          width: 5,
         ),
         Row(
           children: [
@@ -85,7 +85,7 @@ class _IconsActionsState extends State<IconsActions> {
             Text('${widget.comment.ups}', style: const TextStyle(fontSize: 12)),
           ],
         ),
-        const SizedBox(width: 15),
+        const SizedBox(width: 5),
         Row(
           children: [
             IconButton(
