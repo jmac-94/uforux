@@ -91,11 +91,7 @@ class _HomeState extends State<Home> {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(60),
             child: AppBar(
-              backgroundColor: Colors.blueGrey[600],
-              shadowColor: Colors.transparent,
-              title: const Text(
-                'Foro general',
-              ),
+              title: const Text('Foro general'),
               titleTextStyle: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w700,
@@ -109,6 +105,19 @@ class _HomeState extends State<Home> {
                   onPressed: () {},
                 ),
               ],
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.blue.shade900, // Color de inicio del degradado
+                      Colors.blue.shade700, // Color de fin del degradado
+                    ],
+                  ),
+                ),
+              ),
+              shadowColor: Colors.transparent,
             ),
           ),
           backgroundColor: Colors.grey[100],
@@ -167,7 +176,10 @@ class _HomeState extends State<Home> {
                                 : '';
 
                             return Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 6.0,
+                                horizontal: 5.0,
+                              ),
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
