@@ -86,9 +86,9 @@ class BodyData extends StatelessWidget {
                 ),
         ),
         const SizedBox(
-          height: 10,
+          height: 30,
         ),
-        if (comment.attachments.isNotEmpty)
+        if (false) //comment.attachments.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Align(
