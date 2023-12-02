@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/controllers/course_controller.dart';
@@ -226,8 +227,32 @@ class _IconsActionsState extends State<IconsActions> {
                                   final Comment comment = widget
                                       .comment.comments!.values
                                       .toList()[index];
-                                  return ListTile(
-                                    title: Text(comment.text),
+                                  return Row(
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      ClipOval(
+                                        child: Container(
+                                          width: 40,
+                                          height: 40,
+                                          color: Colors.grey[400],
+                                          child: Image.network(
+                                            'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(comment.text),
+                                      const Spacer(),
+                                      Text(
+                                        widget.date,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                    ],
                                   );
                                 },
                                 separatorBuilder: (context, index) =>
