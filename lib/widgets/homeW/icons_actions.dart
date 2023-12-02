@@ -165,12 +165,10 @@ class _IconsActionsState extends State<IconsActions> {
                             SizedBox(
                               height: 200,
                               width: double.infinity,
-                              child: widget.comment.attachments != {}
-                                  ? createCarousel()
-                                  : Image.network(
-                                      'https://lastfm.freetls.fastly.net/i/u/ar0/9e3232f437c90e5ece62dd0b5df2950b.jpg',
-                                      fit: BoxFit.cover,
-                                    ),
+                              child: Image.network(
+                                'https://images.unsplash.com/photo-1700771266232-7a31af68eb31?q=80&w=3432&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
