@@ -16,7 +16,6 @@ class HomeController {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   String userId;
-  // Lista de mapas con Key = comment.id y Value = comment
   Map<String, Comment> comments = {};
 
   final uuid = const Uuid();

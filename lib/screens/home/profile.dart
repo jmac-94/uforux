@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/services/auth.dart';
 import 'package:uforuxpi3/services/database.dart';
 import 'package:uforuxpi3/util/extensions.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Profile extends StatefulWidget {
   final AppUser user;
@@ -18,7 +21,7 @@ class _ProfileState extends State<Profile> {
   final AuthService _auth = AuthService();
   late AppUser loggedUser;
 
-  String getCarrera() {
+  String getUserType() {
     if (loggedUser.assesor == true) {
       return 'Estudiante y asesor';
     } else if (loggedUser.assesor == false) {
@@ -102,101 +105,106 @@ class _ProfileState extends State<Profile> {
                         fontSize: 15,
                       ),
                     ),
-                    // Text(
-                    //   getCarrera(),
-                    //   style: const TextStyle(
-                    //     fontSize: 15,
-                    //   ),
-                    // ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(height: 4),
-                            Text.rich(
-                              TextSpan(
-                                text: '142',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
+                                const SizedBox(height: 4),
+                                Text.rich(
+                                  TextSpan(
+                                    text: getUserType(),
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                const Text(
+                                  'Rango',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              'Publicaciones',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                const SizedBox(height: 4),
+                                RatingBar.builder(
+                                  initialRating: loggedUser.score ?? 0,
+                                  minRating: 0,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemPadding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  itemBuilder: (context, _) => const Icon(
+                                    Icons.star_rate_rounded,
+                                    color: Colors.amber,
+                                  ),
+                                  itemSize: 35,
+                                  ignoreGestures: true,
+                                  onRatingUpdate: (rating) {},
+                                ),
+                                const Text(
+                                  'Score',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                const SizedBox(height: 4),
+                                Text.rich(
+                                  TextSpan(
+                                    text: loggedUser.entrySemester,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                const Text(
+                                  'Ciclo de ingreso',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(height: 4),
-                            Text.rich(
-                              TextSpan(
-                                text: '23',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                // Aquí puedes agregar más TextSpans si necesitas más partes con estilo diferente
-                              ),
-                            ),
-                            Text(
-                              'Seguidores',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(height: 4),
-                            Text.rich(
-                              TextSpan(
-                                text: '10',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              'Siguiendo',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                     const SizedBox(
                       height: 20,

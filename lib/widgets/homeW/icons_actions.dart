@@ -1,3 +1,5 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
@@ -9,12 +11,14 @@ class IconsActions extends StatefulWidget {
   final Comment comment;
   final HomeController homeController;
   final uuid = const Uuid();
+  final String date;
 
   const IconsActions({
     super.key,
     required this.hasImage,
     required this.comment,
     required this.homeController,
+    required this.date,
   });
 
   @override
@@ -58,7 +62,7 @@ class _IconsActionsState extends State<IconsActions> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(
-          width: 10,
+          width: 5,
         ),
         Row(
           children: [
@@ -76,54 +80,53 @@ class _IconsActionsState extends State<IconsActions> {
                 isLiked
                     ? Icons.local_fire_department
                     : Icons.local_fire_department_outlined,
-                size: 25,
+                size: 20,
               ),
               constraints: const BoxConstraints.tightFor(
-                width: 35,
+                width: 30,
               ),
             ),
             Text('${widget.comment.ups}', style: const TextStyle(fontSize: 12)),
           ],
         ),
-        const SizedBox(width: 15),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () async {
-                setState(() {});
-                commentsInfo(context);
-              },
-              icon: const Icon(
-                Icons.comment,
-                size: 25,
+        const SizedBox(width: 5),
+        Flexible(
+          child: Row(
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      setState(() {});
+                      commentsInfo(context);
+                    },
+                    icon: const Icon(
+                      Icons.comment,
+                      size: 20,
+                    ),
+                    constraints: const BoxConstraints.tightFor(
+                      width: 32,
+                    ),
+                  ),
+                  Text(
+                    commentNum.toString(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
               ),
-              constraints: const BoxConstraints.tightFor(
-                width: 37,
+              const Spacer(),
+              Text(
+                widget.date,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
               ),
-            ),
-            Text(
-              commentNum.toString(),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
-        const Spacer(),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.more_horiz,
-                size: 25,
-              ),
-              constraints: const BoxConstraints.tightFor(
-                width: 37,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          width: 15,
+              const SizedBox(
+                width: 10,
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -151,27 +154,23 @@ class _IconsActionsState extends State<IconsActions> {
                   child: Material(
                     child: Stack(
                       children: [
-                        // Positioned.fill(
-                        //   child: Image.asset(
-                        //     'assets/images/clouds.jpg',
-                        //     fit: BoxFit.cover,
-                        //   ),
-                        // ),
                         Column(
                           children: [
                             SizedBox(
                               height: 200,
                               width: double.infinity,
-                              child: Image.network(
-                                'https://lastfm.freetls.fastly.net/i/u/ar0/9e3232f437c90e5ece62dd0b5df2950b.jpg',
-                                fit: BoxFit.cover,
-                              ),
+                              child: widget.comment.attachments != {}
+                                  ? createCarousel()
+                                  : Image.network(
+                                      'https://lastfm.freetls.fastly.net/i/u/ar0/9e3232f437c90e5ece62dd0b5df2950b.jpg',
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Ayuda!! nesecito ayuda en ADA ayudaa.',
-                                style: TextStyle(
+                                widget.comment.text,
+                                style: const TextStyle(
                                   fontSize: 24,
                                 ),
                                 textAlign: TextAlign.center,
@@ -182,21 +181,33 @@ class _IconsActionsState extends State<IconsActions> {
                                 const Spacer(),
                                 IconButton(
                                   onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.local_fire_department_outlined,
+                                  icon: Icon(
+                                    isLiked
+                                        ? Icons.local_fire_department
+                                        : Icons.local_fire_department_outlined,
+                                    size: 20,
                                   ),
+                                ),
+                                Text(
+                                  '${widget.comment.ups}',
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                 IconButton(
                                   onPressed: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      builder: (context) =>
-                                          const CommentSection(),
+                                      builder: (context) => CommentSection(
+                                          homeController: widget.homeController,
+                                          comment: widget.comment),
                                     );
                                   },
                                   icon: const Icon(
                                     Icons.comment,
                                   ),
+                                ),
+                                Text(
+                                  commentNum.toString(),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                 IconButton(
                                   onPressed: () {},
@@ -217,8 +228,7 @@ class _IconsActionsState extends State<IconsActions> {
                                 },
                                 separatorBuilder: (context, index) =>
                                     const Divider(),
-                                itemCount: 0,
-                                // itemCount: commentNum - 1,
+                                itemCount: commentNum,
                               ),
                             ),
                           ],
@@ -241,23 +251,85 @@ class _IconsActionsState extends State<IconsActions> {
       },
     );
   }
+
+  Widget createCarousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        aspectRatio: 16 / 9,
+        viewportFraction: 1.0,
+        enableInfiniteScroll: false,
+      ),
+      items: widget.comment.attachments['images']?.map((attachment) {
+            return FutureBuilder<Image>(
+              future: widget.homeController.getImage(attachment),
+              builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Column(
+                        children: [
+                          snapshot.data!,
+                          const SizedBox(height: 10),
+                          Text(
+                            attachment,
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w800),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
+            );
+          }).toList() ??
+          [],
+    );
+  }
 }
 
 class CommentSection extends StatefulWidget {
-  const CommentSection({super.key});
+  final HomeController homeController;
+  final Comment comment;
+
+  const CommentSection(
+      {super.key, required this.homeController, required this.comment});
 
   @override
-  _CommentSectionState createState() => _CommentSectionState();
+  State<CommentSection> createState() => _CommentSectionState();
 }
 
 class _CommentSectionState extends State<CommentSection> {
+  final uuid = const Uuid();
   final TextEditingController _commentController = TextEditingController();
 
-  void _sendComment() {
-    String commentText = _commentController.text;
+  void _sendComment() async {
+    try {
+      String subcommentText = _commentController.text;
 
-    dPrint("Comentario enviado: $commentText");
-    _commentController.clear();
+      final String userId = widget.homeController.userId;
+
+      Comment subcomment = Comment.fromJson({
+        'id': uuid.v1(),
+        'userId': userId,
+        'text': subcommentText,
+        'ups': 0,
+        'createdAt': Timestamp.now(),
+        'attachments': {},
+      });
+
+      await widget.homeController.submitSubcomment(widget.comment, subcomment);
+
+      _commentController.clear();
+    } catch (e) {
+      dPrint('Error: $e');
+    }
   }
 
   @override

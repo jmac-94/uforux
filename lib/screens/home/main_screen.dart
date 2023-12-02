@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 GButton(
                   icon: Icons.book,
-                  text: 'Libros',
+                  text: 'Cursos',
                 ),
                 GButton(
                   icon: Icons.person,
