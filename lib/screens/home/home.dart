@@ -78,15 +78,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Positioned.fill(
-        //   child: Image.asset(
-        //     'assets/images/clouds.jpg',
-        //     fit: BoxFit.cover,
-        //   ),
         Container(
           color: Colors.grey[100],
         ),
-
         Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(60),
