@@ -171,54 +171,90 @@ class _IconsActionsState extends State<IconsActions> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                widget.comment.text,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
                             Row(
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      widget.comment.text,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 const Spacer(),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    isLiked
-                                        ? Icons.local_fire_department
-                                        : Icons.local_fire_department_outlined,
-                                    size: 20,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(
+                                    widget.date,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[500],
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '${widget.comment.ups}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) => CommentSection(
-                                          homeController: widget.homeController,
-                                          comment: widget.comment),
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.comment,
-                                  ),
-                                ),
-                                Text(
-                                  commentNum.toString(),
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.more_horiz),
                                 ),
                               ],
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 6.0),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Text(
+                                  'lorem ipsum dolor sit amet, consectetur elit, nisl eget aliquam ultricies, nisl nisl aliquam nisl, nec aliquam nisl ',
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  maxLines: 5,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Spacer(),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      isLiked
+                                          ? Icons.local_fire_department
+                                          : Icons
+                                              .local_fire_department_outlined,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${widget.comment.ups}',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) => CommentSection(
+                                          homeController: widget.homeController,
+                                          comment: widget.comment,
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.comment,
+                                    ),
+                                  ),
+                                  Text(
+                                    commentNum.toString(),
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
+                              ),
                             ),
                             const Divider(),
                             Flexible(
@@ -267,7 +303,7 @@ class _IconsActionsState extends State<IconsActions> {
                             Navigator.pop(context);
                           },
                           icon: const Icon(Icons.close),
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ],
                     ),
@@ -357,6 +393,7 @@ class _CommentSectionState extends State<CommentSection> {
       await widget.homeController.submitSubcomment(widget.comment, subcomment);
 
       _commentController.clear();
+      Navigator.pop(context);
     } catch (e) {
       dPrint('Error: $e');
     }
