@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
@@ -73,12 +74,7 @@ class BodyData extends StatelessWidget {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return Image.network(
-                      snapshot.data!,
-                      height: 250,
-                      width: 270,
-                      fit: BoxFit.cover,
-                    );
+                    return createCarousel();
                   }
                 },
               ),
@@ -147,6 +143,44 @@ class BodyData extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+
+  Widget createCarousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 300,
+        enableInfiniteScroll: false,
+      ),
+      items: comment.attachments['images']?.map((attachment) {
+            return FutureBuilder<Image>(
+              future: homeController.getImage(attachment),
+              builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 300,
+                          child: Image(
+                            image: snapshot.data!.image,
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            );
+          }).toList() ??
+          [],
     );
   }
 }

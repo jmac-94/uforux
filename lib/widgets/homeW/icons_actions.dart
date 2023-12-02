@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
@@ -153,27 +154,23 @@ class _IconsActionsState extends State<IconsActions> {
                   child: Material(
                     child: Stack(
                       children: [
-                        // Positioned.fill(
-                        //   child: Image.asset(
-                        //     'assets/images/clouds.jpg',
-                        //     fit: BoxFit.cover,
-                        //   ),
-                        // ),
                         Column(
                           children: [
                             SizedBox(
                               height: 200,
                               width: double.infinity,
-                              child: Image.network(
-                                'https://lastfm.freetls.fastly.net/i/u/ar0/9e3232f437c90e5ece62dd0b5df2950b.jpg',
-                                fit: BoxFit.cover,
-                              ),
+                              child: widget.comment.attachments != {}
+                                  ? createCarousel()
+                                  : Image.network(
+                                      'https://lastfm.freetls.fastly.net/i/u/ar0/9e3232f437c90e5ece62dd0b5df2950b.jpg',
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Ayuda!! nesecito ayuda en ADA ayudaa.',
-                                style: TextStyle(
+                                widget.comment.text,
+                                style: const TextStyle(
                                   fontSize: 24,
                                 ),
                                 textAlign: TextAlign.center,
@@ -184,9 +181,16 @@ class _IconsActionsState extends State<IconsActions> {
                                 const Spacer(),
                                 IconButton(
                                   onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.local_fire_department_outlined,
+                                  icon: Icon(
+                                    isLiked
+                                        ? Icons.local_fire_department
+                                        : Icons.local_fire_department_outlined,
+                                    size: 20,
                                   ),
+                                ),
+                                Text(
+                                  '${widget.comment.ups}',
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -245,6 +249,47 @@ class _IconsActionsState extends State<IconsActions> {
           ),
         );
       },
+    );
+  }
+
+  Widget createCarousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        aspectRatio: 16 / 9,
+        viewportFraction: 1.0,
+        enableInfiniteScroll: false,
+      ),
+      items: widget.comment.attachments['images']?.map((attachment) {
+            return FutureBuilder<Image>(
+              future: widget.homeController.getImage(attachment),
+              builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Column(
+                        children: [
+                          snapshot.data!,
+                          const SizedBox(height: 10),
+                          Text(
+                            attachment,
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w800),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
+            );
+          }).toList() ??
+          [],
     );
   }
 }
