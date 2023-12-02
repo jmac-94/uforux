@@ -10,12 +10,14 @@ class IconsActions extends StatefulWidget {
   final Comment comment;
   final HomeController homeController;
   final uuid = const Uuid();
+  final String date;
 
   const IconsActions({
     super.key,
     required this.hasImage,
     required this.comment,
     required this.homeController,
+    required this.date,
   });
 
   @override
@@ -77,54 +79,53 @@ class _IconsActionsState extends State<IconsActions> {
                 isLiked
                     ? Icons.local_fire_department
                     : Icons.local_fire_department_outlined,
-                size: 25,
+                size: 20,
               ),
               constraints: const BoxConstraints.tightFor(
-                width: 35,
+                width: 30,
               ),
             ),
             Text('${widget.comment.ups}', style: const TextStyle(fontSize: 12)),
           ],
         ),
         const SizedBox(width: 5),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () async {
-                setState(() {});
-                commentsInfo(context);
-              },
-              icon: const Icon(
-                Icons.comment,
-                size: 25,
+        Flexible(
+          child: Row(
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      setState(() {});
+                      commentsInfo(context);
+                    },
+                    icon: const Icon(
+                      Icons.comment,
+                      size: 20,
+                    ),
+                    constraints: const BoxConstraints.tightFor(
+                      width: 32,
+                    ),
+                  ),
+                  Text(
+                    commentNum.toString(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
               ),
-              constraints: const BoxConstraints.tightFor(
-                width: 37,
+              const Spacer(),
+              Text(
+                widget.date,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
               ),
-            ),
-            Text(
-              commentNum.toString(),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
-        const Spacer(),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.more_horiz,
-                size: 25,
-              ),
-              constraints: const BoxConstraints.tightFor(
-                width: 37,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          width: 15,
+              const SizedBox(
+                width: 10,
+              )
+            ],
+          ),
         ),
       ],
     );

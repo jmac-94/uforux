@@ -61,12 +61,6 @@ class ForumHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Text(
-            realTime,
-            style: const TextStyle(
-              fontSize: 11,
-            ),
-          ),
         ]),
       ),
     );

@@ -89,28 +89,38 @@ class _HomeState extends State<Home> {
 
         Scaffold(
           appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(40),
+            preferredSize: const Size.fromHeight(60),
             child: AppBar(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              title: const Text(
-                'Foro general',
-              ),
+              title: const Text('Foro general'),
               titleTextStyle: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w700,
-                color: Colors.black,
+                color: Colors.white,
               ),
               centerTitle: false,
               actions: [
                 IconButton(
+                  color: Colors.white,
                   icon: const Icon(Icons.notifications),
                   onPressed: () {},
                 ),
               ],
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.blue.shade900, // Color de inicio del degradado
+                      Colors.blue.shade700, // Color de fin del degradado
+                    ],
+                  ),
+                ),
+              ),
+              shadowColor: Colors.transparent,
             ),
           ),
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.grey[100],
           body: RefreshIndicator(
             onRefresh: () async {
               await _homeController.fetchComments(isRefresh: true);
@@ -165,38 +175,54 @@ class _HomeState extends State<Home> {
                                 ? (commentAuthor.username ?? '')
                                 : '';
 
-                            return Hero(
-                              tag: 'CommentsForum',
-                              child: Column(
-                                children: [
-                                  ForumHeader(
-                                    profilePhoto: commentData.profilePhoto,
-                                    name: name,
-                                    realTime: commentData.realTime,
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 6.0,
+                                horizontal: 5.0,
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
+                                ),
+                                child: Hero(
+                                  tag: 'CommentsForum',
+                                  child: Column(
+                                    children: [
+                                      ForumHeader(
+                                        profilePhoto: commentData.profilePhoto,
+                                        name: name,
+                                        realTime: commentData.realTime,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      BodyData(
+                                        image: commentData.image,
+                                        hasImage: commentData.hasImage,
+                                        text: comment.text,
+                                        comment: comment,
+                                        homeController: _homeController,
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 1.5,
+                                        color: Colors.grey[200],
+                                      ),
+                                      IconsActions(
+                                        hasImage: commentData.hasImage,
+                                        comment: comment,
+                                        homeController: _homeController,
+                                        date: commentData.realTime,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 5),
-                                  BodyData(
-                                    image: commentData.image,
-                                    hasImage: commentData.hasImage,
-                                    text: comment.text,
-                                    comment: comment,
-                                    homeController: _homeController,
-                                  ),
-                                  IconsActions(
-                                    hasImage: commentData.hasImage,
-                                    comment: comment,
-                                    homeController: _homeController,
-                                  ),
-                                ],
+                                ),
                               ),
                             );
                           }
                         },
                       );
                     },
-                    separatorBuilder: (context, index) => const Divider(
-                      thickness: 0,
-                    ),
+                    separatorBuilder: (context, index) => Container(),
                   );
                 }
               },

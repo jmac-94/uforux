@@ -21,74 +21,73 @@ class BodyData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        hasImage
-            ? Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 20,
-                  ),
-                  child: Text(
-                    comment.text,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              )
-            : const SizedBox(),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadiusDirectional.circular(12),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+          ).copyWith(
+            bottom: 5,
           ),
-          child: hasImage
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0,
-                    vertical: 8.0,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: FutureBuilder<String>(
-                      future: homeController.getImageUrl(image),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return Image.network(
-                            snapshot.data!,
-                            height: 250,
-                            width: 270,
-                            fit: BoxFit.cover,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                  ),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      comment.text,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              comment.text,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+          ),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              'lorem ipsum dolor sit amet, consectetur elit, nisl eget aliquam ultricies, nisl nisl aliquam nisl, nec aliquam nisl ',
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.left,
+              maxLines: 5,
+              style: TextStyle(
+                color: Colors.grey[500],
+              ),
+            ),
+          ),
+        ),
+        if (hasImage)
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 8.0,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: FutureBuilder<String>(
+                future: homeController.getImageUrl(image),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return Image.network(
+                      snapshot.data!,
+                      height: 250,
+                      width: 270,
+                      fit: BoxFit.cover,
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
-        if (comment.attachments.isNotEmpty)
+        if (false) //comment.attachments.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Align(
