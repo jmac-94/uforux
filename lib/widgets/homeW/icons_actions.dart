@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
+import 'package:uforuxpi3/controllers/course_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
 import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uuid/uuid.dart';
@@ -9,9 +10,14 @@ import 'package:uuid/uuid.dart';
 class IconsActions extends StatefulWidget {
   final bool hasImage;
   final Comment comment;
-  final HomeController homeController;
   final uuid = const Uuid();
   final String date;
+
+  ///////////////////////////// TEMPORAL
+  // Agregar clase padre para homeController y courseController para que
+  // ambas puedan estar aqui
+  final dynamic homeController;
+  ///////////////////////////////////////
 
   const IconsActions({
     super.key,
@@ -295,7 +301,8 @@ class _IconsActionsState extends State<IconsActions> {
 }
 
 class CommentSection extends StatefulWidget {
-  final HomeController homeController;
+  // TAMBIEN CAMBIAR ESTOOOOOOOOOOOOO PARA CONTROLLER HOME Y COURSE
+  final dynamic homeController;
   final Comment comment;
 
   const CommentSection(

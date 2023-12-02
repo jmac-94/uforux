@@ -5,27 +5,22 @@ import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/widgets/booksW/book.dart';
 
 class Books extends StatefulWidget {
-  final AppUser? user;
+  final AppUser user;
 
-  const Books({super.key, required this.user});
+  const Books({
+    super.key,
+    required this.user,
+  });
 
   @override
   State<Books> createState() => _BooksState();
 }
 
 class _BooksState extends State<Books> {
-  String userId = '';
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Positioned.fill(
-        //   child: Image.network(
-        //     'https://images.unsplash.com/photo-1498462335304-e7263fe3925a?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        //     fit: BoxFit.cover,
-        //   ),
-        // ),
         SafeArea(
           child: Scaffold(
             backgroundColor: Colors.transparent,
@@ -60,28 +55,28 @@ class _BooksState extends State<Books> {
                         color: Colors.red,
                         image:
                             'https://images.unsplash.com/photo-1581092583537-20d51b4b4f1b?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        tittle: 'Ingenieria civil',
+                        title: 'Cálculo de una variable',
                       ),
                       SizedBox(width: 10.0),
                       CardBook(
                         color: Colors.blue,
                         image:
                             'https://images.unsplash.com/photo-1486825586573-7131f7991bdd?q=80&w=3238&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        tittle: 'Ingenieria quimica',
+                        title: 'Laboratorio de comunicación 1',
                       ),
                       SizedBox(width: 10.0),
                       CardBook(
                         color: Colors.green,
                         image:
                             'https://images.unsplash.com/photo-1551033406-611cf9a28f67?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        tittle: 'Ciencias de la computacion',
+                        title: 'Proyectos interdisciplinarios 1',
                       ),
                       SizedBox(width: 10.0),
                       CardBook(
                         color: Colors.green,
                         image:
                             'https://images.unsplash.com/photo-1581092163144-b7ae3c00adbc?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        tittle: 'Ingenieria Ambiental',
+                        title: 'Álgebra lineal',
                       ),
                     ],
                   ),

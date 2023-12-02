@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
+import 'package:uforuxpi3/controllers/course_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
 
 class BodyData extends StatelessWidget {
@@ -8,7 +9,11 @@ class BodyData extends StatelessWidget {
   final bool hasImage;
   final String text;
   final Comment comment;
-  final HomeController homeController;
+  ///////////////////////////// TEMPORAL
+  // Agregar clase padre para homeController y courseController para que
+  // ambas puedan estar aqui
+  final dynamic homeController;
+  ///////////////////////////////////////
 
   const BodyData(
       {super.key,

@@ -4,13 +4,13 @@ import 'package:uforuxpi3/widgets/booksW/forumView.dart';
 class CardBook extends StatelessWidget {
   final Color color;
   final String image;
-  final String tittle;
+  final String title;
 
   const CardBook({
     super.key,
     required this.color,
     required this.image,
-    required this.tittle,
+    required this.title,
   });
 
   @override
@@ -19,7 +19,7 @@ class CardBook extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DetailScreen(title: tittle)),
+          MaterialPageRoute(builder: (context) => DetailScreen(title: title)),
         );
       },
       child: Column(
@@ -40,7 +40,7 @@ class CardBook extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.3,
             height: 30,
             child: Text(
-              tittle,
+              title,
               style: const TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,
