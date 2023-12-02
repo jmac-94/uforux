@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:uforuxpi3/controllers/course_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/models/comment_data.dart';
+import 'package:uforuxpi3/structures/pair.dart';
 import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uforuxpi3/widgets/homeW/body_data.dart';
 import 'package:uforuxpi3/widgets/homeW/forum_header.dart';
@@ -289,7 +292,116 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(
+            Icons.add_comment,
+          ),
+          onPressed: () {
+            _showDialog();
+          },
+        ),
       ),
+    );
+  }
+
+  void _showDialog() {
+    TextEditingController commentController = TextEditingController();
+    Map<String, List<Pair<String, File>>> filesMap = {};
+    List<String> uploadedFileNames = [];
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Nuevo foro'),
+              icon: const Icon(Icons.add_home_rounded),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: commentController,
+                      decoration: const InputDecoration(
+                        hintText: 'Escribe tu comentario aquí',
+                      ),
+                    ),
+                    ElevatedButton(
+                      child: const Text('Añadir archivos'),
+                      onPressed: () async {
+                        FilePickerResult? result = await FilePicker.platform
+                            .pickFiles(allowMultiple: true);
+                        if (result != null) {
+                          for (var pickedFile in result.files) {
+                            String path = pickedFile.path!;
+                            File file = File(path);
+                            String extension = pickedFile.extension!;
+                            String name = pickedFile.name;
+                            uploadedFileNames.add(name);
+                            String type;
+                            if (extension == 'pdf') {
+                              type = 'documents';
+                            } else if ([
+                              'jpg',
+                              'jpeg',
+                              'png',
+                              'gif',
+                              'bmp',
+                              'webp'
+                            ].contains(extension)) {
+                              type = 'images';
+                            } else {
+                              continue;
+                            }
+                            if (filesMap.containsKey(type)) {
+                              filesMap[type]!.add(Pair(name, file));
+                            } else {
+                              filesMap[type] = [Pair(name, file)];
+                            }
+                          }
+                          setState(() {});
+                        } else {}
+                      },
+                    ),
+                    if (uploadedFileNames.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: uploadedFileNames.map(
+                            (fileName) {
+                              return Text(
+                                fileName,
+                                style: const TextStyle(fontSize: 16),
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Enviar'),
+                  onPressed: () {
+                    String text = commentController.text;
+                    Navigator.of(context).pop();
+                    courseController.submitComment(text, filesMap);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
