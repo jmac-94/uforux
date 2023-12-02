@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/controllers/home_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
@@ -190,13 +191,18 @@ class _IconsActionsState extends State<IconsActions> {
                                   onPressed: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      builder: (context) =>
-                                          const CommentSection(),
+                                      builder: (context) => CommentSection(
+                                          homeController: widget.homeController,
+                                          comment: widget.comment),
                                     );
                                   },
                                   icon: const Icon(
                                     Icons.comment,
                                   ),
+                                ),
+                                Text(
+                                  commentNum.toString(),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                 IconButton(
                                   onPressed: () {},
@@ -217,8 +223,7 @@ class _IconsActionsState extends State<IconsActions> {
                                 },
                                 separatorBuilder: (context, index) =>
                                     const Divider(),
-                                itemCount: 0,
-                                // itemCount: commentNum - 1,
+                                itemCount: commentNum,
                               ),
                             ),
                           ],
@@ -244,20 +249,41 @@ class _IconsActionsState extends State<IconsActions> {
 }
 
 class CommentSection extends StatefulWidget {
-  const CommentSection({super.key});
+  final HomeController homeController;
+  final Comment comment;
+
+  const CommentSection(
+      {super.key, required this.homeController, required this.comment});
 
   @override
-  _CommentSectionState createState() => _CommentSectionState();
+  State<CommentSection> createState() => _CommentSectionState();
 }
 
 class _CommentSectionState extends State<CommentSection> {
+  final uuid = const Uuid();
   final TextEditingController _commentController = TextEditingController();
 
-  void _sendComment() {
-    String commentText = _commentController.text;
+  void _sendComment() async {
+    try {
+      String subcommentText = _commentController.text;
 
-    dPrint("Comentario enviado: $commentText");
-    _commentController.clear();
+      final String userId = widget.homeController.userId;
+
+      Comment subcomment = Comment.fromJson({
+        'id': uuid.v1(),
+        'userId': userId,
+        'text': subcommentText,
+        'ups': 0,
+        'createdAt': Timestamp.now(),
+        'attachments': {},
+      });
+
+      await widget.homeController.submitSubcomment(widget.comment, subcomment);
+
+      _commentController.clear();
+    } catch (e) {
+      dPrint('Error: $e');
+    }
   }
 
   @override

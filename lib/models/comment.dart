@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uforuxpi3/util/dprint.dart';
 
 class Comment {
   final String id;
@@ -40,8 +41,10 @@ class Comment {
   static Comment fromJson(Map<String, dynamic> json) {
     Map<String, List<String>> attachments = {};
 
-    if (json['attachments'] != null) {
-      Map<String, dynamic> attachmentsJson = json['attachments'];
+    if (json['attachments'] != null || json['attachments'] != {}) {
+      Map<String, dynamic> attachmentsJson =
+          Map<String, dynamic>.from(json['attachments']);
+      // Map<String, dynamic> attachmentsJson = json['attachments'];
       attachmentsJson.forEach((key, value) {
         attachments[key] = List<String>.from(value);
       });
