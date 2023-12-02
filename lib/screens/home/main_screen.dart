@@ -30,7 +30,8 @@ class _MainScreenState extends State<MainScreen> {
     final AppUser user = widget.user;
 
     _screens = [
-      Calendar(user: user),
+      // Calendar(user: user),
+      Calendar(),
       Home(user: user),
       Books(user: user),
       Profile(user: user),
