@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -33,8 +34,8 @@ class _HomeState extends State<Home> {
     var commentsList = _homeController.comments.values.toList();
     var comment = commentsList[index];
     final realTime = timeago.format(comment.createdAt.toDate());
-    const profilePhoto =
-        'https://pbs.twimg.com/profile_images/1508500949400129537/4gQ4z4Na_400x400.jpg';
+    final profilePhoto =
+        'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
     String? image;
     bool hasImage = false;
 

@@ -216,7 +216,38 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Calendario")),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          title: const Text('Calendario'),
+          titleTextStyle: const TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+          centerTitle: false,
+          actions: [
+            IconButton(
+              color: Colors.white,
+              icon: const Icon(Icons.notifications),
+              onPressed: () {},
+            ),
+          ],
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.blue.shade900, // Color de inicio del degradado
+                  Colors.blue.shade700, // Color de fin del degradado
+                ],
+              ),
+            ),
+          ),
+          shadowColor: Colors.transparent,
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //Show el dialogo para el usuario ponga el evento

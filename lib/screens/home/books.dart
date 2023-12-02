@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 
@@ -17,34 +19,116 @@ class Books extends StatefulWidget {
 }
 
 class _BooksState extends State<Books> {
+  final Uint8List kTransparentImage = Uint8List.fromList([
+    0x89,
+    0x50,
+    0x4E,
+    0x47,
+    0x0D,
+    0x0A,
+    0x1A,
+    0x0A,
+    0x00,
+    0x00,
+    0x00,
+    0x0D,
+    0x49,
+    0x48,
+    0x44,
+    0x52,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x08,
+    0x06,
+    0x00,
+    0x00,
+    0x00,
+    0x1F,
+    0x15,
+    0xC4,
+    0x89,
+    0x00,
+    0x00,
+    0x00,
+    0x0A,
+    0x49,
+    0x44,
+    0x41,
+    0x54,
+    0x78,
+    0x9C,
+    0x63,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x05,
+    0x00,
+    0x01,
+    0x0D,
+    0x0A,
+    0x2D,
+    0xB4,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x49,
+    0x45,
+    0x4E,
+    0x44,
+    0xAE,
+  ]);
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         SafeArea(
+          top: false,
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              centerTitle: false,
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              title: const Text(
-                'Cursos',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black),
-                textAlign: TextAlign.left,
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {},
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: AppBar(
+                title: const Text('Cursos'),
+                titleTextStyle: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
                 ),
-              ],
+                centerTitle: false,
+                actions: [
+                  IconButton(
+                    color: Colors.white,
+                    icon: const Icon(Icons.notifications),
+                    onPressed: () {},
+                  ),
+                ],
+                flexibleSpace: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.blue.shade900, // Color de inicio del degradado
+                        Colors.blue.shade700, // Color de fin del degradado
+                      ],
+                    ),
+                  ),
+                ),
+                shadowColor: Colors.transparent,
+              ),
             ),
             body: Column(
               children: [
+                const SizedBox(height: 15.0),
                 SizedBox(
                   height: 220,
                   child: ListView(
@@ -187,18 +271,25 @@ class _BooksState extends State<Books> {
                     itemCount: 10,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 14.0,
-                          vertical: 10.0,
+                        decoration: const BoxDecoration(
+                          color: Colors.transparent,
                         ),
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.red,
-                          image: DecorationImage(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(1.0),
+                          child: FadeInImage.memoryNetwork(
+                            placeholder:
+                                kTransparentImage, // A transparent image placeholder
+                            image:
+                                'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
                             fit: BoxFit.cover,
-                            image: NetworkImage(
-                                'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}'),
+                            fadeInDuration: const Duration(milliseconds: 200),
+                            fadeOutDuration: const Duration(milliseconds: 200),
+                            placeholderFit: BoxFit.cover,
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(Icons.error),
+                              );
+                            },
                           ),
                         ),
                       );

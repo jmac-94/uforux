@@ -194,6 +194,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           );
                         } else {
                           return ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             controller: _scrollController,
                             itemCount: courseController.hasMoreData
                                 ? courseController.comments.length + 1
