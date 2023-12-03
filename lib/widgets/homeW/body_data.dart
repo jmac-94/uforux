@@ -85,8 +85,50 @@ class BodyData extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(
-          height: 20,
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 10,
+              ),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text('Math'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+              ),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text('CS'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         if (false) //comment.attachments.isNotEmpty)
           Padding(

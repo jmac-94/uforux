@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -9,17 +7,18 @@ import 'package:uforuxpi3/controllers/course_controller.dart';
 import 'package:uforuxpi3/models/app_user.dart';
 import 'package:uforuxpi3/models/comment_data.dart';
 import 'package:uforuxpi3/structures/pair.dart';
-import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uforuxpi3/widgets/homeW/body_data.dart';
 import 'package:uforuxpi3/widgets/homeW/forum_header.dart';
 import 'package:uforuxpi3/widgets/homeW/icons_actions.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: DetailScreen(
-      title: 'View',
+  runApp(
+    const MaterialApp(
+      home: DetailScreen(
+        title: 'View',
+      ),
     ),
-  ));
+  );
 }
 
 class DetailScreen extends StatefulWidget {
@@ -420,6 +419,7 @@ class _DetailScreenState extends State<DetailScreen> {
             return Container(); // No more data to load
           }
         }
+        return null;
 
         // Aquí, puedes agregar tu lógica para construir cada elemento de la lista.
         // Por ejemplo, usando `courseController.comments[index]`...

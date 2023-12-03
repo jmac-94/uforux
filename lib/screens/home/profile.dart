@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:uforuxpi3/models/app_user.dart';

@@ -2,8 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/controllers/home_controller.dart';
-import 'package:uforuxpi3/controllers/course_controller.dart';
 import 'package:uforuxpi3/models/comment.dart';
 import 'package:uforuxpi3/util/dprint.dart';
 import 'package:uuid/uuid.dart';
@@ -163,18 +161,12 @@ class _IconsActionsState extends State<IconsActions> {
                       children: [
                         Column(
                           children: [
-                            SizedBox(
-                              height: 200,
-                              width: double.infinity,
-                              child: Image.network(
-                                'https://images.unsplash.com/photo-1700771266232-7a31af68eb31?q=80&w=3432&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            const SizedBox(height: 30),
                             Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 8.0),
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
@@ -186,25 +178,14 @@ class _IconsActionsState extends State<IconsActions> {
                                   ),
                                 ),
                                 const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Text(
-                                    widget.date,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[500],
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                             const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 6.0),
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Text(
-                                  'lorem ipsum dolor sit amet, consectetur elit, nisl eget aliquam ultricies, nisl nisl aliquam nisl, nec aliquam nisl ',
+                                  'Estoy buscando ayuda para hacer un foro como reddit, pero no se como empezar, alguien me puede ayudar?',
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   maxLines: 5,
@@ -213,10 +194,17 @@ class _IconsActionsState extends State<IconsActions> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
+                                horizontal: 15.0,
                               ),
                               child: Row(
                                 children: [
+                                  Text(
+                                    widget.date,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
                                   const Spacer(),
                                   IconButton(
                                     onPressed: () {},
@@ -263,47 +251,114 @@ class _IconsActionsState extends State<IconsActions> {
                                   final Comment comment = widget
                                       .comment.comments!.values
                                       .toList()[index];
-                                  return Row(
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      ClipOval(
-                                        child: Container(
-                                          width: 40,
-                                          height: 40,
-                                          color: Colors.grey[400],
-                                          child: Image.network(
-                                            'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
-                                            fit: BoxFit.cover,
+                                  return Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0,
+                                          ),
+                                          child: ClipOval(
+                                            child: Container(
+                                              width: 35,
+                                              height: 35,
+                                              color: Colors.grey[400],
+                                              child: Image.network(
+                                                'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(comment.text),
-                                      const Spacer(),
-                                      Text(
-                                        widget.date,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  bottom: 4.0,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      faker.person
+                                                          .name()
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.red[100],
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                      ),
+                                                      child: const Text(
+                                                        'STD',
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    Icon(
+                                                      Icons.access_time,
+                                                      size: 11,
+                                                      color: Colors.grey[500],
+                                                    ),
+                                                    const SizedBox(width: 3),
+                                                    Text(
+                                                      widget.date,
+                                                      style: TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.grey[500],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                comment.text,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                    ],
+                                      ],
+                                    ),
                                   );
                                 },
                                 separatorBuilder: (context, index) =>
-                                    const Divider(),
+                                    const Divider(
+                                  height: 20,
+                                  color: Colors.transparent,
+                                ),
                                 itemCount: commentNum,
                               ),
                             ),
                           ],
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.close),
-                          color: Colors.black,
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.close),
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
@@ -393,6 +448,7 @@ class _CommentSectionState extends State<CommentSection> {
       await widget.homeController.submitSubcomment(widget.comment, subcomment);
 
       _commentController.clear();
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (e) {
       dPrint('Error: $e');
