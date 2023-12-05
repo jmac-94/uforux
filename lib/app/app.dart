@@ -12,6 +12,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// StreamProvider se utiliza aquí para crear un flujo de datos reactivos en la aplicación.
+    /// En este caso, estamos proporcionando un objeto AppUser (o null) en toda la aplicación.
+    /// El StreamProvider escucha los cambios en el estado de autenticación del usuario a través
+    /// tal que cuando el estado del usuario cambia StreamProvider actualiza automáticamente los widgets
+    /// que dependen de esta información en la UI.
     return StreamProvider<AppUser?>.value(
       value: AuthenticationController().user,
       initialData: null,
