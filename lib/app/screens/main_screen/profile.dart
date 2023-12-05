@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
 import 'package:uforuxpi3/app/controllers/authentication_controller.dart';
 import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
+import 'package:uforuxpi3/core/utils/dprint.dart';
 import 'package:uforuxpi3/core/utils/extensions.dart';
 
 class Profile extends StatefulWidget {
@@ -30,9 +31,11 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> loadData(String id) async {
-    Map<String, dynamic> userData =
-        await AppUserController(uid: id).getUserData();
-    loggedUser = AppUser.fromJson(userData);
+    try {
+      loggedUser = (await AppUserController(uid: id).getUserData())!;
+    } catch (e) {
+      dPrint(e);
+    }
   }
 
   @override
@@ -98,7 +101,6 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     Text(
-                      //${loggedUser.entrySemester ?? ''} -
                       loggedUser.degree.toString().capitalize(),
                       style: const TextStyle(
                         fontSize: 15,

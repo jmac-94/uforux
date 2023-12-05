@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:faker/faker.dart';
 
 import 'package:uforuxpi3/app/controllers/course_controller.dart';

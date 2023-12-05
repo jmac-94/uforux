@@ -259,9 +259,8 @@ class CourseController {
   }
 
   Future<AppUser> fetchAppUser(String id) async {
-    final appUserController = AppUserController(uid: id);
-    final Map<String, dynamic> userJson = await appUserController.getUserData();
-    return AppUser.fromJson(userJson);
+    final appUser = (await AppUserController(uid: id).getUserData())!;
+    return appUser;
   }
 
   Future<void> updateCommentLikes(String commentId, bool isLiked) async {

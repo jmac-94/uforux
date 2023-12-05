@@ -1,42 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uforuxpi3/app/models/app_user.dart';
 
 class AppUserController {
   final String uid;
-
-  AppUserController({required this.uid});
-
   final CollectionReference studentCollection =
       FirebaseFirestore.instance.collection('students');
 
-  Future<Map<String, dynamic>> getUserData() async {
+  AppUserController({required this.uid});
+
+  Future<AppUser?> getUserData() async {
     final snapshot = await studentCollection.doc(uid).get();
 
+    AppUser? user;
     if (snapshot.exists) {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      data['id'] = snapshot.id; // Add the user's ID to the data
-      return data;
-    } else {
-      return {};
+      data['id'] = snapshot.id;
+      user = AppUser.fromJson(data);
     }
+
+    return user;
   }
 
-  Future updateStudentData({
-    required String username,
-    required String entrySemester,
-    required bool assesor,
-    required String degree,
-    required double score,
-    required List<String> forums,
+  Future<void> updateStudentData({
+    String? username,
+    String? entrySemester,
+    bool? assesor,
+    String? degree,
+    double? score,
+    List<String>? forums,
   }) async {
     Map<String, dynamic> studentData = {
-      'username': username,
-      'entrySemester': entrySemester,
-      'assesor': assesor,
-      'degree': degree,
-      'score': score,
-      'forums': forums,
+      if (username != null) 'username': username,
+      if (entrySemester != null) 'entrySemester': entrySemester,
+      if (assesor != null) 'assesor': assesor,
+      if (degree != null) 'degree': degree,
+      if (score != null) 'score': score,
+      if (forums != null) 'forums': forums,
     };
 
-    return await studentCollection.doc(uid).set(studentData);
+    return await studentCollection
+        .doc(uid)
+        .set(studentData, SetOptions(merge: true));
   }
 }

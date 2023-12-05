@@ -43,13 +43,15 @@ class AuthenticationController {
 
       User? user = result.user;
 
-      await AppUserController(uid: user!.uid).updateStudentData(
-          username: username,
-          entrySemester: entrySemester,
-          assesor: assesor,
-          degree: degree,
-          score: 0.0,
-          forums: []);
+      if (user != null) {
+        await AppUserController(uid: user.uid).updateStudentData(
+            username: username,
+            entrySemester: entrySemester,
+            assesor: assesor,
+            degree: degree,
+            score: 0.0,
+            forums: []);
+      }
 
       return _userFromFirebaseUser(user);
     } catch (e) {
