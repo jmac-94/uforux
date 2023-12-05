@@ -1,3 +1,4 @@
+import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -106,107 +107,6 @@ class _ProfileState extends State<Profile> {
                         fontSize: 15,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                const SizedBox(height: 4),
-                                Text.rich(
-                                  TextSpan(
-                                    text: getUserType(),
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  'Rango',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              children: [
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                const SizedBox(height: 4),
-                                RatingBar.builder(
-                                  initialRating: loggedUser.score ?? 0,
-                                  minRating: 0,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemPadding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  itemBuilder: (context, _) => const Icon(
-                                    Icons.star_rate_rounded,
-                                    color: Colors.amber,
-                                  ),
-                                  itemSize: 35,
-                                  ignoreGestures: true,
-                                  onRatingUpdate: (rating) {},
-                                ),
-                                const Text(
-                                  'Score',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              children: [
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                const SizedBox(height: 4),
-                                Text.rich(
-                                  TextSpan(
-                                    text: loggedUser.entrySemester,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  'Ciclo de ingreso',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -291,8 +191,121 @@ class _ProfileState extends State<Profile> {
                               ),
                             ),
                           ),
-                          const Center(
-                            child: Text('Contenido sobre mi'),
+                          ListView(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(
+                                  top: 16.0,
+                                ),
+                                child: Text(
+                                  'Josue Sandoval Castillo',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  getUserType(),
+                                  style: TextStyle(
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              // Column(
+                              //   children: [
+                              //     const SizedBox(
+                              //       height: 20,
+                              //     ),
+                              //     const SizedBox(height: 4),
+                              //     RatingBar.builder(
+                              //       initialRating: loggedUser.score ?? 0,
+                              //       minRating: 0,
+                              //       direction: Axis.horizontal,
+                              //       allowHalfRating: true,
+                              //       itemCount: 5,
+                              //       itemPadding: const EdgeInsets.symmetric(
+                              //           horizontal: 4.0),
+                              //       itemBuilder: (context, _) => const Icon(
+                              //         Icons.star_rate_rounded,
+                              //         color: Colors.amber,
+                              //       ),
+                              //       itemSize: 35,
+                              //       ignoreGestures: true,
+                              //       onRatingUpdate: (rating) {},
+                              //     ),
+                              //     const Text(
+                              //       'Score',
+                              //       style: TextStyle(
+                              //         fontSize: 14,
+                              //         fontWeight: FontWeight.w500,
+                              //         color: Colors.black,
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(FontAwesomeIcons.instagram),
+                                  SizedBox(width: 25),
+                                  Icon(FontAwesomeIcons.linkedin),
+                                  SizedBox(width: 25),
+                                  Icon(FontAwesomeIcons.github),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text.rich(
+                                    TextSpan(
+                                      text: loggedUser.entrySemester,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Ciclo de ingreso',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 20.0,
+                                  horizontal: 30.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Hola soy un estudiante de 4to ciclo, me gusta mucho la programación y el diseño de aplicaciones móviles, me gustaría poder ayudar a los demás con sus dudas y problemas, espero poder ayudarlos en lo que pueda.',
+                                    textAlign: TextAlign.justify,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
