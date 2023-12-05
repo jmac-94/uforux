@@ -7,13 +7,13 @@ import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
 class AuthenticationController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  AppUser? _userFromFirebaseUser(User? user) {
+  AppUser? _appUserFromFirebaseUser(User? user) {
     return user == null ? null : AppUser(id: user.uid);
   }
 
   Stream<AppUser?> get user {
     Stream<User?> streamUser = _auth.authStateChanges();
-    return streamUser.map(_userFromFirebaseUser);
+    return streamUser.map(_appUserFromFirebaseUser);
   }
 
   Future signInWithEmailAndPassword(String email, String password) async {
@@ -23,9 +23,9 @@ class AuthenticationController {
 
       User? user = result.user;
 
-      return _userFromFirebaseUser(user);
+      return _appUserFromFirebaseUser(user);
     } catch (e) {
-      dPrint(e.toString());
+      dPrint(e);
     }
   }
 
@@ -53,7 +53,7 @@ class AuthenticationController {
             forums: []);
       }
 
-      return _userFromFirebaseUser(user);
+      return _appUserFromFirebaseUser(user);
     } catch (e) {
       dPrint(e.toString());
     }
