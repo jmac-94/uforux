@@ -25,8 +25,7 @@ class Validations {
   }
 
   static String? validatePassword(String? value) {
-    // if (value == null || value.isEmpty || value.length < 6) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.isEmpty || value.length < 6) {
       return 'Por favor, ingresar una contraseña válida.';
     }
     return null;

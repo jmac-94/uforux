@@ -5,4 +5,3 @@ dynamic dPrint(dynamic message) {
     print(message);
   }
 }
-
