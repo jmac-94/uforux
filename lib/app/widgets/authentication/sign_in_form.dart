@@ -32,9 +32,9 @@ class _SignInFormState extends State<SignInForm> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Text(
+        const Text(
           Constants.appName,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 70.0,
             fontWeight: FontWeight.bold,
           ),

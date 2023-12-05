@@ -37,9 +37,9 @@ class _RegisterFormState extends State<RegisterForm> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Text(
+        const Text(
           Constants.appName,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 70.0,
             fontWeight: FontWeight.bold,
           ),
@@ -148,7 +148,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             const SizedBox(height: 20.0),
             CustomDropdownField(
-              items: degrees,
+              items: Constants.degrees,
               hintText: 'Carrera',
               onChanged: (value) {},
               validator: Validations.validateDegree,
