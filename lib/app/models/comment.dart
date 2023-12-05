@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:uforuxpi3/app/models/app_user.dart';
 
 class Comment {
   final String id;
   final String userId;
+  AppUser? author;
   String text;
   int ups;
   final Timestamp createdAt;
@@ -13,12 +14,21 @@ class Comment {
   Comment({
     required this.id,
     required this.userId,
+    this.author,
     required this.text,
     required this.ups,
     required this.createdAt,
     required this.attachments,
     this.comments,
   });
+
+  bool hasDocuments() {
+    return attachments['documents']?.isNotEmpty ?? false;
+  }
+
+  bool hasImages() {
+    return attachments['images']?.isNotEmpty ?? false;
+  }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:uforuxpi3/app/models/comment.dart';
 
 class ForumHeader extends StatelessWidget {
+  final String profilePhoto;
+  final Comment comment;
+
   const ForumHeader({
     super.key,
     required this.profilePhoto,
-    required this.name,
-    required this.realTime,
+    required this.comment,
   });
-
-  final String profilePhoto;
-  final String name;
-  final String realTime;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,6 @@ class ForumHeader extends StatelessWidget {
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
         ),
-        //color: Colors.blue[100],
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -40,7 +38,7 @@ class ForumHeader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Text(
-              name,
+              comment.author?.username ?? '',
               style: const TextStyle(
                 fontSize: 11,
               ),

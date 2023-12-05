@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
 import 'package:uuid/uuid.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class IconsActions extends StatefulWidget {
-  final bool hasImage;
   final Comment comment;
   final uuid = const Uuid();
-  final String date;
 
   ///////////////////////////// TEMPORAL
   // Agregar clase padre para homeController y courseController para que
@@ -20,10 +19,8 @@ class IconsActions extends StatefulWidget {
 
   const IconsActions({
     super.key,
-    required this.hasImage,
     required this.comment,
     required this.homeController,
-    required this.date,
   });
 
   @override
@@ -121,7 +118,7 @@ class _IconsActionsState extends State<IconsActions> {
               ),
               const Spacer(),
               Text(
-                widget.date,
+                timeago.format(widget.comment.createdAt.toDate()),
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
@@ -199,7 +196,8 @@ class _IconsActionsState extends State<IconsActions> {
                               child: Row(
                                 children: [
                                   Text(
-                                    widget.date,
+                                    timeago.format(
+                                        widget.comment.createdAt.toDate()),
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey[500],
@@ -319,7 +317,9 @@ class _IconsActionsState extends State<IconsActions> {
                                                     ),
                                                     const SizedBox(width: 3),
                                                     Text(
-                                                      widget.date,
+                                                      timeago.format(widget
+                                                          .comment.createdAt
+                                                          .toDate()),
                                                       style: TextStyle(
                                                         fontSize: 10,
                                                         color: Colors.grey[500],

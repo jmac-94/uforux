@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:faker/faker.dart';
 
 import 'package:uforuxpi3/app/controllers/course_controller.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/comment_data.dart';
+import 'package:uforuxpi3/app/models/comment.dart';
 import 'package:uforuxpi3/app/widgets/home/body_data.dart';
 import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
 import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
@@ -60,28 +61,11 @@ class _DetailScreenState extends State<DetailScreen> {
     super.dispose();
   }
 
-  CommentData getCommentData(int index) {
-    var commentsList = courseController.comments.values.toList();
-    var comment = commentsList[index];
-    final realTime = timeago.format(comment.createdAt.toDate());
-    const profilePhoto =
-        'https://pbs.twimg.com/profile_images/1508500949400129537/4gQ4z4Na_400x400.jpg';
-    String? image;
-    bool hasImage = false;
+  String getUserProfilePhoto(Comment comment) {
+    final profilePhoto =
+        'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
 
-    if (comment.attachments['images'] != null &&
-        comment.attachments['images']!.isNotEmpty) {
-      image = comment.attachments['images']?[0];
-      hasImage = true;
-    }
-
-    return CommentData(
-      comment: comment,
-      realTime: realTime,
-      profilePhoto: profilePhoto,
-      image: image ?? '',
-      hasImage: hasImage,
-    );
+    return profilePhoto;
   }
 
   void _scrollListener() {
@@ -209,8 +193,14 @@ class _DetailScreenState extends State<DetailScreen> {
                                 }
                               }
 
-                              var commentData = getCommentData(index);
-                              var comment = commentData.comment;
+                              // Get current comment from index
+                              final List<Comment> commentsList =
+                                  courseController.comments.values.toList();
+                              final Comment comment = commentsList[index];
+
+                              // Get current comment properties
+                              final String profilePhoto =
+                                  getUserProfilePhoto(comment);
 
                               return FutureBuilder<AppUser>(
                                 future: courseController
@@ -223,10 +213,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                   } else if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
                                   } else {
-                                    final commentAuthor = snapshot.data;
-                                    final String name = commentAuthor != null
-                                        ? (commentAuthor.username ?? '')
-                                        : '';
+                                    // Get current comment author username
+                                    comment.author = snapshot.data;
 
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -244,19 +232,14 @@ class _DetailScreenState extends State<DetailScreen> {
                                           child: Column(
                                             children: [
                                               ForumHeader(
-                                                profilePhoto:
-                                                    commentData.profilePhoto,
-                                                name: name,
-                                                realTime: commentData.realTime,
+                                                profilePhoto: profilePhoto,
+                                                comment: comment,
                                               ),
                                               const SizedBox(height: 5),
                                               BodyData(
-                                                image: commentData.image,
-                                                hasImage: commentData.hasImage,
-                                                text: comment.text,
-                                                comment: comment,
                                                 homeController:
                                                     courseController,
+                                                comment: comment,
                                               ),
                                               Container(
                                                 width: double.infinity,
@@ -264,11 +247,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                                 color: Colors.grey[200],
                                               ),
                                               IconsActions(
-                                                hasImage: commentData.hasImage,
                                                 comment: comment,
                                                 homeController:
                                                     courseController,
-                                                date: commentData.realTime,
                                               ),
                                             ],
                                           ),

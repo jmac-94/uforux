@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
 
 class BodyData extends StatelessWidget {
-  final String image;
-  final bool hasImage;
-  final String text;
   final Comment comment;
   ///////////////////////////// TEMPORAL
   // Agregar clase padre para homeController y courseController para que
@@ -13,13 +10,11 @@ class BodyData extends StatelessWidget {
   final dynamic homeController;
   ///////////////////////////////////////
 
-  const BodyData(
-      {super.key,
-      required this.image,
-      required this.hasImage,
-      required this.text,
-      required this.comment,
-      required this.homeController});
+  const BodyData({
+    super.key,
+    required this.comment,
+    required this.homeController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +55,7 @@ class BodyData extends StatelessWidget {
             ),
           ),
         ),
-        if (hasImage)
+        if (comment.hasImages())
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 10.0,
@@ -68,16 +63,16 @@ class BodyData extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: FutureBuilder<String>(
-                future: homeController.getImageUrl(image),
+              child: FutureBuilder<Widget>(
+                future: Future.value(createCarousel()),
                 builder:
-                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return createCarousel();
+                    return snapshot.data!;
                   }
                 },
               ),

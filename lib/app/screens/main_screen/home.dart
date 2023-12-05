@@ -2,11 +2,10 @@ import 'dart:io';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:uforuxpi3/app/controllers/home_controller.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/comment_data.dart';
+import 'package:uforuxpi3/app/models/comment.dart';
 import 'package:uforuxpi3/app/widgets/home/body_data.dart';
 import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
 import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
@@ -30,28 +29,11 @@ class _HomeState extends State<Home> {
   late HomeController _homeController;
   Map<String, List<Pair<String, File>>>? files = {};
 
-  CommentData getCommentData(int index) {
-    var commentsList = _homeController.comments.values.toList();
-    var comment = commentsList[index];
-    final realTime = timeago.format(comment.createdAt.toDate());
+  String getUserProfilePhoto(Comment comment) {
     final profilePhoto =
         'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
-    String? image;
-    bool hasImage = false;
 
-    if (comment.attachments['images'] != null &&
-        comment.attachments['images']!.isNotEmpty) {
-      image = comment.attachments['images']?[0];
-      hasImage = true;
-    }
-
-    return CommentData(
-      comment: comment,
-      realTime: realTime,
-      profilePhoto: profilePhoto,
-      image: image ?? '',
-      hasImage: hasImage,
-    );
+    return profilePhoto;
   }
 
   void _scrollListener() {
@@ -148,12 +130,17 @@ class _HomeState extends State<Home> {
                             child: CircularProgressIndicator(),
                           );
                         } else {
-                          return Container(); // No more data to load
+                          return Container();
                         }
                       }
 
-                      var commentData = getCommentData(index);
-                      var comment = commentData.comment;
+                      // Get current comment from index
+                      final List<Comment> commentsList =
+                          _homeController.comments.values.toList();
+                      final Comment comment = commentsList[index];
+
+                      // Get current comment properties
+                      final String profilePhoto = getUserProfilePhoto(comment);
 
                       return FutureBuilder<AppUser>(
                         future: _homeController.fetchAppUser(comment.userId),
@@ -165,10 +152,8 @@ class _HomeState extends State<Home> {
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
-                            final commentAuthor = snapshot.data;
-                            final String name = commentAuthor != null
-                                ? (commentAuthor.username ?? '')
-                                : '';
+                            // Get current comment author username
+                            comment.author = snapshot.data;
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
@@ -185,17 +170,13 @@ class _HomeState extends State<Home> {
                                   child: Column(
                                     children: [
                                       ForumHeader(
-                                        profilePhoto: commentData.profilePhoto,
-                                        name: name,
-                                        realTime: commentData.realTime,
+                                        profilePhoto: profilePhoto,
+                                        comment: comment,
                                       ),
                                       const SizedBox(height: 5),
                                       BodyData(
-                                        image: commentData.image,
-                                        hasImage: commentData.hasImage,
-                                        text: comment.text,
-                                        comment: comment,
                                         homeController: _homeController,
+                                        comment: comment,
                                       ),
                                       Container(
                                         width: double.infinity,
@@ -203,10 +184,8 @@ class _HomeState extends State<Home> {
                                         color: Colors.grey[200],
                                       ),
                                       IconsActions(
-                                        hasImage: commentData.hasImage,
                                         comment: comment,
                                         homeController: _homeController,
-                                        date: commentData.realTime,
                                       ),
                                     ],
                                   ),
