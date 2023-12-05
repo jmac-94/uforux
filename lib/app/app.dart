@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       initialData: null,
       child: MaterialApp(
         title: Constants.appName,
-        theme: ThemeClass.lighTheme,
+        theme: ThemeClass.lightTheme,
         darkTheme: ThemeClass.darkTheme,
         themeMode: ThemeMode.light,
         home: const Wrapper(),
