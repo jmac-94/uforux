@@ -1,17 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
 
 class Forum {
-  final String id;
-  final String name;
-  final String description;
-  final DateTime createdAt;
-  final Map<String, Comment> comments;
+  String? id;
+  String? name;
+  String? description;
+  Timestamp? createdAt;
+  Map<String, Comment> comments;
 
   Forum({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.createdAt,
+    this.id,
+    this.name,
+    this.description,
+    this.createdAt,
     required this.comments,
   });
 
@@ -20,7 +21,7 @@ class Forum {
       'id': id,
       'name': name,
       'description': description,
-      'createdAt': createdAt.toUtc().toIso8601String(),
+      'createdAt': createdAt,
       'comments': comments.map((key, value) => MapEntry(key, value.toJson())),
     };
   }
@@ -30,7 +31,7 @@ class Forum {
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: json['createdAt'] as Timestamp,
       comments: (json['comments'] as Map<String, dynamic>).map(
         (key, value) => MapEntry(key, Comment.fromJson(value)),
       ),

@@ -1,19 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:uforuxpi3/app/controllers/forum_controller.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
 
 class BodyData extends StatelessWidget {
   final Comment comment;
-  ///////////////////////////// TEMPORAL
-  // Agregar clase padre para homeController y courseController para que
-  // ambas puedan estar aqui
-  final dynamic homeController;
-  ///////////////////////////////////////
+  final ForumController forumController;
 
   const BodyData({
     super.key,
     required this.comment,
-    required this.homeController,
+    required this.forumController,
   });
 
   @override
@@ -123,65 +120,6 @@ class BodyData extends StatelessWidget {
             ),
           ],
         ),
-        if (false) //comment.attachments.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: comment.attachments.values
-                    .expand((fileList) => fileList)
-                    .map((filePath) {
-                  String fileName = filePath.split('/').last;
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Text(
-                            fileName,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.download_rounded),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Confirmación de descarga'),
-                                content: const Text(
-                                    '¿Deseas continuar con la descarga?'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('Cancelar'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: const Text('Confirmar'),
-                                    onPressed: () async {
-                                      // await homeController
-                                      //     .downloadFile(filePath);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
       ],
     );
   }
@@ -194,7 +132,7 @@ class BodyData extends StatelessWidget {
       ),
       items: comment.attachments['images']?.map((attachment) {
             return FutureBuilder<Image>(
-              future: homeController.getImage(attachment),
+              future: forumController.fetchImage(attachment),
               builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();

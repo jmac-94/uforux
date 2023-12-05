@@ -3,9 +3,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 
-import 'package:uforuxpi3/app/controllers/course_controller.dart';
+import 'package:uforuxpi3/app/controllers/forum_controller.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
+import 'package:uforuxpi3/app/models/forum.dart';
 import 'package:uforuxpi3/app/widgets/home/body_data.dart';
 import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
 import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
@@ -32,7 +33,7 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   final ScrollController _scrollController = ScrollController();
-  late CourseController courseController;
+  late ForumController forumController;
 
   String removeAccentsAndToLowercase(String text) {
     const accents = 'áéíóúÁÉÍÓÚ';
@@ -48,9 +49,13 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-    courseController = CourseController(
-        userId: 'bnVVq7WpH1hMJtkCO4Igej1B4Lb2',
-        courseName: removeAccentsAndToLowercase(widget.title));
+    Forum forum =
+        Forum(name: removeAccentsAndToLowercase(widget.title), comments: {});
+    forumController = ForumController(
+      forum: forum,
+      loggedUserId: 'bnVVq7WpH1hMJtkCO4Igej1B4Lb2',
+    );
+
     _scrollController.addListener(_scrollListener);
   }
 
@@ -70,8 +75,8 @@ class _DetailScreenState extends State<DetailScreen> {
   void _scrollListener() {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
-        courseController.hasMoreData) {
-      courseController.fetchComments();
+        forumController.hasMoreData) {
+      forumController.loadComments();
     }
   }
 
@@ -156,17 +161,17 @@ class _DetailScreenState extends State<DetailScreen> {
                 children: [
                   RefreshIndicator(
                     onRefresh: () async {
-                      await courseController.fetchComments(isRefresh: true);
+                      await forumController.loadComments(isRefresh: true);
                       setState(() {});
                     },
                     child: FutureBuilder<void>(
-                      future: courseController.initialFetchDone
+                      future: forumController.initialFetchDone
                           ? null
-                          : courseController.fetchComments(),
+                          : forumController.loadComments(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                                 ConnectionState.waiting &&
-                            !courseController.initialFetchDone) {
+                            !forumController.initialFetchDone) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
@@ -178,12 +183,13 @@ class _DetailScreenState extends State<DetailScreen> {
                           return ListView.separated(
                             physics: const AlwaysScrollableScrollPhysics(),
                             controller: _scrollController,
-                            itemCount: courseController.hasMoreData
-                                ? courseController.comments.length + 1
-                                : courseController.comments.length,
+                            itemCount: forumController.hasMoreData
+                                ? forumController.forum.comments.length + 1
+                                : forumController.forum.comments.length,
                             itemBuilder: (context, index) {
-                              if (index == courseController.comments.length) {
-                                if (courseController.hasMoreData) {
+                              if (index ==
+                                  forumController.forum.comments.length) {
+                                if (forumController.hasMoreData) {
                                   return const Center(
                                     child: CircularProgressIndicator(),
                                   );
@@ -193,8 +199,9 @@ class _DetailScreenState extends State<DetailScreen> {
                               }
 
                               // Get current comment from index
-                              final List<Comment> commentsList =
-                                  courseController.comments.values.toList();
+                              final List<Comment> commentsList = forumController
+                                  .forum.comments.values
+                                  .toList();
                               final Comment comment = commentsList[index];
 
                               // Get current comment properties
@@ -202,7 +209,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   getUserProfilePhoto(comment);
 
                               return FutureBuilder<AppUser>(
-                                future: courseController
+                                future: forumController
                                     .fetchAppUser(comment.userId),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<AppUser> snapshot) {
@@ -227,7 +234,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                           color: Colors.white,
                                         ),
                                         child: Hero(
-                                          tag: 'CommentsForum',
+                                          tag: 'CommentsForum${comment.id}',
                                           child: Column(
                                             children: [
                                               ForumHeader(
@@ -236,8 +243,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                               ),
                                               const SizedBox(height: 5),
                                               BodyData(
-                                                homeController:
-                                                    courseController,
+                                                forumController:
+                                                    forumController,
                                                 comment: comment,
                                               ),
                                               Container(
@@ -247,8 +254,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                               ),
                                               IconsActions(
                                                 comment: comment,
-                                                homeController:
-                                                    courseController,
+                                                forumController:
+                                                    forumController,
                                               ),
                                             ],
                                           ),
@@ -374,7 +381,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   onPressed: () {
                     String text = commentController.text;
                     Navigator.of(context).pop();
-                    courseController.submitComment(text, filesMap);
+                    forumController.submitComment(text, filesMap);
                   },
                 ),
               ],
@@ -388,12 +395,12 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget buildCommentsListView() {
     return ListView.separated(
       controller: _scrollController,
-      itemCount: courseController.hasMoreData
-          ? courseController.comments.length + 1
-          : courseController.comments.length,
+      itemCount: forumController.hasMoreData
+          ? forumController.forum.comments.length + 1
+          : forumController.forum.comments.length,
       itemBuilder: (context, index) {
-        if (index == courseController.comments.length) {
-          if (courseController.hasMoreData) {
+        if (index == forumController.forum.comments.length) {
+          if (forumController.hasMoreData) {
             return const Center(child: CircularProgressIndicator());
           } else {
             return Container(); // No more data to load
@@ -402,7 +409,7 @@ class _DetailScreenState extends State<DetailScreen> {
         return null;
 
         // Aquí, puedes agregar tu lógica para construir cada elemento de la lista.
-        // Por ejemplo, usando `courseController.comments[index]`...
+        // Por ejemplo, usando `forumController.comments[index]`...
       },
       separatorBuilder: (context, index) => Container(),
     );

@@ -7,7 +7,7 @@ import 'package:uforuxpi3/app/screens/main_screen/courses.dart';
 import 'package:uforuxpi3/app/screens/main_screen/profile.dart';
 
 class MainScreen extends StatefulWidget {
-  // El usuario no llega como null al MainScreen
+  // El usuario nunca llega como null al MainScreen
   final AppUser user;
   const MainScreen({
     super.key,

@@ -3,9 +3,10 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
-import 'package:uforuxpi3/app/controllers/home_controller.dart';
+import 'package:uforuxpi3/app/controllers/forum_controller.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
+import 'package:uforuxpi3/app/models/forum.dart';
 import 'package:uforuxpi3/app/widgets/home/body_data.dart';
 import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
 import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
@@ -26,7 +27,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
   TextEditingController commentController = TextEditingController();
-  late HomeController _homeController;
+  late ForumController forumController;
   Map<String, List<Pair<String, File>>>? files = {};
 
   String getUserProfilePhoto(Comment comment) {
@@ -39,16 +40,21 @@ class _HomeState extends State<Home> {
   void _scrollListener() {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
-        _homeController.hasMoreData) {
-      _homeController.fetchComments();
+        forumController.hasMoreData) {
+      forumController.loadComments();
     }
   }
 
   @override
   void initState() {
     super.initState();
+    Forum forum = Forum(name: 'general', comments: {});
+    forumController = ForumController(
+      forum: forum,
+      loggedUserId: widget.user.id,
+    );
+    forumController.init();
     _scrollController.addListener(_scrollListener);
-    _homeController = HomeController(widget.user.id);
   }
 
   @override
@@ -100,16 +106,16 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.grey[100],
           body: RefreshIndicator(
             onRefresh: () async {
-              await _homeController.fetchComments(isRefresh: true);
+              await forumController.loadComments(isRefresh: true);
               setState(() {});
             },
             child: FutureBuilder<void>(
-              future: _homeController.initialFetchDone
+              future: forumController.initialFetchDone
                   ? null
-                  : _homeController.fetchComments(),
+                  : forumController.loadComments(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting &&
-                    !_homeController.initialFetchDone) {
+                    !forumController.initialFetchDone) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
@@ -120,12 +126,12 @@ class _HomeState extends State<Home> {
                 } else {
                   return ListView.separated(
                     controller: _scrollController,
-                    itemCount: _homeController.hasMoreData
-                        ? _homeController.comments.length + 1
-                        : _homeController.comments.length,
+                    itemCount: forumController.hasMoreData
+                        ? forumController.forum.comments.length + 1
+                        : forumController.forum.comments.length,
                     itemBuilder: (context, index) {
-                      if (index == _homeController.comments.length) {
-                        if (_homeController.hasMoreData) {
+                      if (index == forumController.forum.comments.length) {
+                        if (forumController.hasMoreData) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
@@ -136,14 +142,14 @@ class _HomeState extends State<Home> {
 
                       // Get current comment from index
                       final List<Comment> commentsList =
-                          _homeController.comments.values.toList();
+                          forumController.forum.comments.values.toList();
                       final Comment comment = commentsList[index];
 
                       // Get current comment properties
                       final String profilePhoto = getUserProfilePhoto(comment);
 
                       return FutureBuilder<AppUser>(
-                        future: _homeController.fetchAppUser(comment.userId),
+                        future: forumController.fetchAppUser(comment.userId),
                         builder: (BuildContext context,
                             AsyncSnapshot<AppUser> snapshot) {
                           if (snapshot.connectionState ==
@@ -166,7 +172,7 @@ class _HomeState extends State<Home> {
                                   color: Colors.white,
                                 ),
                                 child: Hero(
-                                  tag: 'CommentsForum',
+                                  tag: 'CommentsForum${comment.id}',
                                   child: Column(
                                     children: [
                                       ForumHeader(
@@ -175,7 +181,7 @@ class _HomeState extends State<Home> {
                                       ),
                                       const SizedBox(height: 5),
                                       BodyData(
-                                        homeController: _homeController,
+                                        forumController: forumController,
                                         comment: comment,
                                       ),
                                       Container(
@@ -185,7 +191,7 @@ class _HomeState extends State<Home> {
                                       ),
                                       IconsActions(
                                         comment: comment,
-                                        homeController: _homeController,
+                                        forumController: forumController,
                                       ),
                                     ],
                                   ),
@@ -305,7 +311,7 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     String text = commentController.text;
                     Navigator.of(context).pop();
-                    _homeController.submitComment(text, filesMap);
+                    forumController.submitComment(text, filesMap);
                   },
                 ),
               ],

@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:uforuxpi3/app/controllers/forum_controller.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
 import 'package:uuid/uuid.dart';
@@ -10,17 +11,12 @@ import 'package:timeago/timeago.dart' as timeago;
 class IconsActions extends StatefulWidget {
   final Comment comment;
   final uuid = const Uuid();
-
-  ///////////////////////////// TEMPORAL
-  // Agregar clase padre para homeController y courseController para que
-  // ambas puedan estar aqui
-  final dynamic homeController;
-  ///////////////////////////////////////
+  final ForumController forumController;
 
   const IconsActions({
     super.key,
     required this.comment,
-    required this.homeController,
+    required this.forumController,
   });
 
   @override
@@ -40,7 +36,7 @@ class _IconsActionsState extends State<IconsActions> {
 
   void fetchUserLikeStatus() async {
     bool userLikeStatus =
-        await widget.homeController.fetchUserLikeStatus(widget.comment.id);
+        await widget.forumController.hasUserLikedComment(widget.comment.id);
 
     if (mounted) {
       setState(() {
@@ -72,10 +68,8 @@ class _IconsActionsState extends State<IconsActions> {
               onPressed: () async {
                 setState(() {
                   isLiked = !isLiked;
-                  widget.comment.ups =
-                      isLiked ? widget.comment.ups + 1 : widget.comment.ups - 1;
                 });
-                await widget.homeController
+                await widget.forumController
                     .updateCommentLikes(widget.comment.id, isLiked);
               },
               icon: Icon(
@@ -223,7 +217,8 @@ class _IconsActionsState extends State<IconsActions> {
                                       showModalBottomSheet(
                                         context: context,
                                         builder: (context) => CommentSection(
-                                          homeController: widget.homeController,
+                                          forumController:
+                                              widget.forumController,
                                           comment: widget.comment,
                                         ),
                                       );
@@ -381,7 +376,7 @@ class _IconsActionsState extends State<IconsActions> {
       ),
       items: widget.comment.attachments['images']?.map((attachment) {
             return FutureBuilder<Image>(
-              future: widget.homeController.getImage(attachment),
+              future: widget.forumController.fetchImage(attachment),
               builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -415,12 +410,11 @@ class _IconsActionsState extends State<IconsActions> {
 }
 
 class CommentSection extends StatefulWidget {
-  // TAMBIEN CAMBIAR ESTOOOOOOOOOOOOO PARA CONTROLLER HOME Y COURSE
-  final dynamic homeController;
+  final ForumController forumController;
   final Comment comment;
 
   const CommentSection(
-      {super.key, required this.homeController, required this.comment});
+      {super.key, required this.forumController, required this.comment});
 
   @override
   State<CommentSection> createState() => _CommentSectionState();
@@ -434,7 +428,7 @@ class _CommentSectionState extends State<CommentSection> {
     try {
       String subcommentText = _commentController.text;
 
-      final String userId = widget.homeController.userId;
+      final String userId = widget.forumController.loggedUserId;
 
       Comment subcomment = Comment.fromJson({
         'id': uuid.v1(),
@@ -445,7 +439,7 @@ class _CommentSectionState extends State<CommentSection> {
         'attachments': {},
       });
 
-      await widget.homeController.submitSubcomment(widget.comment, subcomment);
+      await widget.forumController.submitSubcomment(widget.comment, subcomment);
 
       _commentController.clear();
       // ignore: use_build_context_synchronously
