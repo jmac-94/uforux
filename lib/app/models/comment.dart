@@ -38,31 +38,10 @@ class Comment {
   }
 
   static Comment fromJson(Map<String, dynamic> json) {
-    Map<String, List<String>> attachments = {};
-
-    if (json['attachments'] != null || json['attachments'] != {}) {
-      Map<String, dynamic> attachmentsJson =
-          Map<String, dynamic>.from(json['attachments']);
-      // Map<String, dynamic> attachmentsJson = json['attachments'];
-      attachmentsJson.forEach((key, value) {
-        attachments[key] = List<String>.from(value);
-      });
-    }
-
+    Map<String, Comment>? comments;
     if (json.containsKey('comments')) {
-      final Map<String, dynamic> jsonComments = json['comments'];
-
-      final Map<String, Comment> c = jsonComments
-          .map((key, value) => MapEntry(key, Comment.fromJson(value)));
-
-      return Comment(
-        id: json['id'],
-        userId: json['userId'],
-        text: json['text'],
-        ups: json['ups'],
-        createdAt: json['createdAt'] as Timestamp,
-        attachments: attachments,
-        comments: c,
+      comments = (json['comments'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, Comment.fromJson(value)),
       );
     }
 
@@ -72,7 +51,8 @@ class Comment {
       text: json['text'],
       ups: json['ups'],
       createdAt: json['createdAt'] as Timestamp,
-      attachments: attachments,
+      attachments: json['attachments'],
+      comments: comments,
     );
   }
 }

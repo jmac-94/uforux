@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppUserController {
   final String uid;
+
   AppUserController({required this.uid});
 
   final CollectionReference studentCollection =

@@ -5,6 +5,7 @@ class AppUser {
   final String? entrySemester;
   final double? score;
   final bool? assesor;
+  final List<String>? subscribedForums;
 
   AppUser(
       {required this.id,
@@ -12,7 +13,8 @@ class AppUser {
       this.degree,
       this.entrySemester,
       this.score,
-      this.assesor});
+      this.assesor,
+      this.subscribedForums});
 
   Map<String, dynamic> toJson() {
     return {
@@ -22,6 +24,7 @@ class AppUser {
       'entrySemester': entrySemester,
       'score': score,
       'assesor': assesor,
+      'subscribedForums': subscribedForums,
     };
   }
 
@@ -32,6 +35,7 @@ class AppUser {
         degree: json['degree'],
         entrySemester: json['entrySemester'],
         score: json['score'],
-        assesor: json['assesor']);
+        assesor: json['assesor'],
+        subscribedForums: json['subscribedForums']);
   }
 }
