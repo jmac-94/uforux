@@ -161,7 +161,7 @@ class _IconsActionsState extends State<IconsActions> {
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      widget.comment.text,
+                                      widget.comment.description,
                                       style: const TextStyle(
                                         fontSize: 24,
                                       ),
@@ -326,7 +326,7 @@ class _IconsActionsState extends State<IconsActions> {
                                               ),
                                               const SizedBox(width: 10),
                                               Text(
-                                                comment.text,
+                                                comment.description,
                                               ),
                                             ],
                                           ),
@@ -433,7 +433,8 @@ class _CommentSectionState extends State<CommentSection> {
       Comment subcomment = Comment.fromJson({
         'id': uuid.v1(),
         'userId': userId,
-        'text': subcommentText,
+        'title': subcommentText,
+        'description': subcommentText,
         'ups': 0,
         'createdAt': Timestamp.now(),
         'attachments': {},

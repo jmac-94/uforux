@@ -26,7 +26,7 @@ class BodyData extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomLeft,
             child: Text(
-              comment.text,
+              comment.title,
               maxLines: 5,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
@@ -42,7 +42,7 @@ class BodyData extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomLeft,
             child: Text(
-              'lorem ipsum dolor sit amet, consectetur elit, nisl eget aliquam ultricies, nisl nisl aliquam nisl, nec aliquam nisl ',
+              comment.description,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.left,
               maxLines: 5,

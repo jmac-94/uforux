@@ -167,11 +167,12 @@ class ForumController {
   // Map de key = Type
   // value = Lista de pairs(filename, file)
   Future<void> submitComment(
-    String text,
+    String title,
+    String description,
     Map<String, List<Pair<String, File>>>? filesMap,
   ) async {
     try {
-      if (text.trim().isEmpty) return;
+      if (title.trim().isEmpty || description.trim().isEmpty) return;
 
       final String newCommentId = uuid.v1();
       final Map<String, List<String>> attachments =
@@ -180,7 +181,8 @@ class ForumController {
       final Comment newComment = Comment(
         id: newCommentId,
         userId: loggedUserId,
-        text: text,
+        title: title,
+        description: description,
         ups: 0,
         createdAt: Timestamp.now(),
         attachments: attachments,

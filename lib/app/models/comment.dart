@@ -5,7 +5,8 @@ class Comment {
   final String id;
   final String userId;
   AppUser? author;
-  String text;
+  String title;
+  String description;
   int ups;
   final Timestamp createdAt;
   final Map<String, List<String>> attachments;
@@ -15,7 +16,8 @@ class Comment {
     required this.id,
     required this.userId,
     this.author,
-    required this.text,
+    required this.title,
+    required this.description,
     required this.ups,
     required this.createdAt,
     required this.attachments,
@@ -34,7 +36,8 @@ class Comment {
     Map<String, dynamic> json = {
       'id': id,
       'userId': userId,
-      'text': text,
+      'title': title,
+      'description': description,
       'ups': ups,
       'createdAt': createdAt,
       'attachments': attachments,
@@ -64,7 +67,8 @@ class Comment {
     return Comment(
       id: json['id'],
       userId: json['userId'],
-      text: json['text'],
+      title: json['title'],
+      description: json['description'],
       ups: json['ups'],
       createdAt: json['createdAt'] as Timestamp,
       attachments: attachments,

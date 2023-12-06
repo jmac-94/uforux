@@ -19,7 +19,7 @@ class CardBook extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DetailScreen(title: title)),
+          MaterialPageRoute(builder: (context) => ForumView(title: title)),
         );
       },
       child: Column(

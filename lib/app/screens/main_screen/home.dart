@@ -27,9 +27,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
-  TextEditingController commentController = TextEditingController();
   late ForumController forumController;
-  Map<String, List<Pair<String, File>>>? files = {};
 
   String getUserProfilePhoto(Comment comment) {
     final profilePhoto =
@@ -232,18 +230,23 @@ class _HomeState extends State<Home> {
 class CreateGroupScreen extends StatefulWidget {
   final ForumController forumController;
 
-  const CreateGroupScreen({super.key, required this.forumController});
+  const CreateGroupScreen({
+    super.key,
+    required this.forumController,
+  });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CreateGroupScreenState createState() => _CreateGroupScreenState();
+  State<CreateGroupScreen> createState() => _CreateGroupScreenState();
 }
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
-  TextEditingController commentController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
   Map<String, List<Pair<String, File>>> filesMap = {};
   List<String> uploadedFileNames = [];
-  List<String> allEtiquetas = [
+
+  List<String> allLabels = [
     'Flutter',
     'Dart',
     'Firebase',
@@ -251,8 +254,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     'Backend',
     'Frontend'
   ];
-
-  List<String> etiquetasSeleccionadas = [];
+  List<String> selectedLabels = [];
 
   @override
   Widget build(BuildContext context) {
@@ -309,7 +311,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ),
               child: TextField(
                 textAlign: TextAlign.left,
-                controller: commentController,
+                controller: titleController,
                 cursorColor: Colors.black,
                 decoration: const InputDecoration(
                   hintText: 'Escribe tu idea aca',
@@ -335,10 +337,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.08,
               ),
-              child: const TextField(
+              child: TextField(
                 textAlign: TextAlign.left,
+                controller: descriptionController,
                 cursorColor: Colors.black,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Escribe un poco mas detallado tu pregunta',
                   border: InputBorder.none,
                   hintMaxLines: 3,
@@ -442,16 +445,16 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   if (textEditingValue.text == '') {
                     return const Iterable<String>.empty();
                   }
-                  return allEtiquetas.where((String etiqueta) {
-                    return etiqueta
+                  return allLabels.where((String label) {
+                    return label
                         .toLowerCase()
                         .startsWith(textEditingValue.text.toLowerCase());
                   });
                 },
                 onSelected: (String selectedEtiqueta) {
                   setState(() {
-                    if (!etiquetasSeleccionadas.contains(selectedEtiqueta)) {
-                      etiquetasSeleccionadas.add(selectedEtiqueta);
+                    if (!selectedLabels.contains(selectedEtiqueta)) {
+                      selectedLabels.add(selectedEtiqueta);
                     }
                   });
                 },
@@ -473,14 +476,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             Wrap(
               spacing: 8.0,
               runSpacing: 4.0,
-              children: etiquetasSeleccionadas
+              children: selectedLabels
                   .map(
                     (etiqueta) => Chip(
                       label: Text(etiqueta),
                       onDeleted: () {
                         setState(
                           () {
-                            etiquetasSeleccionadas.remove(etiqueta);
+                            selectedLabels.remove(etiqueta);
                           },
                         );
                       },
@@ -493,9 +496,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          String text = commentController.text;
+          String title = titleController.text;
+          String description = descriptionController.text;
           Navigator.of(context).pop();
-          widget.forumController.submitComment(text, filesMap);
+          widget.forumController.submitComment(title, description, filesMap);
         },
         child: const Icon(Icons.check),
       ),

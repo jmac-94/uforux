@@ -15,25 +15,58 @@ import 'package:uforuxpi3/core/structures/pair.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: DetailScreen(
+      home: ForumView(
         title: 'View',
       ),
     ),
   );
 }
 
-class DetailScreen extends StatefulWidget {
+class ForumView extends StatefulWidget {
   final String title;
 
-  const DetailScreen({super.key, required this.title});
+  const ForumView({
+    super.key,
+    required this.title,
+  });
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
+  State<ForumView> createState() => _DetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
+class _DetailScreenState extends State<ForumView> {
   final ScrollController _scrollController = ScrollController();
   late ForumController forumController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Forum forum =
+        Forum(name: removeAccentsAndToLowercase(widget.title), comments: {});
+
+    forumController = ForumController(
+      forum: forum,
+      loggedUserId: 'bnVVq7WpH1hMJtkCO4Igej1B4Lb2',
+    );
+    forumController.init();
+
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        forumController.hasMoreData) {
+      forumController.loadComments();
+    }
+  }
 
   String removeAccentsAndToLowercase(String text) {
     const accents = 'áéíóúÁÉÍÓÚ';
@@ -46,25 +79,6 @@ class _DetailScreenState extends State<DetailScreen> {
     return text.toLowerCase();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    Forum forum =
-        Forum(name: removeAccentsAndToLowercase(widget.title), comments: {});
-    forumController = ForumController(
-      forum: forum,
-      loggedUserId: 'bnVVq7WpH1hMJtkCO4Igej1B4Lb2',
-    );
-
-    _scrollController.addListener(_scrollListener);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   String getUserProfilePhoto(Comment comment) {
     final profilePhoto =
         'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
@@ -72,12 +86,12 @@ class _DetailScreenState extends State<DetailScreen> {
     return profilePhoto;
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        forumController.hasMoreData) {
-      forumController.loadComments();
-    }
+  void _showCreateGroupScreen() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CreateGroupScreen(
+        forumController: forumController,
+      ),
+    ));
   }
 
   @override
@@ -284,111 +298,10 @@ class _DetailScreenState extends State<DetailScreen> {
             Icons.add_comment,
           ),
           onPressed: () {
-            _showDialog();
+            _showCreateGroupScreen();
           },
         ),
       ),
-    );
-  }
-
-  void _showDialog() {
-    TextEditingController commentController = TextEditingController();
-    Map<String, List<Pair<String, File>>> filesMap = {};
-    List<String> uploadedFileNames = [];
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Nuevo foro'),
-              icon: const Icon(Icons.add_home_rounded),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        hintText: 'Escribe tu comentario aquí',
-                      ),
-                    ),
-                    ElevatedButton(
-                      child: const Text('Añadir archivos'),
-                      onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform
-                            .pickFiles(allowMultiple: true);
-                        if (result != null) {
-                          for (var pickedFile in result.files) {
-                            String path = pickedFile.path!;
-                            File file = File(path);
-                            String extension = pickedFile.extension!;
-                            String name = pickedFile.name;
-                            uploadedFileNames.add(name);
-                            String type;
-                            if (extension == 'pdf') {
-                              type = 'documents';
-                            } else if ([
-                              'jpg',
-                              'jpeg',
-                              'png',
-                              'gif',
-                              'bmp',
-                              'webp'
-                            ].contains(extension)) {
-                              type = 'images';
-                            } else {
-                              continue;
-                            }
-                            if (filesMap.containsKey(type)) {
-                              filesMap[type]!.add(Pair(name, file));
-                            } else {
-                              filesMap[type] = [Pair(name, file)];
-                            }
-                          }
-                          setState(() {});
-                        } else {}
-                      },
-                    ),
-                    if (uploadedFileNames.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: uploadedFileNames.map(
-                            (fileName) {
-                              return Text(
-                                fileName,
-                                style: const TextStyle(fontSize: 16),
-                              );
-                            },
-                          ).toList(),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Cancelar'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text('Enviar'),
-                  onPressed: () {
-                    String text = commentController.text;
-                    Navigator.of(context).pop();
-                    forumController.submitComment(text, filesMap);
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
     );
   }
 
@@ -412,6 +325,286 @@ class _DetailScreenState extends State<DetailScreen> {
         // Por ejemplo, usando `forumController.comments[index]`...
       },
       separatorBuilder: (context, index) => Container(),
+    );
+  }
+}
+
+class CreateGroupScreen extends StatefulWidget {
+  final ForumController forumController;
+
+  const CreateGroupScreen({
+    super.key,
+    required this.forumController,
+  });
+
+  @override
+  State<CreateGroupScreen> createState() => _CreateGroupScreenState();
+}
+
+class _CreateGroupScreenState extends State<CreateGroupScreen> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  Map<String, List<Pair<String, File>>> filesMap = {};
+  List<String> uploadedFileNames = [];
+
+  List<String> allLabels = [
+    'Flutter',
+    'Dart',
+    'Firebase',
+    'UI/UX',
+    'Backend',
+    'Frontend'
+  ];
+  List<String> selectedLabels = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.playlist_add,
+                  color: Colors.blue[800],
+                ),
+                const SizedBox(width: 10),
+                //const Icon(Icons.add_location),
+              ],
+            ),
+            const Text(
+              'Crear un nuevo grupo',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              'Escribe un comentario para crear un nuevo grupo',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 50),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Titulo',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.08,
+              ),
+              child: TextField(
+                textAlign: TextAlign.left,
+                controller: titleController,
+                cursorColor: Colors.black,
+                decoration: const InputDecoration(
+                  hintText: 'Escribe tu idea aca',
+                  border: InputBorder.none,
+                  hintMaxLines: 3,
+                ),
+              ),
+            ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Descripción',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.08,
+              ),
+              child: TextField(
+                textAlign: TextAlign.left,
+                controller: descriptionController,
+                cursorColor: Colors.black,
+                decoration: const InputDecoration(
+                  hintText: 'Escribe un poco mas detallado tu pregunta',
+                  border: InputBorder.none,
+                  hintMaxLines: 3,
+                ),
+              ),
+            ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Archivo adjuntos',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                  vertical: 10,
+                ),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.blueAccent.shade100,
+                    ), // Establece tu color aquí
+                  ),
+                  onPressed: () async {
+                    FilePickerResult? result = await FilePicker.platform
+                        .pickFiles(allowMultiple: true);
+                    if (result != null) {
+                      for (var pickedFile in result.files) {
+                        String path = pickedFile.path!;
+                        File file = File(path);
+                        String extension = pickedFile.extension!;
+                        String name = pickedFile.name;
+                        uploadedFileNames.add(name);
+                        String type;
+                        if (extension == 'pdf') {
+                          type = 'documents';
+                        } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']
+                            .contains(extension)) {
+                          type = 'images';
+                        } else {
+                          continue;
+                        }
+                        if (filesMap.containsKey(type)) {
+                          filesMap[type]!.add(Pair(name, file));
+                        } else {
+                          filesMap[type] = [Pair(name, file)];
+                        }
+                      }
+                      setState(() {});
+                    } else {}
+                  },
+                  child: const Text(
+                    'Añadir archivos',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w300),
+                  ),
+                ),
+              ),
+            ),
+            if (uploadedFileNames.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: uploadedFileNames.map(
+                    (fileName) {
+                      return Text(
+                        fileName,
+                        style: const TextStyle(fontSize: 16),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Etiquetas',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Autocomplete<String>(
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text == '') {
+                    return const Iterable<String>.empty();
+                  }
+                  return allLabels.where((String label) {
+                    return label
+                        .toLowerCase()
+                        .startsWith(textEditingValue.text.toLowerCase());
+                  });
+                },
+                onSelected: (String selectedEtiqueta) {
+                  setState(() {
+                    if (!selectedLabels.contains(selectedEtiqueta)) {
+                      selectedLabels.add(selectedEtiqueta);
+                    }
+                  });
+                },
+                fieldViewBuilder: (BuildContext context,
+                    TextEditingController fieldTextEditingController,
+                    FocusNode fieldFocusNode,
+                    VoidCallback onFieldSubmitted) {
+                  return TextField(
+                    controller: fieldTextEditingController,
+                    focusNode: fieldFocusNode,
+                    decoration: const InputDecoration(
+                      hintText: 'Escribe para buscar etiquetas',
+                      border: OutlineInputBorder(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: selectedLabels
+                  .map(
+                    (etiqueta) => Chip(
+                      label: Text(etiqueta),
+                      onDeleted: () {
+                        setState(
+                          () {
+                            selectedLabels.remove(etiqueta);
+                          },
+                        );
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          String title = titleController.text;
+          String description = descriptionController.text;
+          Navigator.of(context).pop();
+          widget.forumController.submitComment(title, description, filesMap);
+        },
+        child: const Icon(Icons.check),
+      ),
     );
   }
 }
