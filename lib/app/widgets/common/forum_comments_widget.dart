@@ -411,7 +411,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
                 child: Text(
-                  'labels',
+                  'Etiquetas',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
