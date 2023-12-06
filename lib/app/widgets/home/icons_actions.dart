@@ -155,20 +155,21 @@ class _IconsActionsState extends State<IconsActions> {
                             const SizedBox(height: 30),
                             Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0, vertical: 8.0),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      widget.comment.description,
-                                      style: const TextStyle(
-                                        fontSize: 24,
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0, vertical: 8.0),
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        widget.comment.description,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                                const Spacer(),
                               ],
                             ),
                             const Padding(
