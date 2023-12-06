@@ -1,69 +1,205 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:faker/faker.dart';
 
 import 'package:uforuxpi3/app/controllers/forum_controller.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
+import 'package:uforuxpi3/app/models/comment.dart';
+import 'package:uforuxpi3/app/models/forum.dart';
+import 'package:uforuxpi3/app/widgets/home/body_data.dart';
+import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
+import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
 import 'package:uforuxpi3/core/structures/pair.dart';
 
-class Home extends StatefulWidget {
-  final AppUser user;
+class ForumCommentsWidget extends StatefulWidget {
+  final String title;
 
-  const Home({
+  const ForumCommentsWidget({
     super.key,
-    required this.user,
+    required this.title,
   });
 
   @override
-  State<Home> createState() => _HomeState();
+  State<ForumCommentsWidget> createState() => _ForumCommentsWidgetState();
 }
 
-class _HomeState extends State<Home> {
+class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
+  final ScrollController _scrollController = ScrollController();
+  late ForumController forumController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Forum forum =
+        Forum(name: removeAccentsAndToLowercase(widget.title), comments: {});
+
+    forumController = ForumController(
+      forum: forum,
+      loggedUserId: 'bnVVq7WpH1hMJtkCO4Igej1B4Lb2',
+    );
+    forumController.init();
+
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        forumController.hasMoreData) {
+      forumController.loadComments();
+    }
+  }
+
+  String removeAccentsAndToLowercase(String text) {
+    const accents = 'áéíóúÁÉÍÓÚ';
+    const withoutAccents = 'aeiouAEIOU';
+
+    for (int i = 0; i < accents.length; i++) {
+      text = text.replaceAll(accents[i], withoutAccents[i]);
+    }
+
+    return text.toLowerCase();
+  }
+
+  void _showCreateGroupScreen() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CreateGroupScreen(
+        forumController: forumController,
+      ),
+    ));
+  }
+
+  String getUserProfilePhoto(Comment comment) {
+    final profilePhoto =
+        'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
+
+    return profilePhoto;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          color: Colors.grey[100],
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await forumController.loadComments(isRefresh: true);
+          setState(() {});
+        },
+        child: FutureBuilder<void>(
+          future: forumController.initialFetchDone
+              ? null
+              : forumController.loadComments(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting &&
+                !forumController.initialFetchDone) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else {
+              return ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                controller: _scrollController,
+                itemCount: forumController.hasMoreData
+                    ? forumController.forum.comments.length + 1
+                    : forumController.forum.comments.length,
+                itemBuilder: (context, index) {
+                  if (index == forumController.forum.comments.length) {
+                    if (forumController.hasMoreData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }
+
+                  // Get current comment from index
+                  final List<Comment> commentsList =
+                      forumController.forum.comments.values.toList();
+                  final Comment comment = commentsList[index];
+
+                  // Get current comment properties
+                  final String profilePhoto = getUserProfilePhoto(comment);
+
+                  return FutureBuilder<AppUser>(
+                    future: forumController.fetchAppUser(comment.userId),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<AppUser> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        // Get current comment author username
+                        comment.author = snapshot.data;
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 6.0,
+                            horizontal: 5.0,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                            ),
+                            child: Hero(
+                              tag: 'CommentsForum${comment.id}',
+                              child: Column(
+                                children: [
+                                  ForumHeader(
+                                    profilePhoto: profilePhoto,
+                                    comment: comment,
+                                  ),
+                                  const SizedBox(height: 5),
+                                  BodyData(
+                                    forumController: forumController,
+                                    comment: comment,
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 1.5,
+                                    color: Colors.grey[200],
+                                  ),
+                                  IconsActions(
+                                    comment: comment,
+                                    forumController: forumController,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+                separatorBuilder: (context, index) => Container(),
+              );
+            }
+          },
         ),
-        Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
-            child: AppBar(
-              title: const Text('Foro general'),
-              titleTextStyle: const TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-              centerTitle: false,
-              actions: [
-                IconButton(
-                  color: Colors.white,
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () {},
-                ),
-              ],
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.blue.shade900,
-                      Colors.blue.shade700,
-                    ],
-                  ),
-                ),
-              ),
-              shadowColor: Colors.transparent,
-            ),
-          ),
-          backgroundColor: Colors.grey[100],
-          body: const ForumCommentsWidget(title: 'general'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.add_comment,
         ),
-      ],
+        onPressed: () {
+          _showCreateGroupScreen();
+        },
+      ),
     );
   }
 }

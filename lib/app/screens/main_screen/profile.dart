@@ -1,7 +1,6 @@
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:uforuxpi3/app/models/app_user.dart';
 import 'package:uforuxpi3/app/controllers/authentication_controller.dart';
