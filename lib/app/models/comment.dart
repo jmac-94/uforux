@@ -5,12 +5,18 @@ class Comment {
   final String id;
   final String userId;
   AppUser? author;
+
   String title;
   String description;
+
   int ups;
+
   final Timestamp createdAt;
   final Map<String, List<String>> attachments;
+
   Map<String, Comment>? comments;
+
+  List<String> labels;
 
   Comment({
     required this.id,
@@ -22,6 +28,7 @@ class Comment {
     required this.createdAt,
     required this.attachments,
     this.comments,
+    required this.labels,
   });
 
   bool hasDocuments() {
@@ -41,6 +48,7 @@ class Comment {
       'ups': ups,
       'createdAt': createdAt,
       'attachments': attachments,
+      'labels': labels,
     };
 
     if (comments != null) {
@@ -64,6 +72,8 @@ class Comment {
       );
     }
 
+    List<String> labels = List<String>.from(json['labels']);
+
     return Comment(
       id: json['id'],
       userId: json['userId'],
@@ -73,6 +83,7 @@ class Comment {
       createdAt: json['createdAt'] as Timestamp,
       attachments: attachments,
       comments: comments,
+      labels: labels,
     );
   }
 }

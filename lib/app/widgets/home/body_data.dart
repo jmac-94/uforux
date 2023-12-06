@@ -76,8 +76,8 @@ class BodyData extends StatelessWidget {
             ),
           ),
         Row(
-          children: [
-            Padding(
+          children: comment.labels.map((label) {
+            return Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 10,
@@ -89,36 +89,16 @@ class BodyData extends StatelessWidget {
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text('Math'),
+                      child: Text(label),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-              ),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text('CS'),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            );
+          }).toList(),
         ),
       ],
     );

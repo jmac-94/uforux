@@ -12,6 +12,7 @@ import 'package:uforuxpi3/app/widgets/home/body_data.dart';
 import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
 import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
 import 'package:uforuxpi3/core/structures/pair.dart';
+import 'package:uforuxpi3/core/utils/const.dart';
 
 class ForumCommentsWidget extends StatefulWidget {
   final String loggedUserId;
@@ -224,15 +225,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   Map<String, List<Pair<String, File>>> filesMap = {};
   List<String> uploadedFileNames = [];
-
-  List<String> allLabels = [
-    'Flutter',
-    'Dart',
-    'Firebase',
-    'UI/UX',
-    'Backend',
-    'Frontend'
-  ];
   List<String> selectedLabels = [];
 
   @override
@@ -409,7 +401,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
                 child: Text(
-                  'Etiquetas',
+                  'labels',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -424,16 +416,16 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   if (textEditingValue.text == '') {
                     return const Iterable<String>.empty();
                   }
-                  return allLabels.where((String label) {
+                  return Constants.labels.where((String label) {
                     return label
                         .toLowerCase()
                         .startsWith(textEditingValue.text.toLowerCase());
                   });
                 },
-                onSelected: (String selectedEtiqueta) {
+                onSelected: (String selectedlabel) {
                   setState(() {
-                    if (!selectedLabels.contains(selectedEtiqueta)) {
-                      selectedLabels.add(selectedEtiqueta);
+                    if (!selectedLabels.contains(selectedlabel)) {
+                      selectedLabels.add(selectedlabel);
                     }
                   });
                 },
@@ -457,12 +449,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               runSpacing: 4.0,
               children: selectedLabels
                   .map(
-                    (etiqueta) => Chip(
-                      label: Text(etiqueta),
+                    (label) => Chip(
+                      label: Text(label),
                       onDeleted: () {
                         setState(
                           () {
-                            selectedLabels.remove(etiqueta);
+                            selectedLabels.remove(label);
                           },
                         );
                       },
@@ -478,7 +470,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           String title = titleController.text;
           String description = descriptionController.text;
           Navigator.of(context).pop();
-          widget.forumController.submitComment(title, description, filesMap);
+          widget.forumController
+              .submitComment(title, description, filesMap, selectedLabels);
         },
         child: const Icon(Icons.check),
       ),

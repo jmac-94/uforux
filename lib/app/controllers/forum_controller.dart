@@ -170,6 +170,7 @@ class ForumController {
     String title,
     String description,
     Map<String, List<Pair<String, File>>>? filesMap,
+    List<String> labels,
   ) async {
     try {
       // Solo se verifica que el title no este vacio
@@ -188,6 +189,7 @@ class ForumController {
         ups: 0,
         createdAt: Timestamp.now(),
         attachments: attachments,
+        labels: labels,
       );
       forum.comments[newComment.id] = newComment;
 

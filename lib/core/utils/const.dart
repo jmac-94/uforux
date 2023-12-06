@@ -28,4 +28,39 @@ class Constants {
     'administración y negocios digitales',
     'ciencia de datos'
   ];
+
+  static const List<String> courses = [
+    'cálculo de una variable',
+    'laboratorio de comunicación 1',
+    'proyectos interdisciplinarios 1',
+    'proyectos interdisciplinarios 2',
+    'proyectos interdisciplinarios 3',
+    'álgebra lineal',
+    'base de datos 1',
+    'base de datos 2',
+  ];
+
+  static const List<String> coursesAcronyms = [
+    'C1V',
+    'LabComu1',
+    'PI1',
+    'PI2',
+    'PI3',
+    'ADA',
+    'BD1',
+    'BD2',
+  ];
+
+  static const List<String> labels = [
+    ...coursesAcronyms,
+    ...degrees,
+    ...courses,
+    'Futter',
+    'Dart',
+    'Firebase',
+    'UI/UX',
+    'Backend',
+    'Frontend',
+    'general',
+  ];
 }
