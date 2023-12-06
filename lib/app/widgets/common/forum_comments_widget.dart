@@ -228,6 +228,16 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   List<String> selectedLabels = [];
 
   @override
+  void initState() {
+    super.initState();
+
+    final String? forumName = widget.forumController.forum.name;
+    if (forumName != null) {
+      selectedLabels.add(forumName);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
