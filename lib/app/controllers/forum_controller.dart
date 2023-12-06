@@ -41,7 +41,9 @@ class ForumController {
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        final Map<String, dynamic> forumJson = querySnapshot.docs.first.data();
+        final doc = querySnapshot.docs.first;
+        final Map<String, dynamic> forumJson = doc.data();
+        forumJson['id'] = doc.id;
         forum = Forum.fromJson(forumJson);
       }
     } catch (e) {
