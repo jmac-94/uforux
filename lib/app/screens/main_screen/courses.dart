@@ -130,7 +130,7 @@ class _CoursesState extends State<Courses> {
               children: [
                 const SizedBox(height: 15.0),
                 SizedBox(
-                  height: 220,
+                  height: MediaQuery.of(context).size.width * 0.63,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: const [

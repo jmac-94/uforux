@@ -38,7 +38,7 @@ class _ProfileState extends State<Profile> {
       dPrint(e);
     }
   }
-
+  //TODO Seria buenazo agregar una imagen que el usuario pueda subir de modo de presentarte en su perfil
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

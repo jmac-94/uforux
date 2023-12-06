@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:awesome_icons/awesome_icons.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -33,7 +34,6 @@ class _HomeState extends State<Home> {
   String getUserProfilePhoto(Comment comment) {
     final profilePhoto =
         'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
-
     return profilePhoto;
   }
 
@@ -43,6 +43,14 @@ class _HomeState extends State<Home> {
         forumController.hasMoreData) {
       forumController.loadComments();
     }
+  }
+
+  void _showCreateGroupScreen() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CreateGroupScreen(
+        forumController: forumController,
+      ),
+    ));
   }
 
   @override
@@ -94,8 +102,8 @@ class _HomeState extends State<Home> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.blue.shade900, // Color de inicio del degradado
-                      Colors.blue.shade700, // Color de fin del degradado
+                      Colors.blue.shade900,
+                      Colors.blue.shade700,
                     ],
                   ),
                 ),
@@ -144,7 +152,6 @@ class _HomeState extends State<Home> {
                       final List<Comment> commentsList =
                           forumController.forum.comments.values.toList();
                       final Comment comment = commentsList[index];
-
                       // Get current comment properties
                       final String profilePhoto = getUserProfilePhoto(comment);
 
@@ -213,112 +220,285 @@ class _HomeState extends State<Home> {
               Icons.add_comment,
             ),
             onPressed: () {
-              _showDialog();
+              _showCreateGroupScreen();
             },
           ),
         ),
       ],
     );
   }
+}
 
-  void _showDialog() {
-    TextEditingController commentController = TextEditingController();
-    Map<String, List<Pair<String, File>>> filesMap = {};
-    List<String> uploadedFileNames = [];
+class CreateGroupScreen extends StatefulWidget {
+  final ForumController forumController;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Nuevo foro'),
-              icon: const Icon(Icons.add_home_rounded),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        hintText: 'Escribe tu comentario aquí',
-                      ),
-                    ),
-                    ElevatedButton(
-                      child: const Text('Añadir archivos'),
-                      onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform
-                            .pickFiles(allowMultiple: true);
-                        if (result != null) {
-                          for (var pickedFile in result.files) {
-                            String path = pickedFile.path!;
-                            File file = File(path);
-                            String extension = pickedFile.extension!;
-                            String name = pickedFile.name;
-                            uploadedFileNames.add(name);
-                            String type;
-                            if (extension == 'pdf') {
-                              type = 'documents';
-                            } else if ([
-                              'jpg',
-                              'jpeg',
-                              'png',
-                              'gif',
-                              'bmp',
-                              'webp'
-                            ].contains(extension)) {
-                              type = 'images';
-                            } else {
-                              continue;
-                            }
-                            if (filesMap.containsKey(type)) {
-                              filesMap[type]!.add(Pair(name, file));
-                            } else {
-                              filesMap[type] = [Pair(name, file)];
-                            }
-                          }
-                          setState(() {});
-                        } else {}
-                      },
-                    ),
-                    if (uploadedFileNames.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: uploadedFileNames.map(
-                            (fileName) {
-                              return Text(
-                                fileName,
-                                style: const TextStyle(fontSize: 16),
-                              );
-                            },
-                          ).toList(),
-                        ),
-                      ),
-                  ],
+  const CreateGroupScreen({super.key, required this.forumController});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _CreateGroupScreenState createState() => _CreateGroupScreenState();
+}
+
+class _CreateGroupScreenState extends State<CreateGroupScreen> {
+  TextEditingController commentController = TextEditingController();
+  Map<String, List<Pair<String, File>>> filesMap = {};
+  List<String> uploadedFileNames = [];
+  List<String> allEtiquetas = [
+    'Flutter',
+    'Dart',
+    'Firebase',
+    'UI/UX',
+    'Backend',
+    'Frontend'
+  ];
+
+  List<String> etiquetasSeleccionadas = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.playlist_add,
+                  color: Colors.blue[800],
+                ),
+                const SizedBox(width: 10),
+                //const Icon(Icons.add_location),
+              ],
+            ),
+            const Text(
+              'Crear un nuevo grupo',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              'Escribe un comentario para crear un nuevo grupo',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 50),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Titulo',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Cancelar'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.08,
+              ),
+              child: TextField(
+                textAlign: TextAlign.left,
+                controller: commentController,
+                cursorColor: Colors.black,
+                decoration: const InputDecoration(
+                  hintText: 'Escribe tu idea aca',
+                  border: InputBorder.none,
+                  hintMaxLines: 3,
                 ),
-                TextButton(
-                  child: const Text('Enviar'),
-                  onPressed: () {
-                    String text = commentController.text;
-                    Navigator.of(context).pop();
-                    forumController.submitComment(text, filesMap);
-                  },
+              ),
+            ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Descripción',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ],
-            );
-          },
-        );
-      },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.08,
+              ),
+              child: const TextField(
+                textAlign: TextAlign.left,
+                cursorColor: Colors.black,
+                decoration: InputDecoration(
+                  hintText: 'Escribe un poco mas detallado tu pregunta',
+                  border: InputBorder.none,
+                  hintMaxLines: 3,
+                ),
+              ),
+            ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Archivo adjuntos',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                  vertical: 10,
+                ),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.blueAccent.shade100,
+                    ), // Establece tu color aquí
+                  ),
+                  onPressed: () async {
+                    FilePickerResult? result = await FilePicker.platform
+                        .pickFiles(allowMultiple: true);
+                    if (result != null) {
+                      for (var pickedFile in result.files) {
+                        String path = pickedFile.path!;
+                        File file = File(path);
+                        String extension = pickedFile.extension!;
+                        String name = pickedFile.name;
+                        uploadedFileNames.add(name);
+                        String type;
+                        if (extension == 'pdf') {
+                          type = 'documents';
+                        } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']
+                            .contains(extension)) {
+                          type = 'images';
+                        } else {
+                          continue;
+                        }
+                        if (filesMap.containsKey(type)) {
+                          filesMap[type]!.add(Pair(name, file));
+                        } else {
+                          filesMap[type] = [Pair(name, file)];
+                        }
+                      }
+                      setState(() {});
+                    } else {}
+                  },
+                  child: const Text(
+                    'Añadir archivos',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w300),
+                  ),
+                ),
+              ),
+            ),
+            if (uploadedFileNames.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: uploadedFileNames.map(
+                    (fileName) {
+                      return Text(
+                        fileName,
+                        style: const TextStyle(fontSize: 16),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  'Etiquetas',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Autocomplete<String>(
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text == '') {
+                    return const Iterable<String>.empty();
+                  }
+                  return allEtiquetas.where((String etiqueta) {
+                    return etiqueta
+                        .toLowerCase()
+                        .startsWith(textEditingValue.text.toLowerCase());
+                  });
+                },
+                onSelected: (String selectedEtiqueta) {
+                  setState(() {
+                    if (!etiquetasSeleccionadas.contains(selectedEtiqueta)) {
+                      etiquetasSeleccionadas.add(selectedEtiqueta);
+                    }
+                  });
+                },
+                fieldViewBuilder: (BuildContext context,
+                    TextEditingController fieldTextEditingController,
+                    FocusNode fieldFocusNode,
+                    VoidCallback onFieldSubmitted) {
+                  return TextField(
+                    controller: fieldTextEditingController,
+                    focusNode: fieldFocusNode,
+                    decoration: const InputDecoration(
+                      hintText: 'Escribe para buscar etiquetas',
+                      border: OutlineInputBorder(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: etiquetasSeleccionadas
+                  .map(
+                    (etiqueta) => Chip(
+                      label: Text(etiqueta),
+                      onDeleted: () {
+                        setState(
+                          () {
+                            etiquetasSeleccionadas.remove(etiqueta);
+                          },
+                        );
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          String text = commentController.text;
+          Navigator.of(context).pop();
+          widget.forumController.submitComment(text, filesMap);
+        },
+        child: const Icon(Icons.check),
+      ),
     );
   }
 }
