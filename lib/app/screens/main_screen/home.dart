@@ -61,7 +61,10 @@ class _HomeState extends State<Home> {
             ),
           ),
           backgroundColor: Colors.grey[100],
-          body: const ForumCommentsWidget(title: 'general'),
+          body: ForumCommentsWidget(
+            loggedUserId: widget.user.id,
+            title: 'general',
+          ),
         ),
       ],
     );

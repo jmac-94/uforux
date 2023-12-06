@@ -44,8 +44,6 @@ class ForumController {
         final Map<String, dynamic> forumJson = querySnapshot.docs.first.data();
         forum = Forum.fromJson(forumJson);
       }
-
-      await Future.delayed(const Duration(seconds: 5));
     } catch (e) {
       dPrint(e);
     }
@@ -172,7 +170,9 @@ class ForumController {
     Map<String, List<Pair<String, File>>>? filesMap,
   ) async {
     try {
-      if (title.trim().isEmpty || description.trim().isEmpty) return;
+      // Solo se verifica que el title no este vacio
+      // porque el comentario puede NO tener descripcion
+      if (title.trim().isEmpty) return;
 
       final String newCommentId = uuid.v1();
       final Map<String, List<String>> attachments =

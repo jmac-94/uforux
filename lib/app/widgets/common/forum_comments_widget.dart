@@ -14,10 +14,12 @@ import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
 import 'package:uforuxpi3/core/structures/pair.dart';
 
 class ForumCommentsWidget extends StatefulWidget {
+  final String loggedUserId;
   final String title;
 
   const ForumCommentsWidget({
     super.key,
+    required this.loggedUserId,
     required this.title,
   });
 
@@ -38,7 +40,7 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
 
     forumController = ForumController(
       forum: forum,
-      loggedUserId: 'bnVVq7WpH1hMJtkCO4Igej1B4Lb2',
+      loggedUserId: widget.loggedUserId,
     );
     forumController.init();
 

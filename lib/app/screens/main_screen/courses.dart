@@ -133,30 +133,34 @@ class _CoursesState extends State<Courses> {
                   height: MediaQuery.of(context).size.width * 0.63,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    children: const [
-                      SizedBox(width: 10.0),
+                    children: [
+                      const SizedBox(width: 10.0),
                       CardBook(
+                        loggedUserId: widget.user.id,
                         color: Colors.red,
                         image:
                             'https://images.unsplash.com/photo-1581092583537-20d51b4b4f1b?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                         title: 'Cálculo de una variable',
                       ),
-                      SizedBox(width: 10.0),
+                      const SizedBox(width: 10.0),
                       CardBook(
+                        loggedUserId: widget.user.id,
                         color: Colors.blue,
                         image:
                             'https://images.unsplash.com/photo-1486825586573-7131f7991bdd?q=80&w=3238&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                         title: 'Laboratorio de comunicación 1',
                       ),
-                      SizedBox(width: 10.0),
+                      const SizedBox(width: 10.0),
                       CardBook(
+                        loggedUserId: widget.user.id,
                         color: Colors.green,
                         image:
                             'https://images.unsplash.com/photo-1551033406-611cf9a28f67?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                         title: 'Proyectos interdisciplinarios 1',
                       ),
-                      SizedBox(width: 10.0),
+                      const SizedBox(width: 10.0),
                       CardBook(
+                        loggedUserId: widget.user.id,
                         color: Colors.green,
                         image:
                             'https://images.unsplash.com/photo-1581092163144-b7ae3c00adbc?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',

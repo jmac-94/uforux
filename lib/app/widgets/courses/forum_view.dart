@@ -2,21 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
 
-void main() {
-  runApp(
-    const MaterialApp(
-      home: ForumView(
-        title: 'View',
-      ),
-    ),
-  );
-}
-
 class ForumView extends StatefulWidget {
+  final String loggedUserId;
   final String title;
 
   const ForumView({
     super.key,
+    required this.loggedUserId,
     required this.title,
   });
 
@@ -104,7 +96,10 @@ class _DetailScreenState extends State<ForumView> {
             Expanded(
               child: TabBarView(
                 children: [
-                  ForumCommentsWidget(title: widget.title),
+                  ForumCommentsWidget(
+                    loggedUserId: widget.loggedUserId,
+                    title: widget.title,
+                  ),
                   const Center(child: Text('Wikipedia Content')),
                   const Center(child: Text('Members Content')),
                 ],

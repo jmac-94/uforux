@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/widgets/courses/forum_view.dart';
 
 class CardBook extends StatelessWidget {
+  final String loggedUserId;
   final Color color;
   final String image;
   final String title;
 
   const CardBook({
     super.key,
+    required this.loggedUserId,
     required this.color,
     required this.image,
     required this.title,
@@ -19,7 +21,9 @@ class CardBook extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ForumView(title: title)),
+          MaterialPageRoute(
+              builder: (context) =>
+                  ForumView(loggedUserId: loggedUserId, title: title)),
         );
       },
       child: Column(
