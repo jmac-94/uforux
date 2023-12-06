@@ -51,9 +51,9 @@ class ForumHeader extends StatelessWidget {
               fontWeight: FontWeight.w200,
             ),
           ),
-          const Text(
-            '#MATH',
-            style: TextStyle(
+          Text(
+            '#${comment.labels[0]}',
+            style: const TextStyle(
               fontSize: 11,
               color: Colors.blueAccent,
             ),
