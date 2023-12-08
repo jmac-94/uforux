@@ -1,4 +1,9 @@
+import 'package:flutter/material.dart';
+
 class Event {
   final String title;
-  Event(this.title);
+  TimeOfDay starTime;
+  TimeOfDay endtime;
+
+  Event(this.title, this.starTime, this.endtime);
 }

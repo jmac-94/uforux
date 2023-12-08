@@ -188,6 +188,10 @@ class _CalendarState extends State<Calendar> {
   TextEditingController _eventController = TextEditingController();
   //Visualizar si se guardo el evento
   late ValueNotifier<List<Event>> _selectedEvents;
+  //selecionar por horas
+  TimeOfDay _startTime = TimeOfDay.now();
+  TimeOfDay _endTime =
+      TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1);
 
   //funcion para seleccion dia
 
@@ -219,35 +223,66 @@ class _CalendarState extends State<Calendar> {
       appBar: AppBar(title: Text("Calendario")),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //Show el dialogo para el usuario ponga el evento
           showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: Text("Event Name"),
-                  content: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextField(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                scrollable: true,
+                title: Text("Event name"),
+                content: Column(
+                  children: [
+                    TextField(
                       controller: _eventController,
                     ),
-                  ),
-                  actions: [
+                    //selector de hora de inicio
                     ElevatedButton(
-                      onPressed: () {
-                        //Guardar el nombre del ebento en el mapa
-                        events.addAll({
-                          _selectedDay!: [Event(_eventController.text)]
-                        });
-
-                        Navigator.of(context).pop();
-                        _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                      onPressed: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                            context: context, initialTime: _startTime);
+                        if (picked != null && picked != _startTime) {
+                          setState(() {
+                            _startTime = picked;
+                          });
+                        }
                       },
-                      child: Text("Submit"),
-                    )
+                      child: Text("Star Time: ${_startTime.format(context)}"),
+                    ),
+                    //selectector de hora de fin
+                    ElevatedButton(
+                      onPressed: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: _endTime,
+                        );
+                        if (picked != null && picked != _endTime) {
+                          setState(() {
+                            _endTime = picked;
+                          });
+                        }
+                      },
+                      child: Text("End Time :${_endTime.format(context)}"),
+                    ),
                   ],
-                );
-              });
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      //Agregar el evento con hora de inicio y fin
+                      if (!events.containsKey(_selectedDay)) {
+                        events[_selectedDay!] = [];
+                      }
+                      events[_selectedDay!]!.add(
+                          Event(_eventController.text, _startTime, _endTime));
+                      _eventController.clear();
+                      _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Submit"),
+                  ),
+                ],
+              );
+            },
+          );
         },
         child: Icon(Icons.add),
       ),
@@ -269,7 +304,7 @@ class _CalendarState extends State<Calendar> {
                 headerStyle: HeaderStyle(
                     formatButtonVisible: false, titleCentered: true),
                 availableGestures: AvailableGestures.all,
-                selectedDayPredicate: (day) => isSameDay(day, today),
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 focusedDay: today,
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),
@@ -293,8 +328,10 @@ class _CalendarState extends State<Calendar> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: ListTile(
-                              onTap: () => print(""),
-                              title: Text("${value[index].title}"),
+                              onTap: () =>
+                                  print("Event: ${value[index].title}"),
+                              title: Text(
+                                  "${value[index].title} (${value[index].starTime.format(context)} - ${value[index].endtime.format(context)})"),
                             ),
                           );
                         });
