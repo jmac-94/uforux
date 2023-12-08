@@ -4,6 +4,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/controllers/forum_controller.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
+import 'package:uforuxpi3/app/models/subcomment.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
 import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -25,12 +26,12 @@ class IconsActions extends StatefulWidget {
 
 class _IconsActionsState extends State<IconsActions> {
   bool isLiked = false;
-  late int commentNum;
+  late int subcommentNum;
 
   @override
   void initState() {
     super.initState();
-    commentNum = getCommentsLen();
+    subcommentNum = getSubcommentsLen();
     fetchUserLikeStatus();
   }
 
@@ -45,10 +46,10 @@ class _IconsActionsState extends State<IconsActions> {
     }
   }
 
-  int getCommentsLen() {
-    final Map<String, Comment>? comments = widget.comment.comments;
-    if (comments != null) {
-      return comments.length;
+  int getSubcommentsLen() {
+    final Map<String, Subcomment>? subcomments = widget.comment.subcomments;
+    if (subcomments != null) {
+      return subcomments.length;
     } else {
       return 0;
     }
@@ -105,7 +106,7 @@ class _IconsActionsState extends State<IconsActions> {
                     ),
                   ),
                   Text(
-                    commentNum.toString(),
+                    subcommentNum.toString(),
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
@@ -162,7 +163,7 @@ class _IconsActionsState extends State<IconsActions> {
                                     child: Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
-                                        widget.comment.description,
+                                        widget.comment.title,
                                         style: const TextStyle(
                                           fontSize: 24,
                                         ),
@@ -172,12 +173,13 @@ class _IconsActionsState extends State<IconsActions> {
                                 ),
                               ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Text(
-                                  'Estoy buscando ayuda para hacer un foro como reddit, pero no se como empezar, alguien me puede ayudar?',
+                                  widget.comment.description,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   maxLines: 5,
@@ -229,7 +231,7 @@ class _IconsActionsState extends State<IconsActions> {
                                     ),
                                   ),
                                   Text(
-                                    commentNum.toString(),
+                                    subcommentNum.toString(),
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                   const SizedBox(
@@ -242,8 +244,8 @@ class _IconsActionsState extends State<IconsActions> {
                             Flexible(
                               child: ListView.separated(
                                 itemBuilder: (context, index) {
-                                  final Comment comment = widget
-                                      .comment.comments!.values
+                                  final Subcomment subcomment = widget
+                                      .comment.subcomments!.values
                                       .toList()[index];
                                   return Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -327,7 +329,7 @@ class _IconsActionsState extends State<IconsActions> {
                                               ),
                                               const SizedBox(width: 10),
                                               Text(
-                                                comment.description,
+                                                subcomment.text,
                                               ),
                                             ],
                                           ),
@@ -341,7 +343,7 @@ class _IconsActionsState extends State<IconsActions> {
                                   height: 20,
                                   color: Colors.transparent,
                                 ),
-                                itemCount: commentNum,
+                                itemCount: subcommentNum,
                               ),
                             ),
                           ],
@@ -431,14 +433,14 @@ class _CommentSectionState extends State<CommentSection> {
 
       final String userId = widget.forumController.loggedUserId;
 
-      Comment subcomment = Comment.fromJson({
+      Subcomment subcomment = Subcomment.fromJson({
         'id': uuid.v1(),
         'userId': userId,
-        'title': subcommentText,
-        'description': subcommentText,
+        'text': subcommentText,
         'ups': 0,
         'createdAt': Timestamp.now(),
         'attachments': {},
+        'labels': [],
       });
 
       await widget.forumController.submitSubcomment(widget.comment, subcomment);

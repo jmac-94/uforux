@@ -13,6 +13,7 @@ import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
 import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
 import 'package:uforuxpi3/core/structures/pair.dart';
 import 'package:uforuxpi3/core/utils/const.dart';
+import 'package:uforuxpi3/core/utils/dprint.dart';
 
 class ForumCommentsWidget extends StatefulWidget {
   final String loggedUserId;
@@ -74,11 +75,16 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
   }
 
   void _showCreateGroupScreen() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => CreateGroupScreen(
-        forumController: forumController,
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CreateGroupScreen(
+          forumController: forumController,
+          onCommentSubmitted: () {
+            setState(() {});
+          },
+        ),
       ),
-    ));
+    );
   }
 
   String getUserProfilePhoto(Comment comment) {
@@ -209,10 +215,12 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
 
 class CreateGroupScreen extends StatefulWidget {
   final ForumController forumController;
+  final VoidCallback onCommentSubmitted;
 
   const CreateGroupScreen({
     super.key,
     required this.forumController,
+    required this.onCommentSubmitted,
   });
 
   @override
@@ -476,12 +484,16 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           String title = titleController.text;
           String description = descriptionController.text;
           Navigator.of(context).pop();
-          widget.forumController
+
+          await widget.forumController
               .submitComment(title, description, filesMap, selectedLabels);
+
+          widget.onCommentSubmitted();
+          setState(() {});
         },
         child: const Icon(Icons.check),
       ),

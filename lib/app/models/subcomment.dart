@@ -1,34 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/subcomment.dart';
+import 'package:uforuxpi3/core/utils/dprint.dart';
 
-class Comment {
+class Subcomment {
   final String id;
   final String userId;
   AppUser? author;
 
-  String title;
-  String description;
+  String text;
 
   int ups;
 
   final Timestamp createdAt;
   final Map<String, List<String>> attachments;
 
-  Map<String, Subcomment>? subcomments;
-
   List<String> labels;
 
-  Comment({
+  Subcomment({
     required this.id,
     required this.userId,
     this.author,
-    required this.title,
-    required this.description,
+    required this.text,
     required this.ups,
     required this.createdAt,
     required this.attachments,
-    this.subcomments,
     required this.labels,
   });
 
@@ -44,46 +39,32 @@ class Comment {
     Map<String, dynamic> json = {
       'id': id,
       'userId': userId,
-      'title': title,
-      'description': description,
+      'text': text,
       'ups': ups,
       'createdAt': createdAt,
       'attachments': attachments,
       'labels': labels,
     };
 
-    if (subcomments != null) {
-      json['subcomments'] =
-          subcomments?.map((key, value) => MapEntry(key, value.toJson()));
-    }
-
     return json;
   }
 
-  static Comment fromJson(Map<String, dynamic> json) {
+  static Subcomment fromJson(Map<String, dynamic> json) {
     Map<String, List<String>> attachments =
-        (json['attachments'] as Map<String, dynamic>).map(
-      (key, value) => MapEntry(key, List<String>.from(value)),
+        Map<String, dynamic>.from(json['attachments']).map(
+      (key, value) =>
+          MapEntry<String, List<String>>(key, List<String>.from(value)),
     );
-
-    Map<String, Subcomment>? subcomments;
-    if (json.containsKey('subcomments')) {
-      subcomments = (json['subcomments'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, Subcomment.fromJson(value)),
-      );
-    }
 
     List<String> labels = List<String>.from(json['labels']);
 
-    return Comment(
+    return Subcomment(
       id: json['id'],
       userId: json['userId'],
-      title: json['title'],
-      description: json['description'],
+      text: json['text'],
       ups: json['ups'],
       createdAt: json['createdAt'] as Timestamp,
       attachments: attachments,
-      subcomments: subcomments,
       labels: labels,
     );
   }

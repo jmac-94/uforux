@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
 import 'package:uforuxpi3/app/models/forum.dart';
+import 'package:uforuxpi3/app/models/subcomment.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:uforuxpi3/app/models/app_user.dart';
@@ -201,15 +202,15 @@ class ForumController {
 
   Future<void> submitSubcomment(
     Comment comment,
-    Comment subcomment,
+    Subcomment subcomment,
   ) async {
     if (forum.comments.containsKey(comment.id)) {
       final Comment currentComment = forum.comments[comment.id]!;
 
-      if (currentComment.comments != null) {
-        currentComment.comments?[subcomment.id] = subcomment;
+      if (currentComment.subcomments != null) {
+        currentComment.subcomments?[subcomment.id] = subcomment;
       } else {
-        currentComment.comments = {subcomment.id: subcomment};
+        currentComment.subcomments = {subcomment.id: subcomment};
       }
 
       forum.comments[comment.id] = currentComment;

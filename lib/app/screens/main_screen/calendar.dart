@@ -1,9 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import 'package:uforuxpi3/app/models/app_user.dart';
+import 'package:uforuxpi3/core/utils/dprint.dart';
 
 import 'event.dart';
 
@@ -22,7 +19,7 @@ class _CalendarState extends State<Calendar> {
   //Crear eventos
   Map<DateTime, List<Event>> events = {};
   //Controlador de texto de eventos
-  TextEditingController _eventController = TextEditingController();
+  final TextEditingController _eventController = TextEditingController();
   //Visualizar si se guardo el evento
   late ValueNotifier<List<Event>> _selectedEvents;
   //selecionar por horas
@@ -32,14 +29,14 @@ class _CalendarState extends State<Calendar> {
 
   //funcion para seleccion dia
 
-  @override
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay))
+    if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
         _selectedEvents.value = _getEventsForDay(selectedDay);
       });
+    }
   }
 
   @override
@@ -57,7 +54,7 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Calendario")),
+      appBar: AppBar(title: const Text("Calendario")),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -65,7 +62,7 @@ class _CalendarState extends State<Calendar> {
             builder: (context) {
               return AlertDialog(
                 scrollable: true,
-                title: Text("Event name"),
+                title: const Text("Event name"),
                 content: Column(
                   children: [
                     TextField(
@@ -114,14 +111,14 @@ class _CalendarState extends State<Calendar> {
                       _selectedEvents.value = _getEventsForDay(_selectedDay!);
                       Navigator.of(context).pop();
                     },
-                    child: Text("Submit"),
+                    child: const Text("Submit"),
                   ),
                 ],
               );
             },
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: content(),
     );
@@ -132,24 +129,22 @@ class _CalendarState extends State<Calendar> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Text("Selected Day =" + today.toString().split(" ")[0]),
-            Container(
-              child: TableCalendar(
-                //Pesonalizacion estetica
-                locale: "en_US", //idioma
-                rowHeight: 43,
-                headerStyle: HeaderStyle(
-                    formatButtonVisible: false, titleCentered: true),
-                availableGestures: AvailableGestures.all,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                focusedDay: today,
-                firstDay: DateTime.utc(2010, 10, 16),
-                lastDay: DateTime.utc(2030, 3, 14),
-                onDaySelected: _onDaySelected,
-                eventLoader: _getEventsForDay,
-              ),
+            Text("Selected Day =${today.toString().split(" ")[0]}"),
+            TableCalendar(
+              //Pesonalizacion estetica
+              locale: "en_US", //idioma
+              rowHeight: 43,
+              headerStyle: const HeaderStyle(
+                  formatButtonVisible: false, titleCentered: true),
+              availableGestures: AvailableGestures.all,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              focusedDay: today,
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              onDaySelected: _onDaySelected,
+              eventLoader: _getEventsForDay,
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Expanded(
               child: ValueListenableBuilder<List<Event>>(
                   valueListenable: _selectedEvents,
@@ -158,7 +153,7 @@ class _CalendarState extends State<Calendar> {
                         itemCount: value.length,
                         itemBuilder: (context, index) {
                           return Container(
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
                               border: Border.all(),
@@ -166,7 +161,7 @@ class _CalendarState extends State<Calendar> {
                             ),
                             child: ListTile(
                               onTap: () =>
-                                  print("Event: ${value[index].title}"),
+                                  dPrint("Event: ${value[index].title}"),
                               title: Text(
                                   "${value[index].title} (${value[index].starTime.format(context)} - ${value[index].endtime.format(context)})"),
                             ),
