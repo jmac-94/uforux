@@ -118,7 +118,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
               );
             } else {
               return ListView.separated(
-                physics: const AlwaysScrollableScrollPhysics(),
                 controller: _scrollController,
                 itemCount: forumController.hasMoreData
                     ? forumController.forum.comments.length + 1
