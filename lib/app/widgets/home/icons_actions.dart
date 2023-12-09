@@ -182,79 +182,6 @@ class _IconsActionsState extends State<IconsActions> {
   }
 }
 
-class CommentSection extends StatefulWidget {
-  final ForumController forumController;
-  final Comment comment;
-
-  const CommentSection(
-      {super.key, required this.forumController, required this.comment});
-
-  @override
-  State<CommentSection> createState() => _CommentSectionState();
-}
-
-class _CommentSectionState extends State<CommentSection> {
-  final uuid = const Uuid();
-  final TextEditingController _commentController = TextEditingController();
-
-  void _sendComment() async {
-    try {
-      String subcommentText = _commentController.text;
-
-      final String userId = widget.forumController.loggedUserId;
-
-      Subcomment subcomment = Subcomment.fromJson({
-        'id': uuid.v1(),
-        'userId': userId,
-        'text': subcommentText,
-        'ups': 0,
-        'createdAt': Timestamp.now(),
-        'attachments': {},
-        'labels': [],
-      });
-
-      await widget.forumController.submitSubcomment(widget.comment, subcomment);
-
-      _commentController.clear();
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
-    } catch (e) {
-      dPrint('Error: $e');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      reverse: true,
-      child: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Container(
-          padding: const EdgeInsets.all(6),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _commentController,
-                  decoration: const InputDecoration(
-                    hintText: 'Escribe un comentario...',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: _sendComment,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class CommentsInfoPage extends StatefulWidget {
   final Comment comment;
   final ForumController forumController;
@@ -266,7 +193,7 @@ class CommentsInfoPage extends StatefulWidget {
   });
 
   @override
-  _CommentsInfoPageState createState() => _CommentsInfoPageState();
+  State<CommentsInfoPage> createState() => _CommentsInfoPageState();
 }
 
 class _CommentsInfoPageState extends State<CommentsInfoPage> {
@@ -361,6 +288,9 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                                     builder: (context) => CommentSection(
                                       forumController: widget.forumController,
                                       comment: widget.comment,
+                                      onCommentSubmitted: () {
+                                        setState(() {});
+                                      },
                                     ),
                                   );
                                 },
@@ -497,6 +427,87 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CommentSection extends StatefulWidget {
+  final ForumController forumController;
+  final Comment comment;
+  final VoidCallback onCommentSubmitted;
+
+  const CommentSection({
+    super.key,
+    required this.forumController,
+    required this.comment,
+    required this.onCommentSubmitted,
+  });
+
+  @override
+  State<CommentSection> createState() => _CommentSectionState();
+}
+
+class _CommentSectionState extends State<CommentSection> {
+  final uuid = const Uuid();
+  final TextEditingController _commentController = TextEditingController();
+
+  void _sendComment() async {
+    try {
+      String subcommentText = _commentController.text;
+
+      final String userId = widget.forumController.loggedUserId;
+
+      Subcomment subcomment = Subcomment.fromJson({
+        'id': uuid.v1(),
+        'userId': userId,
+        'text': subcommentText,
+        'ups': 0,
+        'createdAt': Timestamp.now(),
+        'attachments': {},
+        'labels': [],
+      });
+
+      await widget.forumController.submitSubcomment(widget.comment, subcomment);
+
+      _commentController.clear();
+
+      widget.onCommentSubmitted();
+
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    } catch (e) {
+      dPrint('Error: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      reverse: true,
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _commentController,
+                  decoration: const InputDecoration(
+                    hintText: 'Escribe un comentario...',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: _sendComment,
+              ),
+            ],
           ),
         ),
       ),

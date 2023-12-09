@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -152,7 +153,7 @@ class ForumController {
       if (forum.comments.containsKey(commentId)) {
         // Actualizar likes en los comentarios
         Comment comment = forum.comments[commentId]!;
-        comment.ups += isLiked ? 1 : -1;
+        comment.ups = max(0, comment.ups + (isLiked ? 1 : -1));
         forum.comments[commentId] = comment;
         updateComments();
 
