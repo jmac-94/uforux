@@ -1,3 +1,5 @@
+import 'package:uforuxpi3/core/utils/dprint.dart';
+
 class AppUser {
   final String id;
   final String? username;
@@ -5,7 +7,7 @@ class AppUser {
   final String? entrySemester;
   final double? score;
   final bool? assesor;
-  final List<String>? subscribedForums;
+  final List<String>? followedForums;
 
   AppUser(
       {required this.id,
@@ -14,7 +16,7 @@ class AppUser {
       this.entrySemester,
       this.score,
       this.assesor,
-      this.subscribedForums});
+      this.followedForums});
 
   Map<String, dynamic> toJson() {
     return {
@@ -24,7 +26,7 @@ class AppUser {
       'entrySemester': entrySemester,
       'score': score,
       'assesor': assesor,
-      'subscribedForums': subscribedForums,
+      'followedForums': followedForums,
     };
   }
 
@@ -36,6 +38,7 @@ class AppUser {
         entrySemester: json['entrySemester'],
         score: json['score'],
         assesor: json['assesor'],
-        subscribedForums: json['subscribedForums']);
+        followedForums: List<String>.from(
+            json['followedForums'].map((item) => item.toString())));
   }
 }

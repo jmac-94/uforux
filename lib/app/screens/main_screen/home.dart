@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
+import 'package:uforuxpi3/app/widgets/common/for_you_page.dart';
 import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
 
 class Home extends StatefulWidget {
@@ -73,9 +74,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: [
-          ForumCommentsWidget(
+          ForYouWidget(
             loggedUserId: widget.user.id,
-            title: 'general',
           ),
           ForumCommentsWidget(
             loggedUserId: widget.user.id,

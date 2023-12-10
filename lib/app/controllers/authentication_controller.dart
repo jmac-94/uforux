@@ -50,7 +50,7 @@ class AuthenticationController {
             assesor: assesor,
             degree: degree,
             score: 0.0,
-            forums: []);
+            followedForums: []);
       }
 
       return _appUserFromFirebaseUser(user);
