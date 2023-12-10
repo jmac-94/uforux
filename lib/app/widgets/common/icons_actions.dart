@@ -70,6 +70,7 @@ class _IconsActionsState extends State<IconsActions> {
                 setState(() {
                   isLiked = !isLiked;
                 });
+
                 await widget.forumController
                     .updateCommentLikes(widget.comment.id, isLiked);
               },

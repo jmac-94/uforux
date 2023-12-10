@@ -10,7 +10,7 @@ import 'package:uforuxpi3/app/models/comment.dart';
 import 'package:uforuxpi3/app/models/forum.dart';
 import 'package:uforuxpi3/app/widgets/home/body_data.dart';
 import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
-import 'package:uforuxpi3/app/widgets/home/icons_actions.dart';
+import 'package:uforuxpi3/app/widgets/common/icons_actions.dart';
 import 'package:uforuxpi3/core/structures/pair.dart';
 import 'package:uforuxpi3/core/utils/const.dart';
 

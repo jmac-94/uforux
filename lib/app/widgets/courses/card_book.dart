@@ -22,8 +22,10 @@ class CardBook extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  ForumView(loggedUserId: loggedUserId, title: title)),
+              builder: (context) => ForumView(
+                    loggedUserId: loggedUserId,
+                    title: title,
+                  )),
         );
       },
       child: Column(

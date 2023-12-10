@@ -50,7 +50,9 @@ class AppUserController {
   Future<List<Forum>> fetchFollowedForums() async {
     List<Forum> followedForums = [];
 
+    // Inicializar el appUser solamente si no es nulo
     appUser = await getUserData();
+
     List<String>? followedForumsIds = appUser?.followedForums;
 
     if (followedForumsIds != null) {
@@ -70,5 +72,68 @@ class AppUserController {
     }
 
     return followedForums;
+  }
+
+  Future<bool> hasUserFollowedForum(String forumName) async {
+    appUser = await getUserData();
+    List<String>? followedForumsIds = appUser?.followedForums;
+
+    if (followedForumsIds != null) {
+      for (var i = 0; i < followedForumsIds.length; i++) {
+        DocumentSnapshot<Map<String, dynamic>> docSnapshot = await firestore
+            .collection('forums')
+            .doc(followedForumsIds[i])
+            .get();
+
+        final Map<String, dynamic>? data = docSnapshot.data();
+
+        if (data != null) {
+          if (removeAccentsAndToLowercase(data['name']) ==
+              removeAccentsAndToLowercase(forumName)) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  Future<void> updateFollowedForums(String forumName, bool isFollowed) async {
+    appUser = await getUserData();
+    List<String>? followedForumsIds = appUser?.followedForums ?? [];
+
+    // Buscar el ID del foro a partir de su nombre
+    final QuerySnapshot<Map<String, dynamic>> forumSnapshot = await firestore
+        .collection('forums')
+        .where('name', isEqualTo: removeAccentsAndToLowercase(forumName))
+        .get();
+    final DocumentSnapshot<Map<String, dynamic>> forumDoc =
+        forumSnapshot.docs.first;
+    final String forumId = forumDoc.id;
+
+    if (isFollowed) {
+      if (!followedForumsIds.contains(forumId)) {
+        followedForumsIds.add(forumId);
+      }
+    } else {
+      followedForumsIds.remove(forumId);
+    }
+
+    await firestore.collection('students').doc(appUser?.id).update({
+      'followedForums': followedForumsIds,
+    });
+  }
+
+  // Metodos de ayuda
+  String removeAccentsAndToLowercase(String text) {
+    const accents = 'áéíóúÁÉÍÓÚ';
+    const withoutAccents = 'aeiouAEIOU';
+
+    for (int i = 0; i < accents.length; i++) {
+      text = text.replaceAll(accents[i], withoutAccents[i]);
+    }
+
+    return text.toLowerCase();
   }
 }

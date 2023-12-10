@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
 
 import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
+import 'package:uforuxpi3/core/utils/dprint.dart';
 
 class ForumView extends StatefulWidget {
   final String loggedUserId;
@@ -17,6 +19,29 @@ class ForumView extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<ForumView> {
+  late AppUserController appUserController;
+  bool isFollowed = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    appUserController = AppUserController(uid: widget.loggedUserId);
+
+    fetchForumFollowedStatus();
+  }
+
+  void fetchForumFollowedStatus() async {
+    bool forumFollowedStatus =
+        await appUserController.hasUserFollowedForum(widget.title);
+
+    if (mounted) {
+      setState(() {
+        isFollowed = forumFollowedStatus;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -63,7 +88,14 @@ class _DetailScreenState extends State<ForumView> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      setState(() {
+                        isFollowed = !isFollowed;
+                      });
+
+                      await appUserController.updateFollowedForums(
+                          widget.title, isFollowed);
+                    },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.red,
                       backgroundColor: Colors.white,
@@ -72,7 +104,7 @@ class _DetailScreenState extends State<ForumView> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text('Joined'),
+                    child: Text(isFollowed ? 'Followed' : 'Unfollowed'),
                   ),
                   const SizedBox(width: 4),
                   IconButton(
