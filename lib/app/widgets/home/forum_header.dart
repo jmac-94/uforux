@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:uforuxpi3/core/utils/extensions.dart';
 
 class ForumHeader extends StatelessWidget {
   final String profilePhoto;
@@ -25,41 +27,50 @@ class ForumHeader extends StatelessWidget {
           horizontal: 15,
           vertical: 10,
         ),
-        child: Row(children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(28.0),
-            child: Image.network(
-              profilePhoto,
-              width: 25,
-              height: 25,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Text(
-              comment.author?.username ?? '',
-              style: const TextStyle(
-                fontSize: 11,
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(28.0),
+              child: Image.network(
+                profilePhoto,
+                width: 25,
+                height: 25,
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-          const Text(
-            'desde ',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w200,
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                comment.author?.username.toString().capitalize() ?? '',
+                style: const TextStyle(
+                  fontSize: 13,
+                ),
+              ),
             ),
-          ),
-          Text(
-            '#${comment.labels[0]}',
-            style: const TextStyle(
-              fontSize: 11,
-              color: Colors.blueAccent,
+            const Text(
+              'desde ',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w200,
+              ),
             ),
-          ),
-          const Spacer(),
-        ]),
+            Text(
+              ' ${comment.labels[0]}',
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.blueAccent,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              timeago.format(comment.createdAt.toDate()),
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

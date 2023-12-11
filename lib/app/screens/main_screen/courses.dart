@@ -111,18 +111,7 @@ class _CoursesState extends State<Courses> {
                     onPressed: () {},
                   ),
                 ],
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.blue.shade900, // Color de inicio del degradado
-                        Colors.blue.shade700, // Color de fin del degradado
-                      ],
-                    ),
-                  ),
-                ),
+                backgroundColor: Colors.blue[800],
                 shadowColor: Colors.transparent,
               ),
             ),

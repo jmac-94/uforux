@@ -31,6 +31,7 @@ class BodyData extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
           ),
@@ -46,8 +47,8 @@ class BodyData extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.left,
               maxLines: 5,
-              style: TextStyle(
-                color: Colors.grey[500],
+              style: const TextStyle(
+                fontSize: 16,
               ),
             ),
           ),
@@ -75,31 +76,6 @@ class BodyData extends StatelessWidget {
               ),
             ),
           ),
-        Row(
-          children: comment.labels.map((label) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 10,
-              ),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(label),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
       ],
     );
   }
