@@ -34,15 +34,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Foro'),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: Colors.white60,
-          unselectedLabelColor: Colors.white,
-          tabs: const [
-            Tab(text: 'Para ti'),
-            Tab(text: 'Foro General'),
-          ],
+        bottom: PreferredSize(
+          preferredSize:
+              const Size.fromHeight(5), // Establece la altura del TabBar
+          child: Align(
+            alignment:
+                Alignment.topCenter, // Alinea el TabBar en la parte superior
+            child: TabBar(
+              controller: _tabController,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.black,
+              tabs: const [
+                Tab(text: 'Para ti'),
+                Tab(text: 'Foro General'),
+              ],
+            ),
+          ),
         ),
         titleTextStyle: const TextStyle(
           fontSize: 20.0,
@@ -50,25 +57,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           color: Colors.white,
         ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            color: Colors.white,
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-          ),
-        ],
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.blue.shade900,
-                Colors.blue.shade700,
-              ],
-            ),
-          ),
-        ),
+        backgroundColor: Colors.blue[800],
         shadowColor: Colors.transparent,
       ),
       body: TabBarView(
@@ -79,7 +68,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
           ForumCommentsWidget(
             loggedUserId: widget.user.id,
-            title: 'general', // Asume que tienes una lógica para manejar esto
+            title: 'general',
           ),
         ],
       ),

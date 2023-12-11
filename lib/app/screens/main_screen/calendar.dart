@@ -54,7 +54,16 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Calendario")),
+      appBar: AppBar(
+        title: const Text("Calendario",
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            )),
+        centerTitle: false,
+        backgroundColor: Colors.blue[800],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(

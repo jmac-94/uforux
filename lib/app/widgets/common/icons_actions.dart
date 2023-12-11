@@ -6,6 +6,7 @@ import 'package:uforuxpi3/app/controllers/forum_controller.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
 import 'package:uforuxpi3/app/models/subcomment.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:uforuxpi3/core/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -60,9 +61,38 @@ class _IconsActionsState extends State<IconsActions> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const SizedBox(
-          width: 5,
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 10.0,
+          ),
+          child: Row(
+            children: widget.comment.labels.skip(1).map((label) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 5,
+                ),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Center(
+                      child: Text(
+                        label.capitalize(),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
+        const Spacer(),
         Row(
           children: [
             IconButton(
@@ -78,53 +108,39 @@ class _IconsActionsState extends State<IconsActions> {
                 isLiked
                     ? Icons.local_fire_department
                     : Icons.local_fire_department_outlined,
-                size: 20,
+                size: 24,
               ),
               constraints: const BoxConstraints.tightFor(
-                width: 30,
+                width: 34,
               ),
             ),
             Text('${widget.comment.ups}', style: const TextStyle(fontSize: 12)),
           ],
         ),
         const SizedBox(width: 5),
-        Flexible(
-          child: Row(
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () async {
-                      setState(() {});
-                      commentsInfo(context);
-                    },
-                    icon: const Icon(
-                      Icons.comment,
-                      size: 20,
-                    ),
-                    constraints: const BoxConstraints.tightFor(
-                      width: 32,
-                    ),
-                  ),
-                  Text(
-                    subcommentNum.toString(),
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ],
+        Row(
+          children: [
+            IconButton(
+              onPressed: () async {
+                setState(() {});
+                commentsInfo(context);
+              },
+              icon: const Icon(
+                Icons.comment,
+                size: 24,
               ),
-              const Spacer(),
-              Text(
-                timeago.format(widget.comment.createdAt.toDate()),
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+              constraints: const BoxConstraints.tightFor(
+                width: 36,
               ),
-              const SizedBox(
-                width: 10,
-              )
-            ],
-          ),
+            ),
+            Text(
+              subcommentNum.toString(),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        const SizedBox(
+          width: 20,
         ),
       ],
     );

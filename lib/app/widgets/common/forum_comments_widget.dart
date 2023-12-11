@@ -166,6 +166,7 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                               tag: 'CommentsForum${comment.id}',
                               child: Column(
                                 children: [
+                                  const SizedBox(height: 5),
                                   ForumHeader(
                                     profilePhoto: profilePhoto,
                                     comment: comment,
@@ -175,15 +176,15 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                                     forumController: forumController,
                                     comment: comment,
                                   ),
-                                  Container(
-                                    width: double.infinity,
-                                    height: 1.5,
-                                    color: Colors.grey[200],
-                                  ),
+                                  if (comment.attachments['images'] == null)
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
                                   IconsActions(
                                     comment: comment,
                                     forumController: forumController,
                                   ),
+                                  const SizedBox(height: 5),
                                 ],
                               ),
                             ),
@@ -358,7 +359,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.blueAccent.shade100,
+                      Colors.blue[400]!,
                     ), // Establece tu color aquí
                   ),
                   onPressed: () async {
