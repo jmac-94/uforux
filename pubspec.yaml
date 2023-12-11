@@ -63,6 +63,7 @@ dependencies:
   simple_animations: ^5.0.2
   firebase_app_check: ^0.2.1+6
   awesome_icons: ^1.1.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
