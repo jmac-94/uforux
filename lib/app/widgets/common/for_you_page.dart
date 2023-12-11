@@ -140,20 +140,26 @@ class _ForYouWidgetState extends State<ForYouWidget> {
                                       tag: 'CommentsForum${comment.id}',
                                       child: Column(
                                         children: [
+                                          const SizedBox(height: 5),
                                           ForumHeader(
-                                              profilePhoto: profilePhoto,
-                                              comment: comment),
+                                            profilePhoto: profilePhoto,
+                                            comment: comment,
+                                          ),
                                           const SizedBox(height: 5),
                                           BodyData(
-                                              forumController: forumController,
-                                              comment: comment),
-                                          Container(
-                                              width: double.infinity,
-                                              height: 1.5,
-                                              color: Colors.grey[200]),
+                                            forumController: forumController,
+                                            comment: comment,
+                                          ),
+                                          if (comment.attachments['images'] ==
+                                              null)
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
                                           IconsActions(
-                                              comment: comment,
-                                              forumController: forumController),
+                                            comment: comment,
+                                            forumController: forumController,
+                                          ),
+                                          const SizedBox(height: 5),
                                         ],
                                       ),
                                     ),

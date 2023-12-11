@@ -124,6 +124,17 @@ class _IconsActionsState extends State<IconsActions> {
               onPressed: () async {
                 setState(() {});
                 commentsInfo(context);
+                //! Automaticamente se abre para insetar un nuevo comentario
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => CommentSection(
+                    forumController: widget.forumController,
+                    comment: widget.comment,
+                    onCommentSubmitted: () {
+                      setState(() {});
+                    },
+                  ),
+                );
               },
               icon: const Icon(
                 Icons.comment,
@@ -226,222 +237,243 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
   Widget build(BuildContext context) {
     // Aquí va el contenido de tu página, similar a lo que tenías en el método commentsInfo
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
       body: SafeArea(
         bottom: false,
         child: Align(
           alignment: Alignment.bottomCenter,
-          child: Hero(
-            tag: 'CommentsForum',
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-              child: Material(
-                child: Stack(
-                  children: [
-                    Column(
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            child: Material(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(28.0),
+                        child: Image.network(
+                          'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
+                          width: 45,
+                          height: 45,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          widget.comment.author?.username
+                                  .toString()
+                                  .capitalize() ??
+                              '',
+                          style: const TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const Text(
+                        'desde ',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w200,
+                        ),
+                      ),
+                      Text(
+                        ' ${widget.comment.labels[0]}',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 8.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              widget.comment.title,
+                              style: const TextStyle(
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        widget.comment.description,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        maxLines: 5,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
+                    child: Row(
                       children: [
-                        const SizedBox(height: 30),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Padding(
+                        Text(
+                          timeago.format(widget.comment.createdAt.toDate()),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.local_fire_department_outlined,
+                            size: 20,
+                          ),
+                        ),
+                        Text(
+                          '${widget.comment.ups}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => CommentSection(
+                                forumController: widget.forumController,
+                                comment: widget.comment,
+                                onCommentSubmitted: () {
+                                  setState(() {});
+                                },
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.comment,
+                          ),
+                        ),
+                        Text(
+                          subcommentNum.toString(),
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Flexible(
+                    child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        final Subcomment subcomment =
+                            widget.comment.subcomments!.values.toList()[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 15.0, vertical: 8.0),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    widget.comment.title,
-                                    style: const TextStyle(
-                                      fontSize: 24,
+                                  horizontal: 8.0,
+                                ),
+                                child: ClipOval(
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    color: Colors.grey[400],
+                                    child: Image.network(
+                                      'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Text(
-                              widget.comment.description,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              maxLines: 5,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15.0,
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                timeago
-                                    .format(widget.comment.createdAt.toDate()),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                              const Spacer(),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.local_fire_department_outlined,
-                                  size: 20,
-                                ),
-                              ),
-                              Text(
-                                '${widget.comment.ups}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => CommentSection(
-                                      forumController: widget.forumController,
-                                      comment: widget.comment,
-                                      onCommentSubmitted: () {
-                                        setState(() {});
-                                      },
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.comment,
-                                ),
-                              ),
-                              Text(
-                                subcommentNum.toString(),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Flexible(
-                          child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              final Subcomment subcomment = widget
-                                  .comment.subcomments!.values
-                                  .toList()[index];
-                              return Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
+                              Expanded(
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
+                                      padding: const EdgeInsets.only(
+                                        bottom: 4.0,
                                       ),
-                                      child: ClipOval(
-                                        child: Container(
-                                          width: 35,
-                                          height: 35,
-                                          color: Colors.grey[400],
-                                          child: Image.network(
-                                            'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      child: Row(
                                         children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              bottom: 4.0,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  faker.person
-                                                      .name()
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.red[100],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  child: const Text(
-                                                    'STD',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                Icon(
-                                                  Icons.access_time,
-                                                  size: 11,
-                                                  color: Colors.grey[500],
-                                                ),
-                                                const SizedBox(width: 3),
-                                                Text(
-                                                  timeago.format(widget
-                                                      .comment.createdAt
-                                                      .toDate()),
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.grey[500],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 5),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
                                           Text(
-                                            subcomment.text,
+                                            faker.person.name().toString(),
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey[600],
+                                            ),
                                           ),
+                                          const SizedBox(width: 5),
+                                          Container(
+                                            padding: const EdgeInsets.all(4.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.red[100],
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: const Text(
+                                              'STD',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Icon(
+                                            Icons.access_time,
+                                            size: 11,
+                                            color: Colors.grey[500],
+                                          ),
+                                          const SizedBox(width: 3),
+                                          Text(
+                                            timeago.format(widget
+                                                .comment.createdAt
+                                                .toDate()),
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey[500],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 5),
                                         ],
                                       ),
                                     ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      subcomment.text,
+                                    ),
                                   ],
                                 ),
-                              );
-                            },
-                            separatorBuilder: (context, index) => const Divider(
-                              height: 20,
-                              color: Colors.transparent,
-                            ),
-                            itemCount: subcommentNum,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.close),
-                        color: Colors.black,
+                        );
+                      },
+                      separatorBuilder: (context, index) => const Divider(
+                        height: 20,
+                        color: Colors.transparent,
                       ),
+                      itemCount: subcommentNum,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
