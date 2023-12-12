@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
+import 'package:forux/app/models/comment.dart';
 
 class Forum {
   String? id;

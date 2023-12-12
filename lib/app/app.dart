@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/controllers/authentication_controller.dart';
-import 'package:uforuxpi3/core/theme_class.dart';
-import 'package:uforuxpi3/core/utils/const.dart';
-import 'package:uforuxpi3/app/screens/wrapper.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/controllers/authentication_controller.dart';
+import 'package:forux/core/theme_class.dart';
+import 'package:forux/core/utils/const.dart';
+import 'package:forux/app/screens/wrapper.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

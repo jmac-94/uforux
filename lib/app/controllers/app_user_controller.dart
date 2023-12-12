@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/forum.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/forum.dart';
+import 'package:forux/core/utils/dprint.dart';
+import 'package:forux/core/utils/extensions.dart';
 
 class AppUserController {
   final String uid;
@@ -9,6 +14,7 @@ class AppUserController {
   final CollectionReference studentCollection =
       FirebaseFirestore.instance.collection('students');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
   AppUserController({required this.uid});
 
@@ -88,8 +94,8 @@ class AppUserController {
         final Map<String, dynamic>? data = docSnapshot.data();
 
         if (data != null) {
-          if (removeAccentsAndToLowercase(data['name']) ==
-              removeAccentsAndToLowercase(forumName)) {
+          if (data['name'].removeAccentsAndToLowercase() ==
+              forumName.removeAccentsAndToLowercase()) {
             return true;
           }
         }
@@ -106,7 +112,7 @@ class AppUserController {
     // Buscar el ID del foro a partir de su nombre
     final QuerySnapshot<Map<String, dynamic>> forumSnapshot = await firestore
         .collection('forums')
-        .where('name', isEqualTo: removeAccentsAndToLowercase(forumName))
+        .where('name', isEqualTo: forumName.removeAccentsAndToLowercase())
         .get();
     final DocumentSnapshot<Map<String, dynamic>> forumDoc =
         forumSnapshot.docs.first;
@@ -125,15 +131,32 @@ class AppUserController {
     });
   }
 
-  // Metodos de ayuda
-  String removeAccentsAndToLowercase(String text) {
-    const accents = 'áéíóúÁÉÍÓÚ';
-    const withoutAccents = 'aeiouAEIOU';
+  Future<Image> getProfilePhoto() async {
+    if (appUser != null) {
+      final String filePath = 'profilePhoto/${appUser!.id}';
+      final Reference ref = storage.ref().child(filePath);
 
-    for (int i = 0; i < accents.length; i++) {
-      text = text.replaceAll(accents[i], withoutAccents[i]);
+      try {
+        final String downloadURL = await ref.getDownloadURL();
+        return Image.network(downloadURL);
+      } catch (e) {
+        dPrint('Error al obtener la foto de perfil: $e');
+        return Image.asset(
+            'assets/images/empty-profile-photo.jpg'); // imagen por defecto
+      }
+    } else {
+      dPrint('Error: appUser es null');
+      return Image.asset(
+          'assets/images/empty-profile-photo.jpg'); // imagen por defecto
     }
+  }
 
-    return text.toLowerCase();
+  Future<void> updateProfilePhoto(File image) async {
+    if (appUser != null) {
+      final String filePath = 'profilePhoto/${appUser!.id}';
+
+      final Reference ref = storage.ref().child(filePath);
+      await ref.putFile(image);
+    }
   }
 }

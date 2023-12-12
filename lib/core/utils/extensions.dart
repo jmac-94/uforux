@@ -26,4 +26,16 @@ extension StringExtensions on String {
             : "${word[0].toUpperCase()}${word.substring(1)}")
         .join(' ');
   }
+
+  String removeAccentsAndToLowercase() {
+    const String accents = 'áéíóúÁÉÍÓÚ';
+    const String withoutAccents = 'aeiouAEIOU';
+
+    String modifiedText = this;
+    for (int i = 0; i < accents.length; i++) {
+      modifiedText = modifiedText.replaceAll(accents[i], withoutAccents[i]);
+    }
+
+    return modifiedText.toLowerCase();
+  }
 }

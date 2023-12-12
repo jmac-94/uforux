@@ -4,15 +4,15 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
-import 'package:uforuxpi3/app/models/forum.dart';
-import 'package:uforuxpi3/app/models/subcomment.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
+import 'package:forux/app/models/forum.dart';
+import 'package:forux/app/models/subcomment.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/core/structures/pair.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/core/structures/pair.dart';
+import 'package:forux/app/models/comment.dart';
+import 'package:forux/core/utils/dprint.dart';
 
 class ForumController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -123,8 +123,16 @@ class ForumController {
 
   Future<void> updateComments() async {
     try {
-      // Actualizar comentarios en firestore
+      // Actualizar comentarios en forums
       Map<String, dynamic> commentsJson = commentsToJson();
+
+      // Filtrar comentarios del usuario logueado
+      Map<String, dynamic> userComments = {};
+      commentsJson.forEach((key, value) {
+        if (value['userId'] == loggedUserId) {
+          userComments[key] = value;
+        }
+      });
 
       if (forum.id != null) {
         await firestore.collection('forums').doc(forum.id).update({
@@ -143,6 +151,22 @@ class ForumController {
           });
         }
       }
+
+      // Obtener el documento del estudiante
+      DocumentSnapshot studentDoc =
+          await firestore.collection('students').doc(loggedUserId).get();
+
+      // Combinar los comentarios existentes con los nuevos
+      Map<String, dynamic> existingComments =
+          (studentDoc.data() as Map<String, dynamic>)['comments'] ?? {};
+      userComments.forEach((key, value) {
+        existingComments[key] = value;
+      });
+
+      // Actualizar comentarios en users/students
+      await firestore.collection('students').doc(loggedUserId).update({
+        'comments': existingComments,
+      });
     } catch (e) {
       dPrint(e);
     }
@@ -289,14 +313,16 @@ class ForumController {
   }
 
   // Images
-  Future<String> fetchImageUrl(String imagePath) async {
+  static Future<String> fetchImageUrl(String imagePath) async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
     final Reference ref = storage.ref().child(imagePath);
     final String url = await ref.getDownloadURL();
     return url;
   }
 
   // No usa el metodo fetchImageUrl ya que sin usarlo es mas rapida la carga
-  Future<Image> fetchImage(String imagePath) async {
+  static Future<Image> fetchImage(String imagePath) async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
     final Reference ref = storage.ref().child(imagePath);
     final String url = await ref.getDownloadURL();
     return Image.network(url);

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
-import 'package:uforuxpi3/app/controllers/forum_controller.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
-import 'package:uforuxpi3/app/models/forum.dart';
-import 'package:uforuxpi3/app/widgets/home/body_data.dart';
-import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
-import 'package:uforuxpi3/app/widgets/common/icons_actions.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
+import 'package:forux/app/controllers/forum_controller.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/comment.dart';
+import 'package:forux/app/models/forum.dart';
+import 'package:forux/app/widgets/home/body_data.dart';
+import 'package:forux/app/widgets/home/forum_header.dart';
+import 'package:forux/app/widgets/common/icons_actions.dart';
 import 'package:faker/faker.dart';
 
 class ForYouWidget extends StatefulWidget {
@@ -140,20 +140,24 @@ class _ForYouWidgetState extends State<ForYouWidget> {
                                       tag: 'CommentsForum${comment.id}',
                                       child: Column(
                                         children: [
+                                          const SizedBox(height: 5),
                                           ForumHeader(
-                                              profilePhoto: profilePhoto,
-                                              comment: comment),
+                                            comment: comment,
+                                          ),
                                           const SizedBox(height: 5),
                                           BodyData(
-                                              forumController: forumController,
-                                              comment: comment),
-                                          Container(
-                                              width: double.infinity,
-                                              height: 1.5,
-                                              color: Colors.grey[200]),
+                                            comment: comment,
+                                          ),
+                                          if (comment.attachments['images'] ==
+                                              null)
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
                                           IconsActions(
-                                              comment: comment,
-                                              forumController: forumController),
+                                            comment: comment,
+                                            forumController: forumController,
+                                          ),
+                                          const SizedBox(height: 5),
                                         ],
                                       ),
                                     ),

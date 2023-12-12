@@ -1,12 +1,17 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/controllers/authentication_controller.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
-import 'package:uforuxpi3/core/utils/extensions.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/controllers/authentication_controller.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
+import 'package:forux/app/widgets/profile/my_forum_widget.dart';
+import 'package:forux/core/utils/dprint.dart';
+import 'package:forux/core/utils/extensions.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   final AppUser user;
@@ -19,6 +24,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final AuthenticationController _auth = AuthenticationController();
+  late AppUserController appUserController;
   late AppUser loggedUser;
 
   String getUserType() {
@@ -33,6 +39,8 @@ class _ProfileState extends State<Profile> {
   Future<void> loadData(String id) async {
     try {
       loggedUser = (await AppUserController(uid: id).getUserData())!;
+      appUserController = AppUserController(uid: widget.user.id);
+      appUserController.appUser = loggedUser;
     } catch (e) {
       dPrint(e);
     }
@@ -76,17 +84,94 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         ),
-                        ClipOval(
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.grey[400],
-                            child: Image.network(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDVJZSsFRquEhWK_qlau6Lr6jN4hLhkzSmyg&usqp=CAU',
-                              fit: BoxFit.cover,
+                        // Profile photo
+                        Stack(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      child: FutureBuilder<Image>(
+                                        future:
+                                            appUserController.getProfilePhoto(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<Image> snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const CircularProgressIndicator();
+                                          } else if (snapshot.hasError) {
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          } else {
+                                            return snapshot.data!;
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: ClipOval(
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.grey[400],
+                                  child: FutureBuilder<Image>(
+                                    future: appUserController.getProfilePhoto(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<Image> snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la imagen
+                                      } else if (snapshot.hasError) {
+                                        return Text(
+                                            'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
+                                      } else {
+                                        return snapshot
+                                            .data!; // Muestra la imagen cuando esté disponible
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final picker = ImagePicker();
+                                  final XFile? pickedFile =
+                                      await picker.pickImage(
+                                    source: ImageSource.gallery,
+                                  );
+
+                                  if (pickedFile != null) {
+                                    File imageFile = File(pickedFile.path);
+                                    await appUserController
+                                        .updateProfilePhoto(imageFile);
+                                  } else {
+                                    dPrint('No se seleccionó ninguna imagen.');
+                                  }
+                                },
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                     Padding(
@@ -168,29 +253,7 @@ class _ProfileState extends State<Profile> {
                     Expanded(
                       child: TabBarView(
                         children: [
-                          Center(
-                            child: Center(
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: List.generate(
-                                  10,
-                                  (index) => Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 2,
-                                    ),
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    child: Image.network(
-                                      'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          MyForumWidget(loggedUser: loggedUser),
                           ListView(
                             children: [
                               Padding(
