@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
 
 import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
+import 'package:uforuxpi3/app/widgets/common/teacher_comments_widget.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
 
 class ForumView extends StatefulWidget {
@@ -121,8 +122,8 @@ class _DetailScreenState extends State<ForumView> {
               unselectedLabelColor: Colors.grey,
               tabs: [
                 Tab(text: 'All Discussions'),
-                Tab(text: 'Wikipedia'),
                 Tab(text: 'Teachers'),
+                Tab(text: 'Wikipedia'),
               ],
             ),
             Expanded(
@@ -132,8 +133,8 @@ class _DetailScreenState extends State<ForumView> {
                     loggedUserId: widget.loggedUserId,
                     title: widget.title,
                   ),
+                  const TeacherCommentsWidget(),
                   const Center(child: Text('Wikipedia Content')),
-                  const Center(child: Text('Members Content')),
                 ],
               ),
             ),
