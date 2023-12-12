@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
 import 'package:forux/app/models/subcomment.dart';
@@ -10,7 +9,6 @@ import 'package:uuid/uuid.dart';
 
 class ProfileController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseStorage storage = FirebaseStorage.instance;
   AppUser loggedUser;
 
   static const uuid = Uuid();

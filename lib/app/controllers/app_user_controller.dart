@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/forum.dart';
 import 'package:forux/core/utils/dprint.dart';
@@ -10,6 +14,7 @@ class AppUserController {
   final CollectionReference studentCollection =
       FirebaseFirestore.instance.collection('students');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
   AppUserController({required this.uid});
 
@@ -124,5 +129,34 @@ class AppUserController {
     await firestore.collection('students').doc(appUser?.id).update({
       'followedForums': followedForumsIds,
     });
+  }
+
+  Future<Image> getProfilePhoto() async {
+    if (appUser != null) {
+      final String filePath = 'profilePhoto/${appUser!.id}';
+      final Reference ref = storage.ref().child(filePath);
+
+      try {
+        final String downloadURL = await ref.getDownloadURL();
+        return Image.network(downloadURL);
+      } catch (e) {
+        dPrint('Error al obtener la foto de perfil: $e');
+        return Image.asset(
+            'assets/images/empty-profile-photo.jpg'); // imagen por defecto
+      }
+    } else {
+      dPrint('Error: appUser es null');
+      return Image.asset(
+          'assets/images/empty-profile-photo.jpg'); // imagen por defecto
+    }
+  }
+
+  Future<void> updateProfilePhoto(File image) async {
+    if (appUser != null) {
+      final String filePath = 'profilePhoto/${appUser!.id}';
+
+      final Reference ref = storage.ref().child(filePath);
+      await ref.putFile(image);
+    }
   }
 }
