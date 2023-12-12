@@ -13,6 +13,7 @@ import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
 import 'package:uforuxpi3/app/widgets/common/icons_actions.dart';
 import 'package:uforuxpi3/core/structures/pair.dart';
 import 'package:uforuxpi3/core/utils/const.dart';
+import 'package:uforuxpi3/core/utils/extensions.dart';
 
 class ForumCommentsWidget extends StatefulWidget {
   final String loggedUserId;
@@ -37,7 +38,7 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
     super.initState();
 
     Forum forum =
-        Forum(name: removeAccentsAndToLowercase(widget.title), comments: {});
+        Forum(name: widget.title.removeAccentsAndToLowercase(), comments: {});
 
     forumController = ForumController(
       forum: forum,
@@ -60,17 +61,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
         forumController.hasMoreData) {
       forumController.loadComments();
     }
-  }
-
-  String removeAccentsAndToLowercase(String text) {
-    const accents = 'áéíóúÁÉÍÓÚ';
-    const withoutAccents = 'aeiouAEIOU';
-
-    for (int i = 0; i < accents.length; i++) {
-      text = text.replaceAll(accents[i], withoutAccents[i]);
-    }
-
-    return text.toLowerCase();
   }
 
   void _showCreateGroupScreen() {
@@ -173,7 +163,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                                   ),
                                   const SizedBox(height: 5),
                                   BodyData(
-                                    forumController: forumController,
                                     comment: comment,
                                   ),
                                   if (comment.attachments['images'] == null)

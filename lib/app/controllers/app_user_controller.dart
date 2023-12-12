@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
 import 'package:uforuxpi3/app/models/forum.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:uforuxpi3/core/utils/extensions.dart';
 
 class AppUserController {
   final String uid;
@@ -88,8 +89,8 @@ class AppUserController {
         final Map<String, dynamic>? data = docSnapshot.data();
 
         if (data != null) {
-          if (removeAccentsAndToLowercase(data['name']) ==
-              removeAccentsAndToLowercase(forumName)) {
+          if (data['name'].removeAccentsAndToLowercase() ==
+              forumName.removeAccentsAndToLowercase()) {
             return true;
           }
         }
@@ -106,7 +107,7 @@ class AppUserController {
     // Buscar el ID del foro a partir de su nombre
     final QuerySnapshot<Map<String, dynamic>> forumSnapshot = await firestore
         .collection('forums')
-        .where('name', isEqualTo: removeAccentsAndToLowercase(forumName))
+        .where('name', isEqualTo: forumName.removeAccentsAndToLowercase())
         .get();
     final DocumentSnapshot<Map<String, dynamic>> forumDoc =
         forumSnapshot.docs.first;
@@ -123,17 +124,5 @@ class AppUserController {
     await firestore.collection('students').doc(appUser?.id).update({
       'followedForums': followedForumsIds,
     });
-  }
-
-  // Metodos de ayuda
-  String removeAccentsAndToLowercase(String text) {
-    const accents = 'áéíóúÁÉÍÓÚ';
-    const withoutAccents = 'aeiouAEIOU';
-
-    for (int i = 0; i < accents.length; i++) {
-      text = text.replaceAll(accents[i], withoutAccents[i]);
-    }
-
-    return text.toLowerCase();
   }
 }

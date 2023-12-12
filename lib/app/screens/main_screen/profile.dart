@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
@@ -5,6 +7,7 @@ import 'package:faker/faker.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
 import 'package:uforuxpi3/app/controllers/authentication_controller.dart';
 import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
+import 'package:uforuxpi3/app/widgets/profile/my_forum_widget.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
 import 'package:uforuxpi3/core/utils/extensions.dart';
 
@@ -168,29 +171,7 @@ class _ProfileState extends State<Profile> {
                     Expanded(
                       child: TabBarView(
                         children: [
-                          Center(
-                            child: Center(
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: List.generate(
-                                  10,
-                                  (index) => Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 2,
-                                    ),
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    child: Image.network(
-                                      'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          MyForumWidget(loggedUser: loggedUser),
                           ListView(
                             children: [
                               Padding(

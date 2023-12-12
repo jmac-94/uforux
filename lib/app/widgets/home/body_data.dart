@@ -5,12 +5,10 @@ import 'package:uforuxpi3/app/models/comment.dart';
 
 class BodyData extends StatelessWidget {
   final Comment comment;
-  final ForumController forumController;
 
   const BodyData({
     super.key,
     required this.comment,
-    required this.forumController,
   });
 
   @override
@@ -88,7 +86,7 @@ class BodyData extends StatelessWidget {
       ),
       items: comment.attachments['images']?.map((attachment) {
             return FutureBuilder<Image>(
-              future: forumController.fetchImage(attachment),
+              future: ForumController.fetchImage(attachment),
               builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();

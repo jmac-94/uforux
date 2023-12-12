@@ -1,3 +1,5 @@
+import 'package:uforuxpi3/app/models/comment.dart';
+
 class AppUser {
   final String id;
   final String? username;
@@ -6,6 +8,7 @@ class AppUser {
   final String? entrySemester;
   final double? score;
   final bool? assesor;
+  Map<String, Comment>? comments;
   final List<String>? followedForums;
 
   AppUser(
@@ -16,6 +19,7 @@ class AppUser {
       this.entrySemester,
       this.score,
       this.assesor,
+      this.comments,
       this.followedForums});
 
   Map<String, dynamic> toJson() {
@@ -27,6 +31,8 @@ class AppUser {
       'entrySemester': entrySemester,
       'score': score,
       'assesor': assesor,
+      'comments':
+          comments?.map((key, value) => MapEntry(key, value.toJson())) ?? [],
       'followedForums': followedForums,
     };
   }
@@ -40,6 +46,9 @@ class AppUser {
         entrySemester: json['entrySemester'],
         score: json['score'],
         assesor: json['assesor'],
+        comments: (json['comments'] as Map<String, dynamic>).map(
+          (key, value) => MapEntry(key, Comment.fromJson(value)),
+        ),
         followedForums: List<String>.from(
             json['followedForums'].map((item) => item.toString())));
   }

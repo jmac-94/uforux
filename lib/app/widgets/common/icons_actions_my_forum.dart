@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/controllers/forum_controller.dart';
+import 'package:uforuxpi3/app/controllers/profile_controller.dart';
 import 'package:uforuxpi3/app/models/comment.dart';
 import 'package:uforuxpi3/app/models/subcomment.dart';
 import 'package:uforuxpi3/core/utils/dprint.dart';
@@ -10,22 +11,22 @@ import 'package:uforuxpi3/core/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class IconsActions extends StatefulWidget {
+class IconsActionsMyForum extends StatefulWidget {
   final Comment comment;
   final uuid = const Uuid();
-  final ForumController forumController;
+  final ProfileController profileController;
 
-  const IconsActions({
+  const IconsActionsMyForum({
     super.key,
     required this.comment,
-    required this.forumController,
+    required this.profileController,
   });
 
   @override
-  State<IconsActions> createState() => _IconsActionsState();
+  State<IconsActionsMyForum> createState() => _IconsActionsMyForumState();
 }
 
-class _IconsActionsState extends State<IconsActions> {
+class _IconsActionsMyForumState extends State<IconsActionsMyForum> {
   bool isLiked = false;
   late int subcommentNum;
 
@@ -38,7 +39,7 @@ class _IconsActionsState extends State<IconsActions> {
 
   void fetchUserLikeStatus() async {
     bool userLikeStatus =
-        await widget.forumController.hasUserLikedComment(widget.comment.id);
+        await widget.profileController.hasUserLikedComment(widget.comment.id);
 
     if (mounted) {
       setState(() {
@@ -101,7 +102,7 @@ class _IconsActionsState extends State<IconsActions> {
                   isLiked = !isLiked;
                 });
 
-                await widget.forumController
+                await widget.profileController
                     .updateCommentLikes(widget.comment.id, isLiked);
               },
               icon: Icon(
@@ -128,7 +129,7 @@ class _IconsActionsState extends State<IconsActions> {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) => CommentSection(
-                    forumController: widget.forumController,
+                    profileController: widget.profileController,
                     comment: widget.comment,
                     onCommentSubmitted: () {
                       setState(() {});
@@ -162,7 +163,7 @@ class _IconsActionsState extends State<IconsActions> {
       MaterialPageRoute(
         builder: (BuildContext context) => CommentsInfoPage(
           comment: widget.comment,
-          forumController: widget.forumController,
+          profileController: widget.profileController,
         ),
       ),
     );
@@ -212,12 +213,12 @@ class _IconsActionsState extends State<IconsActions> {
 
 class CommentsInfoPage extends StatefulWidget {
   final Comment comment;
-  final ForumController forumController;
+  final ProfileController profileController;
 
   const CommentsInfoPage({
     super.key,
     required this.comment,
-    required this.forumController,
+    required this.profileController,
   });
 
   @override
@@ -354,7 +355,7 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                             showModalBottomSheet(
                               context: context,
                               builder: (context) => CommentSection(
-                                forumController: widget.forumController,
+                                profileController: widget.profileController,
                                 comment: widget.comment,
                                 onCommentSubmitted: () {
                                   setState(() {});
@@ -484,13 +485,13 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
 }
 
 class CommentSection extends StatefulWidget {
-  final ForumController forumController;
+  final ProfileController profileController;
   final Comment comment;
   final VoidCallback onCommentSubmitted;
 
   const CommentSection({
     super.key,
-    required this.forumController,
+    required this.profileController,
     required this.comment,
     required this.onCommentSubmitted,
   });
@@ -507,7 +508,7 @@ class _CommentSectionState extends State<CommentSection> {
     try {
       String subcommentText = _commentController.text;
 
-      final String userId = widget.forumController.loggedUserId;
+      final String userId = widget.profileController.loggedUser.id;
 
       Subcomment subcomment = Subcomment.fromJson({
         'id': uuid.v1(),
@@ -519,7 +520,8 @@ class _CommentSectionState extends State<CommentSection> {
         'labels': [],
       });
 
-      await widget.forumController.submitSubcomment(widget.comment, subcomment);
+      await widget.profileController
+          .submitSubcomment(widget.comment, subcomment);
 
       _commentController.clear();
 

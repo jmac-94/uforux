@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/widgets/common/for_you_page.dart';
+import 'package:uforuxpi3/app/widgets/common/for_you_widget.dart';
 import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
 
 class Home extends StatefulWidget {
