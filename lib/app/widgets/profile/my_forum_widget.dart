@@ -7,7 +7,7 @@ import 'package:forux/app/controllers/profile_controller.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
 import 'package:forux/app/models/forum.dart';
-import 'package:forux/app/widgets/common/icons_actions_my_forum.dart';
+import 'package:forux/app/widgets/profile/icons_actions_my_forum.dart';
 import 'package:forux/app/widgets/home/body_data.dart';
 import 'package:forux/app/widgets/home/forum_header.dart';
 import 'package:forux/app/widgets/common/icons_actions.dart';
@@ -128,7 +128,6 @@ class _MyForumWidgetState extends State<MyForumWidget> {
                           children: [
                             const SizedBox(height: 5),
                             ForumHeader(
-                              profilePhoto: profilePhoto,
                               comment: comment,
                             ),
                             const SizedBox(height: 5),

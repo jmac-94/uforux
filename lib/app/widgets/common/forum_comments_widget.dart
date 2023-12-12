@@ -76,13 +76,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
     );
   }
 
-  String getUserProfilePhoto(Comment comment) {
-    final profilePhoto =
-        'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
-
-    return profilePhoto;
-  }
-
   void commentsInfo(BuildContext context, Comment comment) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -138,9 +131,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                       forumController.forum.comments.values.toList();
                   final Comment comment = commentsList[index];
 
-                  // Get current comment properties
-                  final String profilePhoto = getUserProfilePhoto(comment);
-
                   return FutureBuilder<AppUser>(
                     future: forumController.fetchAppUser(comment.userId),
                     builder: (BuildContext context,
@@ -172,7 +162,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                                 children: [
                                   const SizedBox(height: 5),
                                   ForumHeader(
-                                    profilePhoto: profilePhoto,
                                     comment: comment,
                                   ),
                                   const SizedBox(height: 5),

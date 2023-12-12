@@ -142,7 +142,6 @@ class _ForYouWidgetState extends State<ForYouWidget> {
                                         children: [
                                           const SizedBox(height: 5),
                                           ForumHeader(
-                                            profilePhoto: profilePhoto,
                                             comment: comment,
                                           ),
                                           const SizedBox(height: 5),
