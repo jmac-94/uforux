@@ -65,6 +65,7 @@ dependencies:
   awesome_icons: ^1.1.0
   intl: ^0.18.1
   image_picker: ^1.0.4
+  syncfusion_flutter_pdfviewer: ^23.2.7
 
 dev_dependencies:
   flutter_test:

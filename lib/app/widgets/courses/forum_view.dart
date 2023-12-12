@@ -3,6 +3,7 @@ import 'package:forux/app/controllers/app_user_controller.dart';
 
 import 'package:forux/app/widgets/common/forum_comments_widget.dart';
 import 'package:forux/app/widgets/common/teacher_comments_widget.dart';
+import 'package:forux/app/widgets/courses/wikipedia.dart';
 import 'package:forux/core/utils/dprint.dart';
 
 class ForumView extends StatefulWidget {
@@ -136,7 +137,7 @@ class _DetailScreenState extends State<ForumView> {
                     title: widget.title,
                   ),
                   const TeacherCommentsWidget(),
-                  const Center(child: Text('Wikipedia Content')),
+                  Wikipedia(),
                 ],
               ),
             ),

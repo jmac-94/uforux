@@ -24,25 +24,6 @@ class TeacherCommentsWidget extends StatelessWidget {
                               // Ancho de la imagen
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              height: 30,
-                              width: 30,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: const Center(
-                                child: Text('TOP',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                    )),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       Row(
