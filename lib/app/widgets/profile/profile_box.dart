@@ -17,7 +17,7 @@ class ProfileBox extends StatelessWidget {
           width: 65,
           height: 65,
           decoration: BoxDecoration(
-            color: Colors.redAccent,
+            color: Colors.blueAccent[700],
             borderRadius: BorderRadius.circular(20),
             image: DecorationImage(
               image: AssetImage(

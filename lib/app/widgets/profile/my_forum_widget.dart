@@ -109,7 +109,7 @@ class _MyForumWidgetState extends State<MyForumWidget> {
                   // Get current comment properties
                   final String profilePhoto = getUserProfilePhoto(comment);
 
-                  // Get current comment author username
+                  // Get current comment author usernamez
                   comment.author = profileController.loggedUser;
 
                   return Padding(

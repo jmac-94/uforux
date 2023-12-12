@@ -240,8 +240,8 @@ class _ProfileState extends State<Profile> {
                       height: MediaQuery.of(context).size.height * 0.02,
                     ),
                     const TabBar(
-                      indicatorColor: Colors.red,
-                      labelColor: Colors.red,
+                      indicatorColor: Colors.blueAccent,
+                      labelColor: Colors.blueAccent,
                       unselectedLabelColor: Colors.grey,
                       tabs: [
                         Tab(text: 'Mi foro'),
