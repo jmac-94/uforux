@@ -151,6 +151,15 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  spreadRadius: 0,
+                                  blurRadius: 5,
+                                  offset: const Offset(
+                                      0, 1), // changes position of shadow
+                                ),
+                              ],
                               color: Colors.white,
                             ),
                             child: GestureDetector(
