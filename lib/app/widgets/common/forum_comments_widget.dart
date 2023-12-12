@@ -93,6 +93,17 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
     return profilePhoto;
   }
 
+  void commentsInfo(BuildContext context, Comment comment) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => CommentsInfoPage(
+          comment: comment,
+          forumController: forumController,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,8 +173,11 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                               borderRadius: BorderRadius.circular(8),
                               color: Colors.white,
                             ),
-                            child: Hero(
-                              tag: 'CommentsForum${comment.id}',
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {});
+                                commentsInfo(context, comment);
+                              },
                               child: Column(
                                 children: [
                                   const SizedBox(height: 5),
