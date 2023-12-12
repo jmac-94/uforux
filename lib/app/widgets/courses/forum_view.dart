@@ -52,16 +52,17 @@ class _DetailScreenState extends State<ForumView> {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           leading: const BackButton(color: Colors.black),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search, color: Colors.black),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
-              onPressed: () {},
-            ),
-          ],
+          // TODO: Implementar la funcionalidad de búsqueda
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.search, color: Colors.black),
+          //     onPressed: () {},
+          //   ),
+          //   IconButton(
+          //     icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
+          //     onPressed: () {},
+          //   ),
+          // ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,31 +99,32 @@ class _DetailScreenState extends State<ForumView> {
                           widget.title, isFollowed);
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
+                      foregroundColor: Colors.blueAccent,
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.red),
+                        side: const BorderSide(color: Colors.blueAccent),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: Text(isFollowed ? 'Followed' : 'Unfollowed'),
                   ),
                   const SizedBox(width: 4),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_none,
-                        color: Colors.grey),
-                    onPressed: () {},
-                  ),
+                  // TODO: Implementar la funcionalidad de notificaciones
+                  // IconButton(
+                  //   icon: const Icon(Icons.notifications_none,
+                  //       color: Colors.grey),
+                  //   onPressed: () {},
+                  // ),
                 ],
               ),
             ),
             const TabBar(
-              indicatorColor: Colors.red,
-              labelColor: Colors.red,
+              indicatorColor: Colors.blueAccent,
+              labelColor: Colors.blueAccent,
               unselectedLabelColor: Colors.grey,
               tabs: [
-                Tab(text: 'All Discussions'),
-                Tab(text: 'Teachers'),
+                Tab(text: 'Foro'),
+                Tab(text: 'Profesores'),
                 Tab(text: 'Wikipedia'),
               ],
             ),

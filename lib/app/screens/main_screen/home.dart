@@ -36,7 +36,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         bottom: PreferredSize(
           preferredSize:
-              const Size.fromHeight(5), // Establece la altura del TabBar
+              const Size.fromHeight(20), // Establece la altura del TabBar
           child: Align(
             alignment:
                 Alignment.topCenter, // Alinea el TabBar en la parte superior
@@ -45,8 +45,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               labelColor: Colors.white,
               unselectedLabelColor: Colors.black,
               tabs: const [
-                Tab(text: 'Para ti'),
-                Tab(text: 'Foro General'),
+                Tab(
+                  text: 'Para ti',
+                  icon: Icon(Icons.person),
+                ),
+                Tab(
+                  text: 'Foro General',
+                  icon: Icon(Icons.forum),
+                ),
               ],
             ),
           ),
