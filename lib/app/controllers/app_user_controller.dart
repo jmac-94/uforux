@@ -140,12 +140,10 @@ class AppUserController {
         final String downloadURL = await ref.getDownloadURL();
         return Image.network(downloadURL);
       } catch (e) {
-        dPrint('Error al obtener la foto de perfil: $e');
         return Image.asset(
             'assets/images/empty-profile-photo.jpg'); // imagen por defecto
       }
     } else {
-      dPrint('Error: appUser es null');
       return Image.asset(
           'assets/images/empty-profile-photo.jpg'); // imagen por defecto
     }
