@@ -1,4 +1,4 @@
-name: uforuxpi3
+name: forux
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -64,6 +64,12 @@ dependencies:
   firebase_app_check: ^0.2.1+6
   awesome_icons: ^1.1.0
   intl: ^0.18.1
+  image_picker: ^1.0.4
+  syncfusion_flutter_pdfviewer: ^23.2.7
+  dio: ^5.4.0
+  path_provider: ^2.1.1
+  
+  
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +81,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
+
+  flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -91,6 +99,9 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
+    - assets/flutter-cheat-sheet.pdf
+    - assets/Remozamiento_de_Cabina.pdf
+    - assets/EL2_2022_2.pdf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -117,3 +128,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.jpg"
+  min_sdk_android: 21

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/widgets/courses/forum_view.dart';
+import 'package:forux/app/widgets/courses/forum_view.dart';
 
 class CardBook extends StatelessWidget {
   final String loggedUserId;
@@ -38,7 +38,7 @@ class CardBook extends StatelessWidget {
               color: Colors.white,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(image),
+                image: AssetImage(image),
               ),
             ),
           ),

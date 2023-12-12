@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/screens/main_screen/calendar.dart';
-import 'package:uforuxpi3/app/screens/main_screen/home.dart';
-import 'package:uforuxpi3/app/screens/main_screen/courses.dart';
-import 'package:uforuxpi3/app/screens/main_screen/profile.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/screens/main_screen/calendar.dart';
+import 'package:forux/app/screens/main_screen/home.dart';
+import 'package:forux/app/screens/main_screen/courses.dart';
+import 'package:forux/app/screens/main_screen/profile.dart';
 
 class MainScreen extends StatefulWidget {
   // El usuario nunca llega como null al MainScreen

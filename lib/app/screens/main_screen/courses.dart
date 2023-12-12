@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/widgets/courses/card_book.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/widgets/courses/card_book.dart';
 
 class Courses extends StatefulWidget {
   final AppUser user;
@@ -127,16 +127,14 @@ class _CoursesState extends State<Courses> {
                       CardBook(
                         loggedUserId: widget.user.id,
                         color: Colors.red,
-                        image:
-                            'https://images.unsplash.com/photo-1581092583537-20d51b4b4f1b?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        image: 'assets/images/calculoDeUnaVariable.jpg',
                         title: 'Cálculo de una variable',
                       ),
                       const SizedBox(width: 10.0),
                       CardBook(
                         loggedUserId: widget.user.id,
                         color: Colors.blue,
-                        image:
-                            'https://images.unsplash.com/photo-1486825586573-7131f7991bdd?q=80&w=3238&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        image: 'assets/images/laboratorioDeComunicacion1.jpg',
                         title: 'Laboratorio de comunicación 1',
                       ),
                       const SizedBox(width: 10.0),
@@ -144,105 +142,105 @@ class _CoursesState extends State<Courses> {
                         loggedUserId: widget.user.id,
                         color: Colors.green,
                         image:
-                            'https://images.unsplash.com/photo-1551033406-611cf9a28f67?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                            'assets/images/proyectosInterdisciplinarios1.jpg',
                         title: 'Proyectos interdisciplinarios 1',
                       ),
                       const SizedBox(width: 10.0),
                       CardBook(
                         loggedUserId: widget.user.id,
                         color: Colors.green,
-                        image:
-                            'https://images.unsplash.com/photo-1581092163144-b7ae3c00adbc?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        image: 'assets/images/algebraLineal.jpg',
                         title: 'Álgebra lineal',
                       ),
                     ],
                   ),
                 ),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.0,
-                      vertical: 5.0,
-                    ),
-                    child: Text(
-                      'Tendencias',
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      const SizedBox(width: 10.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.black,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '#Ayuda en ADA',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.black,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '#Mejoras en espacios Abiertos',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.black,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '#Finales ADA',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // const Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Padding(
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 14.0,
+                //       vertical: 5.0,
+                //     ),
+                //     child: Text(
+                //       'Tendencias',
+                //       style: TextStyle(
+                //           fontSize: 20.0,
+                //           fontWeight: FontWeight.w700,
+                //           color: Colors.black),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 50,
+                //   child: ListView(
+                //     scrollDirection: Axis.horizontal,
+                //     children: [
+                //       const SizedBox(width: 10.0),
+                //       Container(
+                //         width: MediaQuery.of(context).size.width * 0.4,
+                //         height: 50,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10.0),
+                //           color: Colors.black,
+                //         ),
+                //         child: const Center(
+                //           child: Text(
+                //             '#Ayuda en ADA',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 18.0,
+                //               fontWeight: FontWeight.w500,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       const SizedBox(width: 10.0),
+                //       Container(
+                //         width: MediaQuery.of(context).size.width * 0.4,
+                //         height: 50,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10.0),
+                //           color: Colors.black,
+                //         ),
+                //         child: const Center(
+                //           child: Text(
+                //             '#Mejoras en espacios Abiertos',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 15.0,
+                //               fontWeight: FontWeight.w500,
+                //             ),
+                //             textAlign: TextAlign.center,
+                //             maxLines: 2,
+                //           ),
+                //         ),
+                //       ),
+                //       const SizedBox(width: 10.0),
+                //       Container(
+                //         width: MediaQuery.of(context).size.width * 0.4,
+                //         height: 50,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10.0),
+                //           color: Colors.black,
+                //         ),
+                //         child: const Center(
+                //           child: Text(
+                //             '#Finales ADA',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 15.0,
+                //               fontWeight: FontWeight.w500,
+                //             ),
+                //             textAlign: TextAlign.center,
+                //             maxLines: 2,
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                const SizedBox(height: 10.0),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(

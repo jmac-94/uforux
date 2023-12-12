@@ -4,15 +4,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 
-import 'package:uforuxpi3/app/controllers/forum_controller.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
-import 'package:uforuxpi3/app/models/forum.dart';
-import 'package:uforuxpi3/app/widgets/home/body_data.dart';
-import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
-import 'package:uforuxpi3/app/widgets/common/icons_actions.dart';
-import 'package:uforuxpi3/core/structures/pair.dart';
-import 'package:uforuxpi3/core/utils/const.dart';
+import 'package:forux/app/controllers/forum_controller.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/comment.dart';
+import 'package:forux/app/models/forum.dart';
+import 'package:forux/app/widgets/home/body_data.dart';
+import 'package:forux/app/widgets/home/forum_header.dart';
+import 'package:forux/app/widgets/common/icons_actions.dart';
+import 'package:forux/core/structures/pair.dart';
+import 'package:forux/core/utils/const.dart';
+import 'package:forux/core/utils/extensions.dart';
 
 class ForumCommentsWidget extends StatefulWidget {
   final String loggedUserId;
@@ -37,7 +38,7 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
     super.initState();
 
     Forum forum =
-        Forum(name: removeAccentsAndToLowercase(widget.title), comments: {});
+        Forum(name: widget.title.removeAccentsAndToLowercase(), comments: {});
 
     forumController = ForumController(
       forum: forum,
@@ -62,17 +63,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
     }
   }
 
-  String removeAccentsAndToLowercase(String text) {
-    const accents = 'áéíóúÁÉÍÓÚ';
-    const withoutAccents = 'aeiouAEIOU';
-
-    for (int i = 0; i < accents.length; i++) {
-      text = text.replaceAll(accents[i], withoutAccents[i]);
-    }
-
-    return text.toLowerCase();
-  }
-
   void _showCreateGroupScreen() {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -86,12 +76,22 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
     );
   }
 
-  String getUserProfilePhoto(Comment comment) {
-    final profilePhoto =
-        'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}';
-
-    return profilePhoto;
-  }
+  // void commentsInfo(BuildContext context, Comment comment) {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       builder: (BuildContext context) => CommentsInfoPage(
+  //         comment: comment,
+  //         forumController: forumController,
+  //         onLikeChanged: (bool newLikeStatus) {
+  //           setState(() {
+  //             isLiked = newLikeStatus;
+  //           });
+  //         },
+  //         isLiked: isLiked,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -137,9 +137,6 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                       forumController.forum.comments.values.toList();
                   final Comment comment = commentsList[index];
 
-                  // Get current comment properties
-                  final String profilePhoto = getUserProfilePhoto(comment);
-
                   return FutureBuilder<AppUser>(
                     future: forumController.fetchAppUser(comment.userId),
                     builder: (BuildContext context,
@@ -160,20 +157,30 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  spreadRadius: 0,
+                                  blurRadius: 5,
+                                  offset: const Offset(
+                                      0, 1), // changes position of shadow
+                                ),
+                              ],
                               color: Colors.white,
                             ),
-                            child: Hero(
-                              tag: 'CommentsForum${comment.id}',
+                            child: GestureDetector(
+                              onTap: () {
+                                // setState(() {});
+                                // commentsInfo(context, comment);
+                              },
                               child: Column(
                                 children: [
                                   const SizedBox(height: 5),
                                   ForumHeader(
-                                    profilePhoto: profilePhoto,
                                     comment: comment,
                                   ),
                                   const SizedBox(height: 5),
                                   BodyData(
-                                    forumController: forumController,
                                     comment: comment,
                                   ),
                                   if (comment.attachments['images'] == null)

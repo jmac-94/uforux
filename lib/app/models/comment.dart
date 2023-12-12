@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/subcomment.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/subcomment.dart';
 
 class Comment {
   final String id;

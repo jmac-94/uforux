@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/authentication_controller.dart';
-import 'package:uforuxpi3/core/utils/const.dart';
-import 'package:uforuxpi3/core/utils/extensions.dart';
-import 'package:uforuxpi3/core/utils/validations.dart';
-import 'package:uforuxpi3/app/widgets/authentication/custom_button.dart';
-import 'package:uforuxpi3/app/widgets/authentication/custom_text_field.dart';
+import 'package:forux/app/controllers/authentication_controller.dart';
+import 'package:forux/core/utils/const.dart';
+import 'package:forux/core/utils/extensions.dart';
+import 'package:forux/core/utils/validations.dart';
+import 'package:forux/app/widgets/authentication/custom_button.dart';
+import 'package:forux/app/widgets/authentication/custom_text_field.dart';
 
 class SignInForm extends StatefulWidget {
   final Function toggleView;

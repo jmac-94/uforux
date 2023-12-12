@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/widgets/common/for_you_page.dart';
-import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/widgets/common/for_you_widget.dart';
+import 'package:forux/app/widgets/common/forum_comments_widget.dart';
 
 class Home extends StatefulWidget {
   final AppUser user;
@@ -36,7 +36,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         bottom: PreferredSize(
           preferredSize:
-              const Size.fromHeight(5), // Establece la altura del TabBar
+              const Size.fromHeight(20), // Establece la altura del TabBar
           child: Align(
             alignment:
                 Alignment.topCenter, // Alinea el TabBar en la parte superior
@@ -45,8 +45,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               labelColor: Colors.white,
               unselectedLabelColor: Colors.black,
               tabs: const [
-                Tab(text: 'Para ti'),
-                Tab(text: 'Foro General'),
+                Tab(
+                  text: 'Para ti',
+                  icon: Icon(Icons.person),
+                ),
+                Tab(
+                  text: 'Foro General',
+                  icon: Icon(Icons.forum),
+                ),
               ],
             ),
           ),

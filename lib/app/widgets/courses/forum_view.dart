@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
 
-import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:forux/app/widgets/common/forum_comments_widget.dart';
+import 'package:forux/app/widgets/common/teacher_comments_widget.dart';
+import 'package:forux/app/widgets/courses/wikipedia.dart';
+import 'package:forux/core/utils/dprint.dart';
 
 class ForumView extends StatefulWidget {
   final String loggedUserId;
@@ -27,19 +29,13 @@ class _DetailScreenState extends State<ForumView> {
     super.initState();
 
     appUserController = AppUserController(uid: widget.loggedUserId);
-
-    fetchForumFollowedStatus();
   }
 
-  void fetchForumFollowedStatus() async {
+  Future<bool> fetchForumFollowedStatus() async {
     bool forumFollowedStatus =
         await appUserController.hasUserFollowedForum(widget.title);
 
-    if (mounted) {
-      setState(() {
-        isFollowed = forumFollowedStatus;
-      });
-    }
+    return forumFollowedStatus;
   }
 
   @override
@@ -51,16 +47,17 @@ class _DetailScreenState extends State<ForumView> {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           leading: const BackButton(color: Colors.black),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search, color: Colors.black),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
-              onPressed: () {},
-            ),
-          ],
+          // TODO: Implementar la funcionalidad de búsqueda
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.search, color: Colors.black),
+          //     onPressed: () {},
+          //   ),
+          //   IconButton(
+          //     icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
+          //     onPressed: () {},
+          //   ),
+          // ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,45 +81,45 @@ class _DetailScreenState extends State<ForumView> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton(
-                    onPressed: () async {
-                      setState(() {
-                        isFollowed = !isFollowed;
-                      });
+              child: FutureBuilder<bool>(
+                future: fetchForumFollowedStatus(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Muestra un indicador de carga
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // Maneja el error
+                  } else {
+                    bool isFollowed = snapshot.data ?? false;
 
-                      await appUserController.updateFollowedForums(
-                          widget.title, isFollowed);
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(10),
+                    return TextButton(
+                      onPressed: () async {
+                        bool newFollowStatus = !isFollowed;
+                        await appUserController.updateFollowedForums(
+                            widget.title, newFollowStatus);
+                        setState(() {});
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blueAccent,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.blueAccent),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                    ),
-                    child: Text(isFollowed ? 'Followed' : 'Unfollowed'),
-                  ),
-                  const SizedBox(width: 4),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_none,
-                        color: Colors.grey),
-                    onPressed: () {},
-                  ),
-                ],
+                      child: Text(isFollowed ? 'Seguido' : 'Seguir'),
+                    );
+                  }
+                },
               ),
             ),
             const TabBar(
-              indicatorColor: Colors.red,
-              labelColor: Colors.red,
+              indicatorColor: Colors.blueAccent,
+              labelColor: Colors.blueAccent,
               unselectedLabelColor: Colors.grey,
               tabs: [
-                Tab(text: 'All Discussions'),
+                Tab(text: 'Foro'),
+                Tab(text: 'Profesores'),
                 Tab(text: 'Wikipedia'),
-                Tab(text: 'Teachers'),
               ],
             ),
             Expanded(
@@ -132,8 +129,8 @@ class _DetailScreenState extends State<ForumView> {
                     loggedUserId: widget.loggedUserId,
                     title: widget.title,
                   ),
-                  const Center(child: Text('Wikipedia Content')),
-                  const Center(child: Text('Members Content')),
+                  const TeacherCommentsWidget(),
+                  Wikipedia(),
                 ],
               ),
             ),
