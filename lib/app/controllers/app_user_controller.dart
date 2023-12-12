@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/forum.dart';
 import 'package:forux/core/utils/dprint.dart';
-import 'package:forux/core/utils/extensions.dart';
 
 class AppUserController {
   final String uid;
@@ -94,8 +93,8 @@ class AppUserController {
         final Map<String, dynamic>? data = docSnapshot.data();
 
         if (data != null) {
-          if (data['name'].removeAccentsAndToLowercase() ==
-              forumName.removeAccentsAndToLowercase()) {
+          if (removeAccentsAndToLowercase(data['name']) ==
+              removeAccentsAndToLowercase(forumName)) {
             return true;
           }
         }
@@ -112,7 +111,7 @@ class AppUserController {
     // Buscar el ID del foro a partir de su nombre
     final QuerySnapshot<Map<String, dynamic>> forumSnapshot = await firestore
         .collection('forums')
-        .where('name', isEqualTo: forumName.removeAccentsAndToLowercase())
+        .where('name', isEqualTo: removeAccentsAndToLowercase(forumName))
         .get();
     final DocumentSnapshot<Map<String, dynamic>> forumDoc =
         forumSnapshot.docs.first;
@@ -157,4 +156,15 @@ class AppUserController {
       await ref.putFile(image);
     }
   }
+}
+
+String removeAccentsAndToLowercase(String text) {
+  const String accents = 'áéíóúÁÉÍÓÚ';
+  const String withoutAccents = 'aeiouAEIOU';
+
+  for (int i = 0; i < accents.length; i++) {
+    text = text.replaceAll(accents[i], withoutAccents[i]);
+  }
+
+  return text.toLowerCase();
 }
