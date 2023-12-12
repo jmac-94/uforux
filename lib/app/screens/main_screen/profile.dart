@@ -84,28 +84,56 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         ),
+                        // Profile photo
                         Stack(
                           children: <Widget>[
-                            ClipOval(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                color: Colors.grey[400],
-                                child: FutureBuilder<Image>(
-                                  future: appUserController.getProfilePhoto(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<Image> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la imagen
-                                    } else if (snapshot.hasError) {
-                                      return Text(
-                                          'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
-                                    } else {
-                                      return snapshot
-                                          .data!; // Muestra la imagen cuando esté disponible
-                                    }
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      child: FutureBuilder<Image>(
+                                        future:
+                                            appUserController.getProfilePhoto(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<Image> snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const CircularProgressIndicator();
+                                          } else if (snapshot.hasError) {
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          } else {
+                                            return snapshot.data!;
+                                          }
+                                        },
+                                      ),
+                                    );
                                   },
+                                );
+                              },
+                              child: ClipOval(
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.grey[400],
+                                  child: FutureBuilder<Image>(
+                                    future: appUserController.getProfilePhoto(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<Image> snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la imagen
+                                      } else if (snapshot.hasError) {
+                                        return Text(
+                                            'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
+                                      } else {
+                                        return snapshot
+                                            .data!; // Muestra la imagen cuando esté disponible
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
