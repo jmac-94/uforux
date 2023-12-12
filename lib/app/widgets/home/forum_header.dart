@@ -70,7 +70,7 @@ class ForumHeader extends StatelessWidget {
                 fontWeight: FontWeight.w200,
               ),
             ),
-            Flexible(
+            Expanded(
               child: Text(
                 ' ${comment.labels[0]}',
                 style: const TextStyle(
