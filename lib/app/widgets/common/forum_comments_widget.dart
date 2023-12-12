@@ -76,16 +76,22 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
     );
   }
 
-  void commentsInfo(BuildContext context, Comment comment) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) => CommentsInfoPage(
-          comment: comment,
-          forumController: forumController,
-        ),
-      ),
-    );
-  }
+  // void commentsInfo(BuildContext context, Comment comment) {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       builder: (BuildContext context) => CommentsInfoPage(
+  //         comment: comment,
+  //         forumController: forumController,
+  //         onLikeChanged: (bool newLikeStatus) {
+  //           setState(() {
+  //             isLiked = newLikeStatus;
+  //           });
+  //         },
+  //         isLiked: isLiked,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -155,8 +161,8 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                setState(() {});
-                                commentsInfo(context, comment);
+                                // setState(() {});
+                                // commentsInfo(context, comment);
                               },
                               child: Column(
                                 children: [

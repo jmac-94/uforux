@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
 import 'package:forux/app/controllers/forum_controller.dart';
+import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
 import 'package:forux/app/models/subcomment.dart';
 import 'package:forux/core/utils/dprint.dart';
@@ -124,7 +126,7 @@ class _IconsActionsState extends State<IconsActions> {
               onPressed: () async {
                 setState(() {});
                 commentsInfo(context);
-                //! Automaticamente se abre para insetar un nuevo comentario
+                //! Automaticamente se abre para insertar un nuevo comentario
                 showModalBottomSheet(
                   context: context,
                   builder: (context) => CommentSection(
@@ -163,6 +165,12 @@ class _IconsActionsState extends State<IconsActions> {
         builder: (BuildContext context) => CommentsInfoPage(
           comment: widget.comment,
           forumController: widget.forumController,
+          onLikeChanged: (bool newLikeStatus) {
+            setState(() {
+              isLiked = newLikeStatus;
+            });
+          },
+          isLiked: isLiked,
         ),
       ),
     );
@@ -213,11 +221,15 @@ class _IconsActionsState extends State<IconsActions> {
 class CommentsInfoPage extends StatefulWidget {
   final Comment comment;
   final ForumController forumController;
+  final Function(bool) onLikeChanged;
+  final bool isLiked;
 
   const CommentsInfoPage({
     super.key,
     required this.comment,
     required this.forumController,
+    required this.onLikeChanged,
+    this.isLiked = false,
   });
 
   @override
@@ -226,16 +238,20 @@ class CommentsInfoPage extends StatefulWidget {
 
 class _CommentsInfoPageState extends State<CommentsInfoPage> {
   late int subcommentNum;
+  late AppUserController appUserController;
+  bool isLiked = false;
 
   @override
   void initState() {
     super.initState();
     subcommentNum = widget.comment.subcomments?.length ?? 0;
+    appUserController = AppUserController(uid: widget.comment.userId);
+    appUserController.appUser = AppUser(id: widget.comment.userId);
+    isLiked = widget.isLiked;
   }
 
   @override
   Widget build(BuildContext context) {
-    // Aquí va el contenido de tu página, similar a lo que tenías en el método commentsInfo
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -255,13 +271,27 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                   Row(
                     children: [
                       const SizedBox(width: 10),
+                      // Profile photo
                       ClipRRect(
                         borderRadius: BorderRadius.circular(28.0),
-                        child: Image.network(
-                          'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
-                          width: 45,
-                          height: 45,
-                          fit: BoxFit.cover,
+                        child: FutureBuilder<Image>(
+                          future: appUserController.getProfilePhoto(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Image> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return Image(
+                                image: snapshot.data!.image,
+                                width: 25,
+                                height: 25,
+                                fit: BoxFit.cover,
+                              );
+                            }
+                          },
                         ),
                       ),
                       Padding(
@@ -338,17 +368,34 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                           ),
                         ),
                         const Spacer(),
+                        // Like
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.local_fire_department_outlined,
-                            size: 20,
+                          onPressed: () async {
+                            bool newLikeStatus = !isLiked;
+                            setState(() {
+                              isLiked = newLikeStatus;
+                            });
+
+                            await widget.forumController
+                                .updateCommentLikes(widget.comment.id, isLiked);
+
+                            // Notifica el cambio a _IconsActionsState
+                            widget.onLikeChanged(newLikeStatus);
+                          },
+                          icon: Icon(
+                            isLiked
+                                ? Icons.local_fire_department
+                                : Icons.local_fire_department_outlined,
+                            size: 24,
+                          ),
+                          constraints: const BoxConstraints.tightFor(
+                            width: 34,
                           ),
                         ),
-                        Text(
-                          '${widget.comment.ups}',
-                          style: const TextStyle(fontSize: 12),
-                        ),
+                        Text('${widget.comment.ups}',
+                            style: const TextStyle(fontSize: 12)),
+
+                        // To comment
                         IconButton(
                           onPressed: () {
                             showModalBottomSheet(
