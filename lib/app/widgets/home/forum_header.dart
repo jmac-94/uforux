@@ -83,7 +83,10 @@ class ForumHeader extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              timeago.format(comment.createdAt.toDate()),
+              timeago.format(
+                comment.createdAt.toDate(),
+                locale: 'es',
+              ),
               style: const TextStyle(
                 fontSize: 14,
                 color: Colors.grey,

@@ -361,7 +361,10 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                     child: Row(
                       children: [
                         Text(
-                          timeago.format(widget.comment.createdAt.toDate()),
+                          timeago.format(
+                            widget.comment.createdAt.toDate(),
+                            locale: 'es',
+                          ),
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[500],
@@ -511,9 +514,11 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                                                 ),
                                                 const SizedBox(width: 3),
                                                 Text(
-                                                  timeago.format(subcomment
-                                                      .createdAt
-                                                      .toDate()),
+                                                  timeago.format(
+                                                    subcomment.createdAt
+                                                        .toDate(),
+                                                    locale: 'es',
+                                                  ),
                                                   style: TextStyle(
                                                     fontSize: 10,
                                                     color: Colors.grey[500],

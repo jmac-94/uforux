@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:faker/faker.dart';
 
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/controllers/authentication_controller.dart';

@@ -28,19 +28,13 @@ class _DetailScreenState extends State<ForumView> {
     super.initState();
 
     appUserController = AppUserController(uid: widget.loggedUserId);
-
-    fetchForumFollowedStatus();
   }
 
-  void fetchForumFollowedStatus() async {
+  Future<bool> fetchForumFollowedStatus() async {
     bool forumFollowedStatus =
         await appUserController.hasUserFollowedForum(widget.title);
 
-    if (mounted) {
-      setState(() {
-        isFollowed = forumFollowedStatus;
-      });
-    }
+    return forumFollowedStatus;
   }
 
   @override
@@ -86,36 +80,35 @@ class _DetailScreenState extends State<ForumView> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton(
-                    onPressed: () async {
-                      setState(() {
-                        isFollowed = !isFollowed;
-                      });
+              child: FutureBuilder<bool>(
+                future: fetchForumFollowedStatus(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Muestra un indicador de carga
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // Maneja el error
+                  } else {
+                    bool isFollowed = snapshot.data ?? false;
 
-                      await appUserController.updateFollowedForums(
-                          widget.title, isFollowed);
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blueAccent,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.circular(10),
+                    return TextButton(
+                      onPressed: () async {
+                        bool newFollowStatus = !isFollowed;
+                        await appUserController.updateFollowedForums(
+                            widget.title, newFollowStatus);
+                        setState(() {});
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blueAccent,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.blueAccent),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                    ),
-                    child: Text(isFollowed ? 'Followed' : 'Unfollowed'),
-                  ),
-                  const SizedBox(width: 4),
-                  // TODO: Implementar la funcionalidad de notificaciones
-                  // IconButton(
-                  //   icon: const Icon(Icons.notifications_none,
-                  //       color: Colors.grey),
-                  //   onPressed: () {},
-                  // ),
-                ],
+                      child: Text(isFollowed ? 'Seguido' : 'Seguir'),
+                    );
+                  }
+                },
               ),
             ),
             const TabBar(
