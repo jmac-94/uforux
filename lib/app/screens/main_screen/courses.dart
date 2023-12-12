@@ -158,91 +158,92 @@ class _CoursesState extends State<Courses> {
                     ],
                   ),
                 ),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.0,
-                      vertical: 5.0,
-                    ),
-                    child: Text(
-                      'Tendencias',
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      const SizedBox(width: 10.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.black,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '#Ayuda en ADA',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.black,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '#Mejoras en espacios Abiertos',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.black,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '#Finales ADA',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // const Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Padding(
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 14.0,
+                //       vertical: 5.0,
+                //     ),
+                //     child: Text(
+                //       'Tendencias',
+                //       style: TextStyle(
+                //           fontSize: 20.0,
+                //           fontWeight: FontWeight.w700,
+                //           color: Colors.black),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 50,
+                //   child: ListView(
+                //     scrollDirection: Axis.horizontal,
+                //     children: [
+                //       const SizedBox(width: 10.0),
+                //       Container(
+                //         width: MediaQuery.of(context).size.width * 0.4,
+                //         height: 50,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10.0),
+                //           color: Colors.black,
+                //         ),
+                //         child: const Center(
+                //           child: Text(
+                //             '#Ayuda en ADA',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 18.0,
+                //               fontWeight: FontWeight.w500,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       const SizedBox(width: 10.0),
+                //       Container(
+                //         width: MediaQuery.of(context).size.width * 0.4,
+                //         height: 50,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10.0),
+                //           color: Colors.black,
+                //         ),
+                //         child: const Center(
+                //           child: Text(
+                //             '#Mejoras en espacios Abiertos',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 15.0,
+                //               fontWeight: FontWeight.w500,
+                //             ),
+                //             textAlign: TextAlign.center,
+                //             maxLines: 2,
+                //           ),
+                //         ),
+                //       ),
+                //       const SizedBox(width: 10.0),
+                //       Container(
+                //         width: MediaQuery.of(context).size.width * 0.4,
+                //         height: 50,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10.0),
+                //           color: Colors.black,
+                //         ),
+                //         child: const Center(
+                //           child: Text(
+                //             '#Finales ADA',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 15.0,
+                //               fontWeight: FontWeight.w500,
+                //             ),
+                //             textAlign: TextAlign.center,
+                //             maxLines: 2,
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                const SizedBox(height: 10.0),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
