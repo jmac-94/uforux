@@ -424,93 +424,112 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                     ),
                   ),
                   const Divider(),
+                  // Subcomments
                   Flexible(
                     child: ListView.separated(
                       itemBuilder: (context, index) {
                         final Subcomment subcomment =
                             widget.comment.subcomments!.values.toList()[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                ),
-                                child: ClipOval(
-                                  child: Container(
-                                    width: 35,
-                                    height: 35,
-                                    color: Colors.grey[400],
-                                    child: Image.network(
-                                      'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
+
+                        return FutureBuilder<AppUser>(
+                          future: widget.forumController
+                              .fetchAppUser(subcomment.userId),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<AppUser> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              subcomment.author = snapshot.data;
+
+                              return Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 4.0,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
                                       ),
-                                      child: Row(
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(28.0),
+                                        child: FutureBuilder<Image>(
+                                          future: appUserController
+                                              .getProfilePhoto(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<Image> snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const CircularProgressIndicator();
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                  'Error: ${snapshot.error}');
+                                            } else {
+                                              return Image(
+                                                image: snapshot.data!.image,
+                                                width: 25,
+                                                height: 25,
+                                                fit: BoxFit.cover,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 4.0,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  subcomment.author?.username ??
+                                                      'Unknown',
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                                Icon(
+                                                  Icons.access_time,
+                                                  size: 11,
+                                                  color: Colors.grey[500],
+                                                ),
+                                                const SizedBox(width: 3),
+                                                Text(
+                                                  timeago.format(subcomment
+                                                      .createdAt
+                                                      .toDate()),
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.grey[500],
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 5),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
                                           Text(
-                                            faker.person.name().toString(),
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.grey[600],
-                                            ),
+                                            subcomment.text,
                                           ),
-                                          const SizedBox(width: 5),
-                                          Container(
-                                            padding: const EdgeInsets.all(4.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.red[100],
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: const Text(
-                                              'STD',
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          Icon(
-                                            Icons.access_time,
-                                            size: 11,
-                                            color: Colors.grey[500],
-                                          ),
-                                          const SizedBox(width: 3),
-                                          Text(
-                                            timeago.format(widget
-                                                .comment.createdAt
-                                                .toDate()),
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.grey[500],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 5),
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      subcomment.text,
-                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
+                              );
+                            }
+                          },
                         );
                       },
                       separatorBuilder: (context, index) => const Divider(
