@@ -25,14 +25,14 @@ class _HomeScreenState extends State<HomeCalendar>
       appBar: AppBar(
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Color.fromARGB(
+          labelColor: const Color.fromARGB(
             153,
             16,
             0,
             0,
           ),
-          unselectedLabelColor: Color.fromARGB(153, 16, 0, 0),
-          tabs: [
+          unselectedLabelColor: const Color.fromARGB(153, 16, 0, 0),
+          tabs: const [
             Tab(text: "Horario de curso"),
             Tab(text: "Calendario"),
             Tab(text: "Simulador de Notas"), // Nueva pestaña
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeCalendar>
         controller: _tabController,
         children: [
           CourseScheduleWidget(),
-          Calendar(),
+          const Calendar(),
           GradeSimulatorWidget(), // Nuevo widget para el simulador de notas
         ],
       ),
@@ -106,7 +106,7 @@ class _CalendarState extends State<Calendar> {
         child: const Icon(Icons.add),
         onPressed: () {
           _startTime = TimeOfDay.now();
-          _endTime = _startTime.replacing(hour: _startTime.hour + 1);
+          _endTime = TimeOfDay.now();
 
           showDialog(
             context: context,
@@ -133,7 +133,10 @@ class _CalendarState extends State<Calendar> {
                           initialTime: _startTime,
                         );
 
-                        if (picked != null && picked != _startTime) {
+                        if (picked != null &&
+                            picked != _startTime &&
+                            picked.hour >= 0 &&
+                            picked.hour < 24) {
                           setState(() {
                             _startTime = picked;
                           });
@@ -315,9 +318,9 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
             .map((course) => ListTile(
                   title: Text(course['name']!),
                   subtitle: Text(course['time']!),
-                  leading: Icon(Icons.book),
+                  leading: const Icon(Icons.book),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () {
                       setState(() {
                         weeklySchedule[day]?.remove(course);
@@ -335,49 +338,50 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddCourseDialog(context),
-        child: Icon(Icons.add),
         backgroundColor: Colors.blue,
+        child: const Icon(Icons.add),
       ),
     );
   }
 
   void _showAddCourseDialog(BuildContext context) {
-    final _nameController = TextEditingController();
-    final _startHourController = TextEditingController();
-    final _startMinuteController = TextEditingController();
-    final _endHourController = TextEditingController();
-    final _endMinuteController = TextEditingController();
+    final nameController = TextEditingController();
+    final startHourController = TextEditingController();
+    final startMinuteController = TextEditingController();
+    final endHourController = TextEditingController();
+    final endMinuteController = TextEditingController();
     String selectedDay = 'Lunes';
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Agregar nuevo curso'),
+          title: const Text('Agregar nuevo curso'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Nombre del Curso'),
+                controller: nameController,
+                decoration:
+                    const InputDecoration(labelText: 'Nombre del Curso'),
               ),
               Row(
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: _startHourController,
+                      controller: startHourController,
                       decoration:
-                          InputDecoration(labelText: 'Hora Inicio (HH)'),
+                          const InputDecoration(labelText: 'Hora Inicio (HH)'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: TextFormField(
-                      controller: _startMinuteController,
-                      decoration:
-                          InputDecoration(labelText: 'Minuto Inicio (MM)'),
+                      controller: startMinuteController,
+                      decoration: const InputDecoration(
+                          labelText: 'Minuto Inicio (MM)'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
@@ -388,17 +392,19 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: _endHourController,
-                      decoration: InputDecoration(labelText: 'Hora Fin (HH)'),
+                      controller: endHourController,
+                      decoration:
+                          const InputDecoration(labelText: 'Hora Fin (HH)'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: TextFormField(
-                      controller: _endMinuteController,
-                      decoration: InputDecoration(labelText: 'Minuto Fin (MM)'),
+                      controller: endMinuteController,
+                      decoration:
+                          const InputDecoration(labelText: 'Minuto Fin (MM)'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
@@ -424,25 +430,25 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: Text('Agregar'),
+              child: const Text('Agregar'),
               onPressed: () {
-                if (_nameController.text.isNotEmpty &&
-                    _startHourController.text.isNotEmpty &&
-                    _startMinuteController.text.isNotEmpty &&
-                    _endHourController.text.isNotEmpty &&
-                    _endMinuteController.text.isNotEmpty) {
+                if (nameController.text.isNotEmpty &&
+                    startHourController.text.isNotEmpty &&
+                    startMinuteController.text.isNotEmpty &&
+                    endHourController.text.isNotEmpty &&
+                    endMinuteController.text.isNotEmpty) {
                   String formattedStartTime =
-                      '${_startHourController.text.padLeft(2, '0')}:${_startMinuteController.text.padLeft(2, '0')}';
+                      '${startHourController.text.padLeft(2, '0')}:${startMinuteController.text.padLeft(2, '0')}';
                   String formattedEndTime =
-                      '${_endHourController.text.padLeft(2, '0')}:${_endMinuteController.text.padLeft(2, '0')}';
+                      '${endHourController.text.padLeft(2, '0')}:${endMinuteController.text.padLeft(2, '0')}';
                   _addCourse(
                     selectedDay,
                     {
-                      'name': _nameController.text,
+                      'name': nameController.text,
                       'time': '$formattedStartTime - $formattedEndTime'
                     },
                   );
@@ -481,20 +487,19 @@ class _GradeSimulatorWidgetState extends State<GradeSimulatorWidget> {
       children: [
         TextField(
           controller: _courseNameController,
-          decoration: InputDecoration(labelText: 'Nombre del Curso'),
+          decoration: const InputDecoration(labelText: 'Nombre del Curso'),
           onSubmitted: (_) => _addCourse(),
         ),
         ElevatedButton(
           onPressed: _addCourse,
-          child: Text('Agregar Curso'),
+          child: const Text('Agregar Curso'),
         ),
         Expanded(
           child: ListView.builder(
             itemCount: courses.length,
             itemBuilder: (context, index) {
-              return CourseItemWidget(
+              return CourseGradeItemWidget(
                 course: courses[index],
-                onGradesUpdated: () => setState(() {}),
               );
             },
           ),
@@ -510,17 +515,23 @@ class Course {
   Course({required this.name, required this.grades});
 }
 
-class CourseItemWidget extends StatefulWidget {
-  final Course course;
-  final VoidCallback onGradesUpdated;
-
-  CourseItemWidget({required this.course, required this.onGradesUpdated});
-
-  @override
-  _CourseItemWidgetState createState() => _CourseItemWidgetState();
+class Grade {
+  double grade;
+  double weight;
+  String evaluationName;
+  Grade(this.grade, this.weight, this.evaluationName);
 }
 
-class _CourseItemWidgetState extends State<CourseItemWidget> {
+class CourseGradeItemWidget extends StatefulWidget {
+  final Course course;
+
+  CourseGradeItemWidget({required this.course});
+
+  @override
+  _CourseGradeItemWidgetState createState() => _CourseGradeItemWidgetState();
+}
+
+class _CourseGradeItemWidgetState extends State<CourseGradeItemWidget> {
   final TextEditingController _gradeController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _evaluationNameController =
@@ -530,13 +541,13 @@ class _CourseItemWidgetState extends State<CourseItemWidget> {
     double grade = double.tryParse(_gradeController.text) ?? 0.0;
     double weight = double.tryParse(_weightController.text) ?? 0.0;
     String evaluationName = _evaluationNameController.text;
+
     if (grade > 0 && weight > 0 && evaluationName.isNotEmpty) {
       setState(() {
         widget.course.grades.add(Grade(grade, weight, evaluationName));
         _gradeController.clear();
         _weightController.clear();
         _evaluationNameController.clear();
-        widget.onGradesUpdated();
       });
     }
   }
@@ -553,52 +564,41 @@ class _CourseItemWidgetState extends State<CourseItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          Text(widget.course.name,
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          for (var grade in widget.course.grades)
-            Text(
-                '${grade.evaluationName}: ${grade.grade}, Peso: ${grade.weight}'),
-          Row(
+    return ExpansionTile(
+      title: Text(widget.course.name,
+          style: const TextStyle(fontWeight: FontWeight.bold)),
+      children: [
+        for (var grade in widget.course.grades)
+          Text(
+              '${grade.evaluationName}: Nota: ${grade.grade}, Peso: ${grade.weight}%'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
             children: [
-              Expanded(
-                  child: TextField(
+              TextField(
                 controller: _evaluationNameController,
                 decoration:
-                    InputDecoration(labelText: "Nombre de la evaluation"),
-              )),
-              Expanded(
-                child: TextField(
-                  controller: _gradeController,
-                  decoration: InputDecoration(labelText: 'Nota'),
-                  keyboardType: TextInputType.number,
-                ),
+                    const InputDecoration(labelText: "Nombre de la Evaluación"),
               ),
-              Expanded(
-                child: TextField(
-                  controller: _weightController,
-                  decoration: InputDecoration(labelText: 'Peso'),
-                  keyboardType: TextInputType.number,
-                ),
+              TextField(
+                controller: _gradeController,
+                decoration: const InputDecoration(labelText: 'Nota'),
+                keyboardType: TextInputType.number,
               ),
-              IconButton(
-                icon: Icon(Icons.add),
+              TextField(
+                controller: _weightController,
+                decoration: const InputDecoration(labelText: 'Peso (%)'),
+                keyboardType: TextInputType.number,
+              ),
+              ElevatedButton(
                 onPressed: _addGrade,
+                child: const Text('Agregar Evaluación'),
               ),
+              Text('Promedio: ${calculateAverage().toStringAsFixed(2)}'),
             ],
           ),
-          Text('Promedio: ${calculateAverage().toStringAsFixed(2)}'),
-        ],
-      ),
+        ),
+      ],
     );
   }
-}
-
-class Grade {
-  double grade;
-  double weight;
-  String evaluationName;
-  Grade(this.grade, this.weight, this.evaluationName);
 }
