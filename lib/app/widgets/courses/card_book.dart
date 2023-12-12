@@ -38,7 +38,7 @@ class CardBook extends StatelessWidget {
               color: Colors.white,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(image),
+                image: AssetImage(image),
               ),
             ),
           ),
