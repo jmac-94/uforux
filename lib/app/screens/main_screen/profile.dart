@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
@@ -163,8 +161,8 @@ class _ProfileState extends State<Profile> {
                       labelColor: Colors.red,
                       unselectedLabelColor: Colors.grey,
                       tabs: [
-                        Tab(text: 'Mi Foro'),
-                        Tab(text: 'Sobre mi'),
+                        Tab(text: 'Mi foro'),
+                        Tab(text: 'Sobre mí'),
                       ],
                     ),
                     Expanded(
@@ -195,14 +193,14 @@ class _ProfileState extends State<Profile> {
                           ),
                           ListView(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(
+                              Padding(
+                                padding: const EdgeInsets.only(
                                   top: 16.0,
                                 ),
                                 child: Text(
-                                  'Josue Sandoval Castillo',
+                                  loggedUser.username.toString().capitalize(),
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -216,41 +214,6 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              // Column(
-                              //   children: [
-                              //     const SizedBox(
-                              //       height: 20,
-                              //     ),
-                              //     const SizedBox(height: 4),
-                              //     RatingBar.builder(
-                              //       initialRating: loggedUser.score ?? 0,
-                              //       minRating: 0,
-                              //       direction: Axis.horizontal,
-                              //       allowHalfRating: true,
-                              //       itemCount: 5,
-                              //       itemPadding: const EdgeInsets.symmetric(
-                              //           horizontal: 4.0),
-                              //       itemBuilder: (context, _) => const Icon(
-                              //         Icons.star_rate_rounded,
-                              //         color: Colors.amber,
-                              //       ),
-                              //       itemSize: 35,
-                              //       ignoreGestures: true,
-                              //       onRatingUpdate: (rating) {},
-                              //     ),
-                              //     const Text(
-                              //       'Score',
-                              //       style: TextStyle(
-                              //         fontSize: 14,
-                              //         fontWeight: FontWeight.w500,
-                              //         color: Colors.black,
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
                               const SizedBox(
                                 height: 10,
                               ),
@@ -290,16 +253,16 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ],
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 20.0,
                                   horizontal: 30.0,
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Hola soy un estudiante de 4to ciclo, me gusta mucho la programación y el diseño de aplicaciones móviles, me gustaría poder ayudar a los demás con sus dudas y problemas, espero poder ayudarlos en lo que pueda.',
+                                    loggedUser.aboutMe.toString(),
                                     textAlign: TextAlign.justify,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,

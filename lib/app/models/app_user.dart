@@ -1,9 +1,8 @@
-import 'package:uforuxpi3/core/utils/dprint.dart';
-
 class AppUser {
   final String id;
   final String? username;
   final String? degree;
+  final String? aboutMe;
   final String? entrySemester;
   final double? score;
   final bool? assesor;
@@ -13,6 +12,7 @@ class AppUser {
       {required this.id,
       this.username,
       this.degree,
+      this.aboutMe,
       this.entrySemester,
       this.score,
       this.assesor,
@@ -23,6 +23,7 @@ class AppUser {
       'id': id,
       'username': username,
       'degree': degree,
+      'aboutMe': aboutMe,
       'entrySemester': entrySemester,
       'score': score,
       'assesor': assesor,
@@ -35,6 +36,7 @@ class AppUser {
         id: json['id'],
         username: json['username'],
         degree: json['degree'],
+        aboutMe: json['aboutMe'],
         entrySemester: json['entrySemester'],
         score: json['score'],
         assesor: json['assesor'],
