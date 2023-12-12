@@ -31,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
 
     _screens = [
       // Calendar(user: user),
-      const Calendar(),
+      HomeCalendar(),
       Home(user: user),
       Courses(user: user),
       Profile(user: user),
