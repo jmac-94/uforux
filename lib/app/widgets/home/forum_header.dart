@@ -54,11 +54,15 @@ class ForumHeader extends StatelessWidget {
                 fontWeight: FontWeight.w200,
               ),
             ),
-            Text(
-              ' ${comment.labels[0]}',
-              style: const TextStyle(
-                fontSize: 13,
-                color: Colors.blueAccent,
+            Flexible(
+              child: Text(
+                ' ${comment.labels[0]}',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.blueAccent,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const Spacer(),
