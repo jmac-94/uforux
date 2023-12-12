@@ -135,31 +135,36 @@ class _ForYouWidgetState extends State<ForYouWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 0,
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 1), 
+                                        ),
+                                      ],
                                     ),
-                                    child: Hero(
-                                      tag: 'CommentsForum${comment.id}',
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(height: 5),
-                                          ForumHeader(
-                                            comment: comment,
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 5),
+                                        ForumHeader(
+                                          comment: comment,
+                                        ),
+                                        const SizedBox(height: 5),
+                                        BodyData(
+                                          comment: comment,
+                                        ),
+                                        if (comment.attachments['images'] ==
+                                            null)
+                                          const SizedBox(
+                                            height: 20,
                                           ),
-                                          const SizedBox(height: 5),
-                                          BodyData(
-                                            comment: comment,
-                                          ),
-                                          if (comment.attachments['images'] ==
-                                              null)
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                          IconsActions(
-                                            comment: comment,
-                                            forumController: forumController,
-                                          ),
-                                          const SizedBox(height: 5),
-                                        ],
-                                      ),
+                                        IconsActions(
+                                          comment: comment,
+                                          forumController: forumController,
+                                        ),
+                                        const SizedBox(height: 5),
+                                      ],
                                     ),
                                   ),
                                 );
@@ -167,7 +172,7 @@ class _ForYouWidgetState extends State<ForYouWidget> {
                             },
                           );
                         },
-                        separatorBuilder: (context, index) => const Divider(),
+                        separatorBuilder: (context, index) => Container(),
                       );
                     }
                   },
