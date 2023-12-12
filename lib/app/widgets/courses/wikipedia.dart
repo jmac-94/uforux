@@ -73,7 +73,7 @@ class PdfViewScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
-        title: const Text("PDF Viewer"),
+        title: const Text("Vista previa"),
       ),
       body: SfPdfViewer.asset(filePath),
     );
