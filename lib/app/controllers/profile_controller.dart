@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
-import 'package:uforuxpi3/app/models/subcomment.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/comment.dart';
+import 'package:forux/app/models/subcomment.dart';
+import 'package:forux/core/utils/dprint.dart';
 import 'package:uuid/uuid.dart';
 
 class ProfileController {

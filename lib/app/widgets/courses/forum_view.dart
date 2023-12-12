@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
 
-import 'package:uforuxpi3/app/widgets/common/forum_comments_widget.dart';
-import 'package:uforuxpi3/app/widgets/common/teacher_comments_widget.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:forux/app/widgets/common/forum_comments_widget.dart';
+import 'package:forux/app/widgets/common/teacher_comments_widget.dart';
+import 'package:forux/core/utils/dprint.dart';
 
 class ForumView extends StatefulWidget {
   final String loggedUserId;

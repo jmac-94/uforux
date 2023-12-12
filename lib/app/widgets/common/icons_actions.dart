@@ -2,11 +2,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/forum_controller.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
-import 'package:uforuxpi3/app/models/subcomment.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
-import 'package:uforuxpi3/core/utils/extensions.dart';
+import 'package:forux/app/controllers/forum_controller.dart';
+import 'package:forux/app/models/comment.dart';
+import 'package:forux/app/models/subcomment.dart';
+import 'package:forux/core/utils/dprint.dart';
+import 'package:forux/core/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as timeago;
 

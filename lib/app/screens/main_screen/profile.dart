@@ -4,12 +4,12 @@ import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/controllers/authentication_controller.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
-import 'package:uforuxpi3/app/widgets/profile/my_forum_widget.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
-import 'package:uforuxpi3/core/utils/extensions.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/controllers/authentication_controller.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
+import 'package:forux/app/widgets/profile/my_forum_widget.dart';
+import 'package:forux/core/utils/dprint.dart';
+import 'package:forux/core/utils/extensions.dart';
 
 class Profile extends StatefulWidget {
   final AppUser user;

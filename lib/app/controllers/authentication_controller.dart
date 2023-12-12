@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/core/utils/dprint.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
 
 class AuthenticationController {
   final FirebaseAuth _auth = FirebaseAuth.instance;

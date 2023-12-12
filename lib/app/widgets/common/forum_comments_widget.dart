@@ -4,16 +4,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 
-import 'package:uforuxpi3/app/controllers/forum_controller.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
-import 'package:uforuxpi3/app/models/forum.dart';
-import 'package:uforuxpi3/app/widgets/home/body_data.dart';
-import 'package:uforuxpi3/app/widgets/home/forum_header.dart';
-import 'package:uforuxpi3/app/widgets/common/icons_actions.dart';
-import 'package:uforuxpi3/core/structures/pair.dart';
-import 'package:uforuxpi3/core/utils/const.dart';
-import 'package:uforuxpi3/core/utils/extensions.dart';
+import 'package:forux/app/controllers/forum_controller.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/comment.dart';
+import 'package:forux/app/models/forum.dart';
+import 'package:forux/app/widgets/home/body_data.dart';
+import 'package:forux/app/widgets/home/forum_header.dart';
+import 'package:forux/app/widgets/common/icons_actions.dart';
+import 'package:forux/core/structures/pair.dart';
+import 'package:forux/core/utils/const.dart';
+import 'package:forux/core/utils/extensions.dart';
 
 class ForumCommentsWidget extends StatefulWidget {
   final String loggedUserId;

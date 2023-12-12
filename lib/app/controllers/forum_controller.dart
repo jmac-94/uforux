@@ -4,15 +4,15 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/app_user_controller.dart';
-import 'package:uforuxpi3/app/models/forum.dart';
-import 'package:uforuxpi3/app/models/subcomment.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
+import 'package:forux/app/models/forum.dart';
+import 'package:forux/app/models/subcomment.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/core/structures/pair.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/core/structures/pair.dart';
+import 'package:forux/app/models/comment.dart';
+import 'package:forux/core/utils/dprint.dart';
 
 class ForumController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;

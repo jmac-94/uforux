@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/controllers/forum_controller.dart';
-import 'package:uforuxpi3/app/models/comment.dart';
+import 'package:forux/app/controllers/forum_controller.dart';
+import 'package:forux/app/models/comment.dart';
 
 class BodyData extends StatelessWidget {
   final Comment comment;

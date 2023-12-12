@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/widgets/authentication/register_form.dart';
+import 'package:forux/app/widgets/authentication/register_form.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;

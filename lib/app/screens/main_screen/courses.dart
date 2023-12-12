@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/widgets/courses/card_book.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/widgets/courses/card_book.dart';
 
 class Courses extends StatefulWidget {
   final AppUser user;

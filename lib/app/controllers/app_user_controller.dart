@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uforuxpi3/app/models/app_user.dart';
-import 'package:uforuxpi3/app/models/forum.dart';
-import 'package:uforuxpi3/core/utils/dprint.dart';
-import 'package:uforuxpi3/core/utils/extensions.dart';
+import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/forum.dart';
+import 'package:forux/core/utils/dprint.dart';
+import 'package:forux/core/utils/extensions.dart';
 
 class AppUserController {
   final String uid;

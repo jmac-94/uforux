@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uforuxpi3/app/screens/authentication/register.dart';
-import 'package:uforuxpi3/app/screens/authentication/sign_in.dart';
+import 'package:forux/app/screens/authentication/register.dart';
+import 'package:forux/app/screens/authentication/sign_in.dart';
 
 class Authentication extends StatefulWidget {
   const Authentication({super.key});
