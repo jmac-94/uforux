@@ -1,5 +1,7 @@
 import 'package:awesome_icons/awesome_icons.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class Wikipedia extends StatelessWidget {
@@ -7,16 +9,16 @@ class Wikipedia extends StatelessWidget {
 
   final List<Document> documents = [
     Document(
-      title: "FLutter cheat sheet PDF",
-      filePath: "assets/flutter-cheat-sheet.pdf",
+      title: "Blue-sky printing",
+      url: "https://www.princexml.com/howcome/2016/samples/magic8/index.pdf",
     ),
     Document(
-      title: "Remozaiento de cabina",
-      filePath: "assets/Remozamiento_de_Cabina.pdf",
+      title: "A Concise Dictionary of Old Iceland",
+      url: "https://css4.pub/2015/icelandic/dictionary.pdf",
     ),
     Document(
-      title: "Examen Laboratorio 2022-2",
-      filePath: "assets/EL2_2022_2.pdf",
+      title: "USENIX Paper",
+      url: "https://css4.pub/2015/usenix/example.pdf",
     ),
     // Agrega más documentos aquí
   ];
@@ -44,7 +46,7 @@ class Wikipedia extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      PdfViewScreen(filePath: documents[index].filePath),
+                      PdfViewScreen(url: documents[index].url),
                 ),
               );
             },
@@ -57,15 +59,35 @@ class Wikipedia extends StatelessWidget {
 
 class Document {
   String title;
-  String filePath;
+  String url;
 
-  Document({required this.title, required this.filePath});
+  Document({required this.title, required this.url});
 }
 
 class PdfViewScreen extends StatelessWidget {
-  final String filePath;
+  final String url;
 
-  const PdfViewScreen({super.key, required this.filePath});
+  const PdfViewScreen({super.key, required this.url});
+
+  Future<void> downloadPdf(
+      String url, String fileName, BuildContext context) async {
+    try {
+      var dio = Dio();
+      var dir = await getApplicationDocumentsDirectory();
+      var filePath = "${dir.path}/$fileName";
+      await dio.download(url, filePath);
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Descargado en $filePath')),
+      );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al descargar: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +95,16 @@ class PdfViewScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
-        title: const Text("Vista previa"),
+        title: const Text("Vista previa del PDF"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () =>
+                downloadPdf(url, 'nombre_del_archivo.pdf', context),
+          ),
+        ],
       ),
-      body: SfPdfViewer.asset(filePath),
+      body: SfPdfViewer.network(url),
     );
   }
 }

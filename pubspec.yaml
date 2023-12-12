@@ -66,6 +66,9 @@ dependencies:
   intl: ^0.18.1
   image_picker: ^1.0.4
   syncfusion_flutter_pdfviewer: ^23.2.7
+  dio: ^5.4.0
+  path_provider: ^2.1.1
+  
   
 
 dev_dependencies:
