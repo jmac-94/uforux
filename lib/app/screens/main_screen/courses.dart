@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
-import 'package:faker/faker.dart';
+import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/widgets/courses/card_book.dart';
+import 'package:forux/app/widgets/courses/eventW.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Courses extends StatefulWidget {
   final AppUser user;
@@ -258,33 +260,35 @@ class _CoursesState extends State<Courses> {
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.transparent,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(1.0),
-                          child: FadeInImage.memoryNetwork(
-                            placeholder:
-                                kTransparentImage, // A transparent image placeholder
-                            image:
-                                'https://random.imagecdn.app/500/${faker.randomGenerator.integer(1000)}',
-                            fit: BoxFit.cover,
-                            fadeInDuration: const Duration(milliseconds: 200),
-                            fadeOutDuration: const Duration(milliseconds: 200),
-                            placeholderFit: BoxFit.cover,
-                            imageErrorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(Icons.error),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                  child: ListView(
+                    children: const [
+                      EventWidget(
+                        time: "Hoy, 9:15 - 10:30 AM",
+                        title: "Entrenamiento de diseño de Hopin",
+                        evento: "Reunion virtual",
+                        url:
+                            'https://plus.unsplash.com/premium_photo-1672354234377-38ef695dd2ed?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZXZlbnR8ZW58MHx8MHx8fDA%3DZ',
+                        icon: FontAwesomeIcons.video,
+                      ),
+                      SizedBox(height: 16.0),
+                      EventWidget(
+                        time: "Hoy, 10:30 - 11:30 AM",
+                        title: "Charla Utec Ventures programa Incuva",
+                        evento: "Coordinacion por whatsapp",
+                        url:
+                            'https://images.unsplash.com/photo-1561489396-888724a1543d?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGV2ZW50fGVufDB8fDB8fHww',
+                        icon: FontAwesomeIcons.whatsapp,
+                      ),
+                      SizedBox(height: 16.0),
+                      EventWidget(
+                        time: "Hoy, 11:30 - 12:30 AM",
+                        title: "Presentacion de proyectos de ADA",
+                        evento: "Reunion virtual",
+                        url:
+                            'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        icon: FontAwesomeIcons.skype,
+                      ),
+                    ],
                   ),
                 ),
               ],
