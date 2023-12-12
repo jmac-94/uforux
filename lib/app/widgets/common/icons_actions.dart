@@ -444,6 +444,11 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                             } else {
                               subcomment.author = snapshot.data;
 
+                              AppUserController subcommentAuthorController =
+                                  AppUserController(uid: subcomment.userId);
+                              subcommentAuthorController.appUser =
+                                  AppUser(id: subcomment.userId);
+
                               return Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Row(
@@ -457,7 +462,7 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                                         borderRadius:
                                             BorderRadius.circular(28.0),
                                         child: FutureBuilder<Image>(
-                                          future: appUserController
+                                          future: subcommentAuthorController
                                               .getProfilePhoto(),
                                           builder: (BuildContext context,
                                               AsyncSnapshot<Image> snapshot) {
