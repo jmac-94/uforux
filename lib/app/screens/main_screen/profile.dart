@@ -243,12 +243,12 @@ class _ProfileState extends State<Profile> {
                                       ),
                                     ),
                                   ),
-                                  const Text(
+                                  Text(
                                     'Ciclo de ingreso',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.black,
+                                      color: Colors.grey[700],
                                     ),
                                   ),
                                 ],
