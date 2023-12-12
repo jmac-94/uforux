@@ -11,3 +11,10 @@ class Event {
     required this.endTime,
   });
 }
+
+class EventType {
+  static const String course = "Curso";
+  static const String degree = "Carrera";
+  static const String university = "Universidad";
+  static const String other = "Otros";
+}
