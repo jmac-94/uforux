@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../models/event.dart';
@@ -22,21 +23,38 @@ class _HomeScreenState extends State<HomeCalendar>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: const Color.fromARGB(
-            153,
-            16,
-            0,
-            0,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: Colors.blue[800],
+          shadowColor: Colors.transparent,
+          bottom: TabBar(
+            controller: _tabController,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.black,
+            tabs: const [
+              Tab(
+                  text: "Horario",
+                  icon: Icon(
+                    Icons.calendar_today,
+                    size: 20,
+                  )),
+              Tab(
+                text: "Calendario",
+                icon: Icon(
+                  Icons.event,
+                  size: 20,
+                ),
+              ),
+              Tab(
+                text: "Sim. de Notas",
+                icon: Icon(
+                  Icons.calculate,
+                  size: 20,
+                ),
+              ),
+            ],
           ),
-          unselectedLabelColor: const Color.fromARGB(153, 16, 0, 0),
-          tabs: const [
-            Tab(text: "Horario de curso"),
-            Tab(text: "Calendario"),
-            Tab(text: "Simulador de Notas"), // Nueva pestaña
-          ],
         ),
       ),
       body: TabBarView(
@@ -312,23 +330,50 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
   @override
   Widget build(BuildContext context) {
     List<Widget> dayWidgets = weeklySchedule.keys.map((day) {
-      return ExpansionTile(
-        title: Text(day),
-        children: weeklySchedule[day]!
-            .map((course) => ListTile(
-                  title: Text(course['name']!),
-                  subtitle: Text(course['time']!),
-                  leading: const Icon(Icons.book),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      setState(() {
-                        weeklySchedule[day]?.remove(course);
-                      });
-                    },
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: ExpansionTile(
+            title: Row(
+              children: [
+                Text(
+                  day,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
-                ))
-            .toList(),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  '${weeklySchedule[day]?.length ?? 0} cursos',
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            children: weeklySchedule[day]!
+                .map((course) => ListTile(
+                      title: Text(course['name']!),
+                      subtitle: Text(course['time']!),
+                      leading: const Icon(Icons.book),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          setState(() {
+                            weeklySchedule[day]?.remove(course);
+                          });
+                        },
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
       );
     }).toList();
 
@@ -483,28 +528,31 @@ class _GradeSimulatorWidgetState extends State<GradeSimulatorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: _courseNameController,
-          decoration: const InputDecoration(labelText: 'Nombre del Curso'),
-          onSubmitted: (_) => _addCourse(),
-        ),
-        ElevatedButton(
-          onPressed: _addCourse,
-          child: const Text('Agregar Curso'),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              return CourseGradeItemWidget(
-                course: courses[index],
-              );
-            },
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _courseNameController,
+            decoration: const InputDecoration(labelText: 'Nombre del Curso'),
+            onSubmitted: (_) => _addCourse(),
           ),
-        ),
-      ],
+          ElevatedButton(
+            onPressed: _addCourse,
+            child: const Text('Agregar Curso'),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: courses.length,
+              itemBuilder: (context, index) {
+                return CourseGradeItemWidget(
+                  course: courses[index],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
