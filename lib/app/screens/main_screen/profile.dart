@@ -61,7 +61,7 @@ class _ProfileState extends State<Profile> {
           return Text('Error: ${snapshot.error}');
         } else {
           return DefaultTabController(
-            length: 2,
+            length: 3,
             child: SafeArea(
               child: Scaffold(
                 backgroundColor: Colors.white,
@@ -264,6 +264,7 @@ class _ProfileState extends State<Profile> {
                       tabs: [
                         Tab(text: 'Mi foro'),
                         Tab(text: 'Sobre mí'),
+                        Tab(text: 'Logros')
                       ],
                     ),
                     Expanded(
@@ -351,6 +352,107 @@ class _ProfileState extends State<Profile> {
                               ),
                             ],
                           ),
+                          ListView(
+                            children: const [
+                              Card(
+                                elevation: 0.1,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(FontAwesomeIcons.check,
+                                            color: Colors.green),
+                                      ), // Asume que existe un ícono de copa
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'Contenido de calidad',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'Obten 10 pdf verificados',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                elevation: 0.1,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(FontAwesomeIcons.star,
+                                            color: Colors.yellow),
+                                      ), // Asume que existe un ícono de copa
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text('Maestro en la ayuda',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            Text(
+                                                'Consigue 100 puntos de reputación',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                elevation: 0.1,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(FontAwesomeIcons.book,
+                                            color: Colors.red),
+                                      ), // Asume que existe un ícono de copa
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'Entusiasta del conocimiento',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'Sigues 10 foros diferentes',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),

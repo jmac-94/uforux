@@ -25,34 +25,49 @@ class Wikipedia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: documents.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Row(
-            children: [
-              Icon(
-                FontAwesomeIcons.filePdf,
-                color: Colors.blueAccent[700],
-              ),
-              const SizedBox(width: 10),
-              Text(documents[index].title),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'Mis Documentos PDF',
+            style: Theme.of(context).textTheme.headline6,
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.open_in_new),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      PdfViewScreen(url: documents[index].url),
+        ),
+        Container(
+          height: 160,
+          child: ListView.builder(
+            itemCount: documents.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Row(
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.filePdf,
+                      color: Colors.blueAccent[700],
+                    ),
+                    const SizedBox(width: 10),
+                    Text(documents[index].title),
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.open_in_new),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PdfViewScreen(url: documents[index].url),
+                      ),
+                    );
+                  },
                 ),
               );
             },
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
@@ -107,4 +122,98 @@ class PdfViewScreen extends StatelessWidget {
       body: SfPdfViewer.network(url),
     );
   }
+}
+
+class CourseSchedule extends StatefulWidget {
+  const CourseSchedule({super.key});
+
+  @override
+  _CourseScheduleState createState() => _CourseScheduleState();
+}
+
+class _CourseScheduleState extends State<CourseSchedule>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final List<String> _cycles = [
+    'CICLO 1',
+    'CICLO 2',
+    'CICLO 3',
+    // Agrega todos los ciclos aquí
+  ];
+
+  Map<String, List<Course>> coursesPerCycle = {
+    'CICLO 1': [
+      Course('Programación I', 4),
+      Course('Cálculo de una Variable', 4),
+      Course('Comunicación Oral y Escrita', 2),
+      Course('Introducción a mecanica', 2),
+    ],
+    'CICLO 2': [
+      Course('Programación II', 4),
+      Course('Cálculo de varias variables', 4),
+      Course('Introducción a la Ingeniería de Sistemas', 2),
+    ],
+    'CICLO 3': [
+      Course('Programación III', 3),
+      Course('Matematica I', 4),
+      Course('Arquitecuta de computadoras', 4),
+    ],
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _cycles.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          constraints: const BoxConstraints.expand(
+            height: 40,
+          ), // Ajusta la altura según sea necesario
+          child: TabBar(
+            controller: _tabController,
+            isScrollable: true,
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
+            tabs: _cycles.map((cycle) => Tab(text: cycle)).toList(),
+          ),
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: _cycles.map((cycle) {
+              final courses = coursesPerCycle[cycle] ?? [];
+              return ListView.builder(
+                itemCount: courses.length,
+                itemBuilder: (context, index) {
+                  final course = courses[index];
+                  return ListTile(
+                    title: Text(course.name),
+                    trailing: Text('${course.credits} CRD'),
+                  );
+                },
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Course {
+  String name;
+  int credits;
+
+  Course(this.name, this.credits);
 }

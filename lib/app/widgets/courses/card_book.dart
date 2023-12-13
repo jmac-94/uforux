@@ -32,7 +32,7 @@ class CardBook extends StatelessWidget {
         children: [
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.width * 0.55,
+            height: MediaQuery.of(context).size.width * 0.45,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               color: Colors.white,
@@ -44,7 +44,7 @@ class CardBook extends StatelessWidget {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.3,
-            height: 31.2,
+            height: 32,
             child: Text(
               title,
               style: const TextStyle(

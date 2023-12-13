@@ -1,18 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:forux/app/controllers/app_user_controller.dart';
-import 'package:forux/app/controllers/forum_controller.dart';
 import 'package:forux/app/controllers/profile_controller.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
-import 'package:forux/app/models/forum.dart';
 import 'package:forux/app/widgets/profile/icons_actions_my_forum.dart';
 import 'package:forux/app/widgets/home/body_data.dart';
 import 'package:forux/app/widgets/home/forum_header.dart';
-import 'package:forux/app/widgets/common/icons_actions.dart';
 import 'package:faker/faker.dart';
-import 'package:forux/core/structures/pair.dart';
 
 class MyForumWidget extends StatefulWidget {
   final AppUser loggedUser;

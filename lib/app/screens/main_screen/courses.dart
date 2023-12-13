@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/widgets/courses/card_book.dart';
 import 'package:forux/app/widgets/courses/eventW.dart';
+import 'package:forux/app/widgets/courses/wikipedia.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Courses extends StatefulWidget {
@@ -121,7 +122,7 @@ class _CoursesState extends State<Courses> {
               children: [
                 const SizedBox(height: 15.0),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.63,
+                  height: MediaQuery.of(context).size.width * 0.57,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
@@ -242,15 +243,13 @@ class _CoursesState extends State<Courses> {
                 //     ],
                 //   ),
                 // ),
-                const SizedBox(height: 10.0),
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 14.0,
-                      vertical: 10.0,
-                    ),
-                    child: Text(
+                    ).copyWith(bottom: 10),
+                    child: const Text(
                       'Eventos',
                       style: TextStyle(
                           fontSize: 20.0,
@@ -290,6 +289,26 @@ class _CoursesState extends State<Courses> {
                       ),
                     ],
                   ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10.0).copyWith(
+                    top: 10.0,
+                  ),
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Malla Curricular',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                const Expanded(
+                  child: CourseSchedule(),
                 ),
               ],
             ),

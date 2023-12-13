@@ -134,15 +134,12 @@ class _CalendarState extends State<Calendar> {
                 title: const Text('Crear nuevo evento'),
                 content: Column(
                   children: [
-                    // Caja de texto input
                     TextField(
                       controller: _eventController,
                       decoration: const InputDecoration(
                         hintText: 'Nombre del evento',
                       ),
                     ),
-
-                    // Selector de hora de inicio
                     ElevatedButton(
                       child: Text('Inicio: ${_startTime.format(context)}'),
                       onPressed: () async {
@@ -161,8 +158,6 @@ class _CalendarState extends State<Calendar> {
                         }
                       },
                     ),
-
-                    // Selector de hora de fin
                     ElevatedButton(
                       child: Text('Fin: ${_endTime.format(context)}'),
                       onPressed: () async {
