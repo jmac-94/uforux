@@ -178,14 +178,19 @@ class _CourseScheduleState extends State<CourseSchedule>
       children: [
         Container(
           constraints: const BoxConstraints.expand(
-            height: 40,
-          ), // Ajusta la altura según sea necesario
-          child: TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey,
-            tabs: _cycles.map((cycle) => Tab(text: cycle)).toList(),
+            height: 30,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              isScrollable: true,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              tabs: _cycles.map((cycle) => Tab(text: cycle)).toList(),
+            ),
           ),
         ),
         Expanded(
