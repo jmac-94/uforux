@@ -89,7 +89,7 @@ class BodyData extends StatelessWidget {
               future: ForumController.fetchImage(attachment),
               builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return Container();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
