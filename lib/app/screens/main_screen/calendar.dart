@@ -121,7 +121,7 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
       body: content(),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.white,
         onPressed: () {
           _startTime = TimeOfDay.now();
           _endTime = TimeOfDay.now();
@@ -228,6 +228,9 @@ class _CalendarState extends State<Calendar> {
             },
           );
         },
+        child: const Icon(
+          Icons.add,
+        ),
       ),
     );
   }
@@ -383,7 +386,7 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddCourseDialog(context),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),
     );
@@ -528,30 +531,49 @@ class _GradeSimulatorWidgetState extends State<GradeSimulatorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          TextField(
-            controller: _courseNameController,
-            decoration: const InputDecoration(labelText: 'Nombre del Curso'),
-            onSubmitted: (_) => _addCourse(),
-          ),
-          ElevatedButton(
-            onPressed: _addCourse,
-            child: const Text('Agregar Curso'),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: courses.length,
-              itemBuilder: (context, index) {
-                return CourseGradeItemWidget(
-                  course: courses[index],
-                );
-              },
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addCourse,
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.add),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _courseNameController,
+              decoration: const InputDecoration(
+                labelText: 'Nombre del Curso',
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+              onSubmitted: (_) => _addCourse(),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.separated(
+                itemCount: courses.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.grey[200],
+                    ),
+                    child: CourseGradeItemWidget(
+                      course: courses[index],
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 20),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -613,36 +635,130 @@ class _CourseGradeItemWidgetState extends State<CourseGradeItemWidget> {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      title: Text(widget.course.name,
-          style: const TextStyle(fontWeight: FontWeight.bold)),
+      collapsedTextColor: Colors.black,
+      title: Text(
+        widget.course.name,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      shape: BeveledRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          20,
+        ),
+      ),
+      backgroundColor: Colors.grey[200],
       children: [
         for (var grade in widget.course.grades)
-          Text(
-              '${grade.evaluationName}: Nota: ${grade.grade}, Peso: ${grade.weight}%'),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.white,
+              ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      grade.evaluationName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20.0, bottom: 10.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Nota: ${grade.grade}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          'Peso: ${grade.weight}%',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Promedio:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            Text(
+              ' ${calculateAverage().toStringAsFixed(2)}',
+              style: TextStyle(
+                color:
+                    double.parse(calculateAverage().toStringAsFixed(2)) < 10.5
+                        ? Colors.red
+                        : Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               TextField(
                 controller: _evaluationNameController,
-                decoration:
-                    const InputDecoration(labelText: "Nombre de la Evaluación"),
+                decoration: const InputDecoration(
+                  labelText: "Nombre de la Evaluación",
+                  labelStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               TextField(
                 controller: _gradeController,
-                decoration: const InputDecoration(labelText: 'Nota'),
+                decoration: const InputDecoration(
+                  labelText: 'Nota',
+                  labelStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
               TextField(
                 controller: _weightController,
-                decoration: const InputDecoration(labelText: 'Peso (%)'),
+                decoration: const InputDecoration(
+                  labelText: 'Peso (%)',
+                  labelStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _addGrade,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blue[500]),
+                ),
                 child: const Text('Agregar Evaluación'),
               ),
-              Text('Promedio: ${calculateAverage().toStringAsFixed(2)}'),
             ],
           ),
         ),
