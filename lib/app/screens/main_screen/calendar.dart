@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -37,6 +39,13 @@ class _HomeScreenState extends State<HomeCalendar>
             unselectedLabelColor: Colors.black,
             tabs: const [
               Tab(
+                text: "Calendario",
+                icon: Icon(
+                  Icons.event,
+                  size: 20,
+                ),
+              ),
+              Tab(
                   text: "Horario",
                   icon: Icon(
                     Icons.calendar_today,
@@ -46,13 +55,6 @@ class _HomeScreenState extends State<HomeCalendar>
                 text: "Sim. de Notas",
                 icon: Icon(
                   Icons.calculate,
-                  size: 20,
-                ),
-              ),
-              Tab(
-                text: "Calendario",
-                icon: Icon(
-                  Icons.event,
                   size: 20,
                 ),
               ),
@@ -359,6 +361,7 @@ class CourseScheduleWidget extends StatefulWidget {
 }
 
 class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
+  final storage = const FlutterSecureStorage();
   Map<String, List<Map<String, String>>> weeklySchedule = {
     'Lunes': [],
     'Martes': [],
@@ -368,10 +371,43 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
     'Sábado': [],
   };
 
-  void _addCourse(String day, Map<String, String> course) {
+  @override
+  void initState() {
+    super.initState();
+    _loadWeeklySchedule();
+  }
+
+  _addCourse(String day, Map<String, String> course) {
     setState(() {
       weeklySchedule[day]?.add(course);
     });
+    _saveWeeklySchedule(); // Guardar después de añadir un curso
+  }
+
+  void _saveWeeklySchedule() async {
+    String weeklyScheduleJson = jsonEncode(weeklySchedule);
+    await storage.write(key: 'weeklySchedule', value: weeklyScheduleJson);
+  }
+
+  void _loadWeeklySchedule() async {
+    String? weeklyScheduleJson = await storage.read(key: 'weeklySchedule');
+    if (weeklyScheduleJson != null) {
+      Map<String, dynamic> decodedJson =
+          jsonDecode(weeklyScheduleJson) as Map<String, dynamic>;
+      Map<String, List<Map<String, String>>> loadedWeeklySchedule = {};
+
+      decodedJson.forEach((day, courses) {
+        loadedWeeklySchedule[day] = List<Map<String, String>>.from(
+          (courses as List).map(
+            (course) => Map<String, String>.from(course as Map),
+          ),
+        );
+      });
+
+      setState(() {
+        weeklySchedule = loadedWeeklySchedule;
+      });
+    }
   }
 
   @override
