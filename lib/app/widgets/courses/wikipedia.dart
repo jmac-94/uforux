@@ -138,7 +138,8 @@ class _CourseScheduleState extends State<CourseSchedule>
     'CICLO 1',
     'CICLO 2',
     'CICLO 3',
-    // Agrega todos los ciclos aquí
+    'CICLO 4',
+    'CICLO 5',
   ];
 
   Map<String, List<Course>> coursesPerCycle = {
@@ -147,6 +148,8 @@ class _CourseScheduleState extends State<CourseSchedule>
       Course('Cálculo de una Variable', 4),
       Course('Comunicación Oral y Escrita', 2),
       Course('Introducción a mecanica', 2),
+      Course('Ciencias de los materiales', 2),
+      Course('Introducción a la Ingeniería de Sistemas', 2),
     ],
     'CICLO 2': [
       Course('Programación II', 4),
@@ -154,6 +157,16 @@ class _CourseScheduleState extends State<CourseSchedule>
       Course('Introducción a la Ingeniería de Sistemas', 2),
     ],
     'CICLO 3': [
+      Course('Programación III', 3),
+      Course('Matematica I', 4),
+      Course('Arquitecuta de computadoras', 4),
+    ],
+    'CICLO 4': [
+      Course('Programación III', 3),
+      Course('Matematica I', 4),
+      Course('Arquitecuta de computadoras', 4),
+    ],
+    'CICLO 5': [
       Course('Programación III', 3),
       Course('Matematica I', 4),
       Course('Arquitecuta de computadoras', 4),
@@ -178,19 +191,14 @@ class _CourseScheduleState extends State<CourseSchedule>
       children: [
         Container(
           constraints: const BoxConstraints.expand(
-            height: 30,
+            height: 50,
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: TabBar(
-              controller: _tabController,
-              isScrollable: true,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              tabs: _cycles.map((cycle) => Tab(text: cycle)).toList(),
-            ),
+          child: TabBar(
+            controller: _tabController,
+            isScrollable: true,
+            labelColor: Colors.blueAccent,
+            unselectedLabelColor: Colors.grey,
+            tabs: _cycles.map((cycle) => Tab(text: cycle)).toList(),
           ),
         ),
         Expanded(
@@ -202,9 +210,22 @@ class _CourseScheduleState extends State<CourseSchedule>
                 itemCount: courses.length,
                 itemBuilder: (context, index) {
                   final course = courses[index];
-                  return ListTile(
-                    title: Text(course.name),
-                    trailing: Text('${course.credits} CRD'),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 5.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.grey[200]!,
+                        ),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                        title: Text(course.name),
+                        trailing: Text('${course.credits} CRD'),
+                      ),
+                    ),
                   );
                 },
               );
