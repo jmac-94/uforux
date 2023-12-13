@@ -193,45 +193,74 @@ class _CalendarState extends State<Calendar> {
             builder: (context) {
               return AlertDialog(
                 scrollable: true,
-                title: const Text('Crear nuevo evento'),
+                title: const Text(
+                  'Crear nuevo evento',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: _eventController,
                       decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         hintText: 'Nombre del evento',
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    ElevatedButton(
-                      child: Text('Inicio: ${_startTime.format(context)}'),
-                      onPressed: () async {
-                        final TimeOfDay? picked = await showTimePicker(
-                          context: context,
-                          initialTime: _startTime,
-                        );
-                        if (picked != null && picked != _startTime) {
-                          setState(() {
-                            _startTime = picked;
-                          });
-                        }
-                      },
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.blue[300],
+                            ),
+                          ),
+                          child: Text('Inicio: ${_startTime.format(context)}'),
+                          onPressed: () async {
+                            final TimeOfDay? picked = await showTimePicker(
+                              context: context,
+                              initialTime: _startTime,
+                            );
+                            if (picked != null && picked != _startTime) {
+                              setState(() {
+                                _startTime = picked;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.blue[300],
+                            ),
+                            shadowColor: MaterialStateProperty.all(
+                              Colors.transparent,
+                            ),
+                          ),
+                          child: Text('Fin: ${_endTime.format(context)}'),
+                          onPressed: () async {
+                            final TimeOfDay? picked = await showTimePicker(
+                              context: context,
+                              initialTime: _endTime,
+                            );
+                            if (picked != null && picked != _endTime) {
+                              setState(() {
+                                _endTime = picked;
+                              });
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                    ElevatedButton(
-                      child: Text('Fin: ${_endTime.format(context)}'),
-                      onPressed: () async {
-                        final TimeOfDay? picked = await showTimePicker(
-                          context: context,
-                          initialTime: _endTime,
-                        );
-                        if (picked != null && picked != _endTime) {
-                          setState(() {
-                            _endTime = picked;
-                          });
-                        }
-                      },
-                    ),
-                    // Si tienes otros widgets como un DropdownButton para seleccionar el tipo de evento, inclúyelos aquí
+                    const SizedBox(height: 5),
                     DropdownButton<String>(
                       value: _selectedEventType,
                       onChanged: (String? newValue) {
@@ -247,14 +276,70 @@ class _CalendarState extends State<Calendar> {
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text(
+                            value,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              // Color del texto
+                            ),
+                          ),
                         );
                       }).toList(),
-                    ),
+                      dropdownColor: Colors.white,
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                      ),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(
+                        color: Colors.deepPurple,
+                        fontSize: 16,
+                      ),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        10, // Valor del radio
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                    )
                   ],
                 ),
                 actions: [
                   ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                      shadowColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                      shadowColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                    ),
                     onPressed: () async {
                       final newEvent = Event(
                         title: _eventController.text,
@@ -269,7 +354,13 @@ class _CalendarState extends State<Calendar> {
                       _eventController.clear();
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Crear'),
+                    child: const Text(
+                      'Crear',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               );
@@ -484,61 +575,69 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Agregar nuevo curso'),
+          title: const Text(
+            'Agregar nuevo curso',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
-                decoration:
-                    const InputDecoration(labelText: 'Nombre del Curso'),
+                decoration: const InputDecoration(hintText: 'Nombre del Curso'),
               ),
+              const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
                     child: TextFormField(
                       controller: startHourController,
                       decoration:
-                          const InputDecoration(labelText: 'Hora Inicio (HH)'),
+                          const InputDecoration(hintText: 'Hora Inicial'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: TextFormField(
                       controller: startMinuteController,
-                      decoration: const InputDecoration(
-                          labelText: 'Minuto Inicio (MM)'),
+                      decoration:
+                          const InputDecoration(hintText: 'Minuto Inicial'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
                     child: TextFormField(
                       controller: endHourController,
-                      decoration:
-                          const InputDecoration(labelText: 'Hora Fin (HH)'),
+                      decoration: const InputDecoration(hintText: 'Hora Final'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: TextFormField(
                       controller: endMinuteController,
                       decoration:
-                          const InputDecoration(labelText: 'Minuto Fin (MM)'),
+                          const InputDecoration(hintText: 'Minuto Final'),
                       keyboardType: TextInputType.number,
                       maxLength: 2,
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
               DropdownButton<String>(
                 value: selectedDay,
                 onChanged: (String? newValue) {
@@ -553,16 +652,64 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
                     child: Text(day),
                   );
                 }).toList(),
+                dropdownColor: Colors.white,
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.blue,
+                ),
+                iconSize: 24,
+                elevation: 16,
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 16,
+                ),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
+                ),
+                borderRadius: BorderRadius.circular(
+                  10,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
               ),
             ],
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancelar'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.transparent,
+                ),
+                shadowColor: MaterialStateProperty.all(
+                  Colors.transparent,
+                ),
+              ),
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: const Text('Agregar'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.transparent,
+                ),
+                shadowColor: MaterialStateProperty.all(
+                  Colors.transparent,
+                ),
+              ),
+              child: const Text(
+                'Agregar',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
               onPressed: () {
                 if (nameController.text.isNotEmpty &&
                     startHourController.text.isNotEmpty &&
@@ -677,19 +824,32 @@ class _GradeSimulatorWidgetState extends State<GradeSimulatorWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: _addCourse,
+        icon: const Icon(Icons.add),
+        label: const Text('Agregar Curso',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         backgroundColor: Colors.white,
-        child: const Icon(Icons.add),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Nombre del curso',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 5),
             TextField(
               controller: _courseNameController,
               decoration: const InputDecoration(
-                labelText: 'Nombre del Curso',
+                hintText: 'Ej. Matemáticas',
                 labelStyle: TextStyle(
                   color: Colors.black,
                   fontSize: 18,
@@ -804,13 +964,15 @@ class _CourseGradeItemWidgetState extends State<CourseGradeItemWidget> {
                   ),
                   const Spacer(),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20.0, bottom: 10.0),
+                    padding: const EdgeInsets.only(
+                        right: 20.0, bottom: .0, top: 5.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Nota: ${grade.grade}',
                           style: const TextStyle(
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
