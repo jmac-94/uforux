@@ -177,6 +177,7 @@ class _ForumCommentsWidgetState extends State<ForumCommentsWidget> {
                                 children: [
                                   const SizedBox(height: 5),
                                   ForumHeader(
+                                    loggedUserId: widget.loggedUserId,
                                     comment: comment,
                                   ),
                                   const SizedBox(height: 5),

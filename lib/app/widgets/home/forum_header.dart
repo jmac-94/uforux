@@ -1,16 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:forux/app/controllers/app_user_controller.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
+import 'package:forux/app/screens/main_screen/profile.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:forux/core/utils/extensions.dart';
 
 class ForumHeader extends StatelessWidget {
+  String loggedUserId;
   final Comment comment;
   late AppUserController appUserController;
 
   ForumHeader({
     super.key,
+    required this.loggedUserId,
     required this.comment,
   });
 
@@ -34,24 +39,40 @@ class ForumHeader extends StatelessWidget {
         ),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(28.0),
-              child: FutureBuilder<Image>(
-                future: appUserController.getProfilePhoto(),
-                builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return Image(
-                      image: snapshot.data!.image,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.cover,
-                    );
-                  }
-                },
+            GestureDetector(
+              onTap: () {
+                if (comment.userId != loggedUserId) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(
+                        user: AppUser(id: comment.userId),
+                        loggedUserId: loggedUserId,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28.0),
+                child: FutureBuilder<Image>(
+                  future: appUserController.getProfilePhoto(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Image(
+                        image: snapshot.data!.image,
+                        width: 25,
+                        height: 25,
+                        fit: BoxFit.cover,
+                      );
+                    }
+                  },
+                ),
               ),
             ),
             Padding(

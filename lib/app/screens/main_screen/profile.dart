@@ -13,8 +13,13 @@ import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   final AppUser user;
+  final String loggedUserId;
 
-  const Profile({super.key, required this.user});
+  const Profile({
+    super.key,
+    required this.user,
+    required this.loggedUserId,
+  });
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -59,7 +64,7 @@ class _ProfileState extends State<Profile> {
             length: 2,
             child: SafeArea(
               child: Scaffold(
-                backgroundColor: Colors.transparent,
+                backgroundColor: Colors.white,
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -69,18 +74,30 @@ class _ProfileState extends State<Profile> {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 5,
                           ),
-                          child: Row(
-                            children: [
-                              const Spacer(),
-                              IconButton(
-                                onPressed: () async {
-                                  await _auth.signOut();
-                                },
-                                icon: const Icon(Icons.logout),
-                                iconSize: 30,
-                              ),
-                            ],
-                          ),
+                          child: widget.loggedUserId == widget.user.id
+                              ? Row(
+                                  children: [
+                                    const Spacer(),
+                                    IconButton(
+                                      onPressed: () async {
+                                        await _auth.signOut();
+                                      },
+                                      icon: const Icon(Icons.logout),
+                                      iconSize: 30,
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.arrow_back),
+                                      iconSize: 30,
+                                    ),
+                                  ],
+                                ),
                         ),
                         // Profile photo
                         Stack(
@@ -122,52 +139,52 @@ class _ProfileState extends State<Profile> {
                                         AsyncSnapshot<Image> snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
-                                        return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la imagen
+                                        return const CircularProgressIndicator();
                                       } else if (snapshot.hasError) {
-                                        return Text(
-                                            'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
+                                        return Text('Error: ${snapshot.error}');
                                       } else {
-                                        return snapshot
-                                            .data!; // Muestra la imagen cuando esté disponible
+                                        return snapshot.data!;
                                       }
                                     },
                                   ),
                                 ),
                               ),
                             ),
-                            Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: GestureDetector(
-                                onTap: () async {
-                                  final picker = ImagePicker();
-                                  final XFile? pickedFile =
-                                      await picker.pickImage(
-                                    source: ImageSource.gallery,
-                                  );
+                            if (widget.loggedUserId == widget.user.id)
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    final picker = ImagePicker();
+                                    final XFile? pickedFile =
+                                        await picker.pickImage(
+                                      source: ImageSource.gallery,
+                                    );
 
-                                  if (pickedFile != null) {
-                                    File imageFile = File(pickedFile.path);
-                                    await appUserController
-                                        .updateProfilePhoto(imageFile);
-                                  } else {
-                                    dPrint('No se seleccionó ninguna imagen.');
-                                  }
-                                },
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.edit,
-                                    size: 20,
+                                    if (pickedFile != null) {
+                                      File imageFile = File(pickedFile.path);
+                                      await appUserController
+                                          .updateProfilePhoto(imageFile);
+                                    } else {
+                                      dPrint(
+                                          'No se seleccionó ninguna imagen.');
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      size: 20,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              ), // Empty container when condition is not met
                           ],
                         )
                       ],
@@ -193,49 +210,50 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: 130,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey[200],
-                          ),
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Editar perfil',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                    if (widget.loggedUserId == widget.user.id)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 130,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[200],
+                            ),
+                            child: TextButton(
+                              onPressed: () {},
+                              child: const Text(
+                                'Editar perfil',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 130,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blueAccent[400],
-                          ),
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Seguir',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                          Container(
+                            width: 130,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blueAccent[400],
+                            ),
+                            child: TextButton(
+                              onPressed: () {},
+                              child: const Text(
+                                'Seguir',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.02,
                     ),

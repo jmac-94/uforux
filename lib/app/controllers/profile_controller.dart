@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:forux/app/controllers/app_user_controller.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
 import 'package:forux/app/models/subcomment.dart';
@@ -21,6 +22,10 @@ class ProfileController {
   ProfileController({
     required this.loggedUser,
   });
+
+  Future<AppUser> fetchAppUser(String id) async {
+    return (await AppUserController(uid: id).getUserData())!;
+  }
 
   Map<String, Comment> commentsFromJson(Map<String, dynamic> json) {
     return json.map((key, value) =>

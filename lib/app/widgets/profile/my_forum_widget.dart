@@ -128,6 +128,7 @@ class _MyForumWidgetState extends State<MyForumWidget> {
                           children: [
                             const SizedBox(height: 5),
                             ForumHeader(
+                              loggedUserId: widget.loggedUser.id,
                               comment: comment,
                             ),
                             const SizedBox(height: 5),
