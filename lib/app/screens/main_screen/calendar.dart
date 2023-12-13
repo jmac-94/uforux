@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 import '../../models/event.dart';
 
@@ -40,16 +43,16 @@ class _HomeScreenState extends State<HomeCalendar>
                     size: 20,
                   )),
               Tab(
-                text: "Calendario",
+                text: "Sim. de Notas",
                 icon: Icon(
-                  Icons.event,
+                  Icons.calculate,
                   size: 20,
                 ),
               ),
               Tab(
-                text: "Sim. de Notas",
+                text: "Calendario",
                 icon: Icon(
-                  Icons.calculate,
+                  Icons.event,
                   size: 20,
                 ),
               ),
@@ -60,8 +63,8 @@ class _HomeScreenState extends State<HomeCalendar>
       body: TabBarView(
         controller: _tabController,
         children: [
-          CourseScheduleWidget(),
           const Calendar(),
+          CourseScheduleWidget(),
           GradeSimulatorWidget(), // Nuevo widget para el simulador de notas
         ],
       ),
@@ -81,6 +84,8 @@ class _CalendarState extends State<Calendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
 
+  Database? _database;
+
   // Crear eventos
   Map<DateTime, List<Event>> events = {};
   // Controlador de texto de eventos
@@ -98,6 +103,61 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+    _initDb();
+  }
+
+  Future<void> _initDb() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'calendar.db');
+
+    _database = await openDatabase(path, version: 1, onCreate: (db, version) {
+      return db.execute(
+        'CREATE TABLE events(id INTEGER PRIMARY KEY, title TEXT, date TEXT, startTime TEXT, endTime TEXT)',
+      );
+    });
+
+    _loadEvents();
+  }
+
+  Future<void> _loadEvents() async {
+    final List<Map<String, dynamic>> maps = await _database!.query('events');
+
+    setState(() {
+      events = {};
+      for (var map in maps) {
+        final date = DateTime.parse(map['date']);
+        final event = Event.fromJson(map);
+        events.putIfAbsent(date, () => []).add(event);
+      }
+      _selectedEvents.value = _getEventsForDay(_selectedDay);
+    });
+  }
+
+  Future<void> _saveEvent(Event event) async {
+    await _database!.insert(
+      'events',
+      event.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    _selectedEvents.value = _getEventsForDay(_selectedDay);
+    _loadEvents();
+  }
+
+  void _addEvent() {
+    if (_eventController.text.isEmpty) {
+      return;
+    }
+
+    final event = Event(
+      title: _eventController.text,
+      startTime: _startTime,
+      endTime: _endTime,
+      date: _selectedDay,
+    );
+
+    _saveEvent(event);
+    _eventController.clear();
   }
 
   // Funcion para seleccion dia
@@ -133,6 +193,7 @@ class _CalendarState extends State<Calendar> {
                 scrollable: true,
                 title: const Text('Crear nuevo evento'),
                 content: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: _eventController,
@@ -147,11 +208,7 @@ class _CalendarState extends State<Calendar> {
                           context: context,
                           initialTime: _startTime,
                         );
-
-                        if (picked != null &&
-                            picked != _startTime &&
-                            picked.hour >= 0 &&
-                            picked.hour < 24) {
+                        if (picked != null && picked != _startTime) {
                           setState(() {
                             _startTime = picked;
                           });
@@ -165,7 +222,6 @@ class _CalendarState extends State<Calendar> {
                           context: context,
                           initialTime: _endTime,
                         );
-
                         if (picked != null && picked != _endTime) {
                           setState(() {
                             _endTime = picked;
@@ -173,11 +229,12 @@ class _CalendarState extends State<Calendar> {
                         }
                       },
                     ),
+                    // Si tienes otros widgets como un DropdownButton para seleccionar el tipo de evento, inclúyelos aquí
                     DropdownButton<String>(
                       value: _selectedEventType,
-                      onChanged: (String? newValude) {
+                      onChanged: (String? newValue) {
                         setState(() {
-                          _selectedEventType = newValude!;
+                          _selectedEventType = newValue!;
                         });
                       },
                       items: <String>[
@@ -185,10 +242,10 @@ class _CalendarState extends State<Calendar> {
                         EventType.degree,
                         EventType.university,
                         EventType.other
-                      ].map<DropdownMenuItem<String>>((String valude) {
+                      ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
-                          value: valude,
-                          child: Text(valude),
+                          value: value,
+                          child: Text(value),
                         );
                       }).toList(),
                     ),
@@ -196,24 +253,18 @@ class _CalendarState extends State<Calendar> {
                 ),
                 actions: [
                   ElevatedButton(
-                    onPressed: () {
-                      // Agregar el evento con hora de inicio y fin
-                      if (!events.containsKey(_selectedDay)) {
-                        events[_selectedDay] = [];
-                      }
-
-                      events[_selectedDay]!.add(
-                        Event(
-                          title: _eventController.text,
-                          startTime: _startTime,
-                          endTime: _endTime,
-                        ),
+                    onPressed: () async {
+                      final newEvent = Event(
+                        title: _eventController.text,
+                        startTime: _startTime,
+                        endTime: _endTime,
+                        date: _selectedDay,
                       );
 
-                      _eventController.clear();
-
+                      await _saveEvent(newEvent); // Guardar en la base de datos
                       _selectedEvents.value = _getEventsForDay(_selectedDay);
 
+                      _eventController.clear();
                       Navigator.of(context).pop();
                     },
                     child: const Text('Crear'),
@@ -223,9 +274,7 @@ class _CalendarState extends State<Calendar> {
             },
           );
         },
-        child: const Icon(
-          Icons.add,
-        ),
+        child: const Icon(Icons.add),
       ),
     );
   }
