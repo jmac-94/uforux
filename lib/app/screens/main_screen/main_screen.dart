@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forux/core/utils/dprint.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/screens/main_screen/calendar.dart';
@@ -34,7 +35,10 @@ class _MainScreenState extends State<MainScreen> {
       HomeCalendar(),
       Home(user: user),
       Courses(user: user),
-      Profile(user: user),
+      Profile(
+        user: user,
+        loggedUserId: widget.user.id,
+      ),
     ];
   }
 

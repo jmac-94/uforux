@@ -140,7 +140,7 @@ class _ForYouWidgetState extends State<ForYouWidget> {
                                           color: Colors.grey.withOpacity(0.1),
                                           spreadRadius: 0,
                                           blurRadius: 5,
-                                          offset: const Offset(0, 1), 
+                                          offset: const Offset(0, 1),
                                         ),
                                       ],
                                     ),
@@ -148,6 +148,7 @@ class _ForYouWidgetState extends State<ForYouWidget> {
                                       children: [
                                         const SizedBox(height: 5),
                                         ForumHeader(
+                                          loggedUserId: widget.loggedUserId,
                                           comment: comment,
                                         ),
                                         const SizedBox(height: 5),

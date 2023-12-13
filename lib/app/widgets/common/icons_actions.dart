@@ -7,6 +7,7 @@ import 'package:forux/app/controllers/forum_controller.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
 import 'package:forux/app/models/subcomment.dart';
+import 'package:forux/app/screens/main_screen/profile.dart';
 import 'package:forux/core/utils/dprint.dart';
 import 'package:forux/core/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
@@ -171,6 +172,7 @@ class _IconsActionsState extends State<IconsActions> {
             });
           },
           isLiked: isLiked,
+          loggedUserId: widget.forumController.loggedUserId,
         ),
       ),
     );
@@ -223,6 +225,7 @@ class CommentsInfoPage extends StatefulWidget {
   final ForumController forumController;
   final Function(bool) onLikeChanged;
   final bool isLiked;
+  final String loggedUserId;
 
   const CommentsInfoPage({
     super.key,
@@ -230,6 +233,7 @@ class CommentsInfoPage extends StatefulWidget {
     required this.forumController,
     required this.onLikeChanged,
     this.isLiked = false,
+    required this.loggedUserId,
   });
 
   @override
@@ -272,26 +276,39 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                     children: [
                       const SizedBox(width: 10),
                       // Profile photo
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(28.0),
-                        child: FutureBuilder<Image>(
-                          future: appUserController.getProfilePhoto(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Image> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              return Image(
-                                image: snapshot.data!.image,
-                                width: 25,
-                                height: 25,
-                                fit: BoxFit.cover,
-                              );
-                            }
-                          },
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Profile(
+                                user: AppUser(id: widget.comment.userId),
+                                loggedUserId: widget.loggedUserId,
+                              ),
+                            ),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(28.0),
+                          child: FutureBuilder<Image>(
+                            future: appUserController.getProfilePhoto(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<Image> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Image(
+                                  image: snapshot.data!.image,
+                                  width: 25,
+                                  height: 25,
+                                  fit: BoxFit.cover,
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ),
                       Padding(
@@ -461,29 +478,44 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0,
                                       ),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(28.0),
-                                        child: FutureBuilder<Image>(
-                                          future: subcommentAuthorController
-                                              .getProfilePhoto(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<Image> snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return const CircularProgressIndicator();
-                                            } else if (snapshot.hasError) {
-                                              return Text(
-                                                  'Error: ${snapshot.error}');
-                                            } else {
-                                              return Image(
-                                                image: snapshot.data!.image,
-                                                width: 25,
-                                                height: 25,
-                                                fit: BoxFit.cover,
-                                              );
-                                            }
-                                          },
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Profile(
+                                                user: AppUser(
+                                                    id: subcomment.userId),
+                                                loggedUserId:
+                                                    widget.loggedUserId,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(28.0),
+                                          child: FutureBuilder<Image>(
+                                            future: appUserController
+                                                .getProfilePhoto(),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<Image> snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return Container();
+                                              } else if (snapshot.hasError) {
+                                                return Text(
+                                                    'Error: ${snapshot.error}');
+                                              } else {
+                                                return Image(
+                                                  image: snapshot.data!.image,
+                                                  width: 25,
+                                                  height: 25,
+                                                  fit: BoxFit.cover,
+                                                );
+                                              }
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
