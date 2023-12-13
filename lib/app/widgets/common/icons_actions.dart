@@ -496,7 +496,7 @@ class _CommentsInfoPageState extends State<CommentsInfoPage> {
                                           borderRadius:
                                               BorderRadius.circular(28.0),
                                           child: FutureBuilder<Image>(
-                                            future: appUserController
+                                            future: subcommentAuthorController
                                                 .getProfilePhoto(),
                                             builder: (BuildContext context,
                                                 AsyncSnapshot<Image> snapshot) {
