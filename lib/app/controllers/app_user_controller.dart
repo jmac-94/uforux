@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:forux/app/models/app_user.dart';
+import 'package:forux/app/models/comment.dart';
 import 'package:forux/app/models/forum.dart';
 import 'package:forux/core/utils/dprint.dart';
 
@@ -37,6 +38,8 @@ class AppUserController {
     String? degree,
     double? score,
     List<String>? followedForums,
+    String? aboutMe,
+    Map<String, Comment>? comments,
   }) async {
     Map<String, dynamic> studentData = {
       if (username != null) 'username': username,
@@ -45,6 +48,8 @@ class AppUserController {
       if (degree != null) 'degree': degree,
       if (score != null) 'score': score,
       if (followedForums != null) 'followedForums': followedForums,
+      if (aboutMe != null) 'aboutMe': aboutMe,
+      if (comments != null) 'comments': comments,
     };
 
     return await studentCollection
