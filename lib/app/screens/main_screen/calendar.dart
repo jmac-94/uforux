@@ -591,20 +591,85 @@ class _CourseScheduleWidgetState extends State<CourseScheduleWidget> {
   }
 }
 
+class Course {
+  String name;
+  List<Grade> grades;
+
+  Course({
+    required this.name,
+    required this.grades,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'grades': grades.map((grade) => grade.toJson()).toList(),
+      };
+
+  static Course fromJson(Map<String, dynamic> json) => Course(
+        name: json['name'],
+        grades: List<Grade>.from(json['grades'].map((x) => Grade.fromJson(x))),
+      );
+}
+
+class Grade {
+  double grade;
+  double weight;
+  String evaluationName;
+
+  Grade(this.grade, this.weight, this.evaluationName);
+
+  Map<String, dynamic> toJson() => {
+        'grade': grade,
+        'weight': weight,
+        'evaluationName': evaluationName,
+      };
+
+  static Grade fromJson(Map<String, dynamic> json) => Grade(
+        json['grade'],
+        json['weight'],
+        json['evaluationName'],
+      );
+}
+
 class GradeSimulatorWidget extends StatefulWidget {
   @override
-  _GradeSimulatorWidgetState createState() => _GradeSimulatorWidgetState();
+  State<GradeSimulatorWidget> createState() => _GradeSimulatorWidgetState();
 }
 
 class _GradeSimulatorWidgetState extends State<GradeSimulatorWidget> {
   List<Course> courses = [];
   final TextEditingController _courseNameController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadCourses();
+  }
+
   void _addCourse() {
     if (courses.length < 7 && _courseNameController.text.isNotEmpty) {
       setState(() {
         courses.add(Course(name: _courseNameController.text, grades: []));
         _courseNameController.clear();
+      });
+    }
+    _saveCourses();
+  }
+
+  Future<void> _saveCourses() async {
+    final prefs = await SharedPreferences.getInstance();
+    String encodedData =
+        jsonEncode(courses.map((course) => course.toJson()).toList());
+    await prefs.setString('courses', encodedData);
+  }
+
+  Future<void> _loadCourses() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? encodedData = prefs.getString('courses');
+    if (encodedData != null) {
+      List<dynamic> decodedData = jsonDecode(encodedData);
+      setState(() {
+        courses = decodedData.map((json) => Course.fromJson(json)).toList();
       });
     }
   }
@@ -645,6 +710,7 @@ class _GradeSimulatorWidgetState extends State<GradeSimulatorWidget> {
                     ),
                     child: CourseGradeItemWidget(
                       course: courses[index],
+                      onSaveCourses: _saveCourses,
                     ),
                   );
                 },
@@ -659,23 +725,11 @@ class _GradeSimulatorWidgetState extends State<GradeSimulatorWidget> {
   }
 }
 
-class Course {
-  String name;
-  List<Grade> grades;
-  Course({required this.name, required this.grades});
-}
-
-class Grade {
-  double grade;
-  double weight;
-  String evaluationName;
-  Grade(this.grade, this.weight, this.evaluationName);
-}
-
 class CourseGradeItemWidget extends StatefulWidget {
   final Course course;
+  final VoidCallback onSaveCourses;
 
-  CourseGradeItemWidget({required this.course});
+  CourseGradeItemWidget({required this.course, required this.onSaveCourses});
 
   @override
   _CourseGradeItemWidgetState createState() => _CourseGradeItemWidgetState();
@@ -699,6 +753,8 @@ class _CourseGradeItemWidgetState extends State<CourseGradeItemWidget> {
         _weightController.clear();
         _evaluationNameController.clear();
       });
+
+      widget.onSaveCourses(); // Guarda los cursos después de agregar la nota
     }
   }
 
