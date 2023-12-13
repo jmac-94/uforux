@@ -122,7 +122,7 @@ class _CoursesState extends State<Courses> {
               children: [
                 const SizedBox(height: 15.0),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.57,
+                  height: MediaQuery.of(context).size.width * 0.45,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
@@ -258,7 +258,8 @@ class _CoursesState extends State<Courses> {
                     ),
                   ),
                 ),
-                Expanded(
+                SizedBox(
+                  height: 220,
                   child: ListView(
                     children: const [
                       EventWidget(
@@ -293,7 +294,7 @@ class _CoursesState extends State<Courses> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10.0).copyWith(
-                    top: 10.0,
+                    top: 5.0,
                   ),
                   child: const Align(
                     alignment: Alignment.centerLeft,
