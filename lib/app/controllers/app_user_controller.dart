@@ -15,9 +15,11 @@ class AppUserController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
 
-  AppUserController({required this.uid});
+  AppUserController({
+    required this.uid,
+  });
 
-  Future<AppUser?> getUserData() async {
+  Future<AppUser?> get user async {
     final snapshot = await studentCollection.doc(uid).get();
 
     AppUser? user;
@@ -60,7 +62,7 @@ class AppUserController {
     List<Forum> followedForums = [];
 
     // Inicializar el appUser solamente si no es nulo
-    appUser = await getUserData();
+    appUser = await user;
 
     List<String>? followedForumsIds = appUser?.followedForums;
 
@@ -84,7 +86,7 @@ class AppUserController {
   }
 
   Future<bool> hasUserFollowedForum(String forumName) async {
-    appUser = await getUserData();
+    appUser = await user;
     List<String>? followedForumsIds = appUser?.followedForums;
 
     if (followedForumsIds != null) {
@@ -109,7 +111,7 @@ class AppUserController {
   }
 
   Future<void> updateFollowedForums(String forumName, bool isFollowed) async {
-    appUser = await getUserData();
+    appUser = await user;
     List<String>? followedForumsIds = appUser?.followedForums ?? [];
 
     // Buscar el ID del foro a partir de su nombre

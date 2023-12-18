@@ -245,7 +245,7 @@ class ForumController {
 
   // User
   Future<AppUser> fetchAppUser(String id) async {
-    return (await AppUserController(uid: id).getUserData())!;
+    return (await AppUserController(uid: id).user)!;
   }
 
   Future<void> updateUserLikes(String commentId, bool isLiked) async {

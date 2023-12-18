@@ -41,7 +41,7 @@ class _ProfileState extends State<Profile> {
 
   Future<void> loadData(String id) async {
     try {
-      loggedUser = (await AppUserController(uid: id).getUserData())!;
+      loggedUser = (await AppUserController(uid: id).user)!;
       appUserController = AppUserController(uid: widget.user.id);
       appUserController.appUser = loggedUser;
     } catch (e) {

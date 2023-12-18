@@ -7,29 +7,41 @@ import 'package:forux/app/controllers/app_user_controller.dart';
 class AuthenticationController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  AppUser? _appUserFromFirebaseUser(User? user) {
-    return user == null ? null : AppUser(id: user.uid);
-  }
-
   Stream<AppUser?> get user {
-    Stream<User?> streamUser = _auth.authStateChanges();
-    return streamUser.map(_appUserFromFirebaseUser);
+    final Stream<User?> streamUser = _auth.authStateChanges();
+    return streamUser.asyncMap(_appUserFromFirebaseUser);
   }
 
-  Future signInWithEmailAndPassword(String email, String password) async {
-    try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+  Future<AppUser?> _appUserFromFirebaseUser(User? user) async {
+    if (user == null) {
+      return null;
+    } else {
+      final appUserController = AppUserController(uid: user.uid);
+      final AppUser? appUser = await appUserController.user;
+      return appUser;
+    }
+  }
 
-      User? user = result.user;
+  Future<AppUser?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final UserCredential result = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final User? user = result.user;
 
       return _appUserFromFirebaseUser(user);
     } catch (e) {
       dPrint(e);
+      return null;
     }
   }
 
-  Future registerWithEmailAndPassword({
+  Future<AppUser?> registerWithEmailAndPassword({
     required String email,
     required String username,
     required String password,
@@ -38,10 +50,10 @@ class AuthenticationController {
     required String degree,
   }) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
+      final UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      User? user = result.user;
+      final User? user = result.user;
 
       if (user != null) {
         await AppUserController(uid: user.uid).updateStudentData(
@@ -58,16 +70,16 @@ class AuthenticationController {
 
       return _appUserFromFirebaseUser(user);
     } catch (e) {
-      dPrint(e.toString());
+      dPrint(e);
+      return null;
     }
   }
 
-  Future signOut() async {
+  Future<void> signOut() async {
     try {
-      return await _auth.signOut();
+      await _auth.signOut();
     } catch (e) {
-      dPrint(e.toString());
-      return null;
+      dPrint(e);
     }
   }
 }

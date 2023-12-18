@@ -9,7 +9,10 @@ import 'package:forux/app/widgets/authentication/custom_text_field.dart';
 class SignInForm extends StatefulWidget {
   final Function toggleView;
 
-  const SignInForm({super.key, required this.toggleView});
+  const SignInForm({
+    super.key,
+    required this.toggleView,
+  });
 
   @override
   State<SignInForm> createState() => _SignInFormState();

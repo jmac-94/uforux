@@ -11,16 +11,17 @@ class AppUser {
   Map<String, Comment>? comments;
   final List<String>? followedForums;
 
-  AppUser(
-      {required this.id,
-      this.username,
-      this.degree,
-      this.aboutMe,
-      this.entrySemester,
-      this.score,
-      this.assesor,
-      this.comments,
-      this.followedForums});
+  AppUser({
+    required this.id,
+    this.username,
+    this.degree,
+    this.aboutMe,
+    this.entrySemester,
+    this.score,
+    this.assesor,
+    this.comments,
+    this.followedForums,
+  });
 
   Map<String, dynamic> toJson() {
     return {
