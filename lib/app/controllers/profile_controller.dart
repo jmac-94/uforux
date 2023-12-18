@@ -26,7 +26,7 @@ class ProfileController {
   Future<AppUser> fetchAppUser(String id) async {
     return (await AppUserController(uid: id).getUserData())!;
   }
-
+  
   Map<String, Comment> commentsFromJson(Map<String, dynamic> json) {
     return json.map((key, value) =>
         MapEntry(key, Comment.fromJson(value as Map<String, dynamic>)));
@@ -98,7 +98,7 @@ class ProfileController {
   }
 
   Future<void> updateComments() async {
-    try {
+    try { 
       // Actualizar comentarios en firestore
       Map<String, dynamic> commentsJson = commentsToJson();
 
