@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:forux/app/models/app_user.dart';
 import 'package:forux/app/models/comment.dart';
 import 'package:forux/app/models/forum.dart';
-import 'package:forux/core/utils/dprint.dart';
 
 class AppUserController {
   final String uid;

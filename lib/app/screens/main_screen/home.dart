@@ -64,7 +64,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
         centerTitle: false,
         backgroundColor: Colors.blue[800],
-        shadowColor: Colors.transparent,
+        shadowColor: Colors.transparent,    
       ),
       body: TabBarView(
         controller: _tabController,

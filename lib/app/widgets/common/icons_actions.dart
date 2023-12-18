@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:forux/app/controllers/app_user_controller.dart';
 import 'package:forux/app/controllers/forum_controller.dart';
