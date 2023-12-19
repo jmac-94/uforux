@@ -4,7 +4,10 @@ import 'package:forux/app/widgets/authentication/register_form.dart';
 class Register extends StatefulWidget {
   final Function toggleView;
 
-  const Register({super.key, required this.toggleView});
+  const Register({
+    super.key,
+    required this.toggleView,
+  });
 
   @override
   State<Register> createState() => _RegisterState();
@@ -14,6 +17,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

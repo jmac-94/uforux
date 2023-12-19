@@ -15,9 +15,11 @@ class AppUserController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
 
-  AppUserController({required this.uid});
+  AppUserController({
+    required this.uid,
+  });
 
-  Future<AppUser?> getUserData() async {
+  Future<AppUser?> get user async {
     final snapshot = await studentCollection.doc(uid).get();
 
     AppUser? user;
@@ -32,6 +34,7 @@ class AppUserController {
 
   Future<void> updateStudentData({
     String? username,
+    String? name,
     String? entrySemester,
     bool? assesor,
     String? degree,
@@ -42,6 +45,7 @@ class AppUserController {
   }) async {
     Map<String, dynamic> studentData = {
       if (username != null) 'username': username,
+      if (name != null) 'name': name,
       if (entrySemester != null) 'entrySemester': entrySemester,
       if (assesor != null) 'assesor': assesor,
       if (degree != null) 'degree': degree,
@@ -60,7 +64,7 @@ class AppUserController {
     List<Forum> followedForums = [];
 
     // Inicializar el appUser solamente si no es nulo
-    appUser = await getUserData();
+    appUser = await user;
 
     List<String>? followedForumsIds = appUser?.followedForums;
 
@@ -84,7 +88,7 @@ class AppUserController {
   }
 
   Future<bool> hasUserFollowedForum(String forumName) async {
-    appUser = await getUserData();
+    appUser = await user;
     List<String>? followedForumsIds = appUser?.followedForums;
 
     if (followedForumsIds != null) {
@@ -109,7 +113,7 @@ class AppUserController {
   }
 
   Future<void> updateFollowedForums(String forumName, bool isFollowed) async {
-    appUser = await getUserData();
+    appUser = await user;
     List<String>? followedForumsIds = appUser?.followedForums ?? [];
 
     // Buscar el ID del foro a partir de su nombre

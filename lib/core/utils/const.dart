@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constants {
   static const String appName = 'Forux';
+  static const String firebaseAppName = 'uforux-pi3';
 
   static const InputDecoration textInputDecoration = InputDecoration(
     fillColor: Colors.white,

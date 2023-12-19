@@ -6,7 +6,7 @@ class CustomDropdownField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
   final Color backgroundColor;
-  final String hintText; // Declare hintText as a member variable
+  final String hintText;
 
   const CustomDropdownField({
     super.key,
@@ -15,7 +15,7 @@ class CustomDropdownField extends StatelessWidget {
     this.validator,
     this.onSaved,
     this.backgroundColor = const Color.fromARGB(255, 178, 167, 202),
-    required this.hintText, // Initialize hintText in the constructor
+    required this.hintText,
   });
 
   @override
@@ -23,8 +23,9 @@ class CustomDropdownField extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: DropdownButtonFormField<String>(
+        isExpanded: true,
         decoration: InputDecoration(
-          hintText: hintText, // Use hintText here
+          hintText: hintText,
           hintStyle: const TextStyle(
             color: Color.fromARGB(255, 68, 35, 176),
           ),
@@ -42,7 +43,8 @@ class CustomDropdownField extends StatelessWidget {
             child: Text(
               value,
               style: const TextStyle(
-                  color: Color.fromARGB(255, 68, 35, 176)), // Color del texto
+                color: Color.fromARGB(255, 68, 35, 176),
+              ),
             ),
           );
         }).toList(),

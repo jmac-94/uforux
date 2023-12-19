@@ -8,7 +8,9 @@ import 'package:forux/core/utils/const.dart';
 import 'package:forux/app/screens/wrapper.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

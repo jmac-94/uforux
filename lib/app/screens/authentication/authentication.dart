@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:forux/app/screens/authentication/register.dart';
 import 'package:forux/app/screens/authentication/sign_in.dart';
 
 class Authentication extends StatefulWidget {
-  const Authentication({super.key});
+  const Authentication({
+    super.key,
+  });
 
   @override
   State<Authentication> createState() => _AuthenticationState();

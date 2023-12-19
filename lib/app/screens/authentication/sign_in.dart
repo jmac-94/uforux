@@ -4,7 +4,10 @@ import 'package:forux/app/widgets/authentication/sign_in_form.dart';
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
-  const SignIn({super.key, required this.toggleView});
+  const SignIn({
+    super.key,
+    required this.toggleView,
+  });
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -14,6 +17,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

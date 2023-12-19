@@ -6,7 +6,9 @@ import 'package:forux/app/screens/authentication/authentication.dart';
 import 'package:forux/app/screens/main_screen/main_screen.dart';
 
 class Wrapper extends StatelessWidget {
-  const Wrapper({super.key});
+  const Wrapper({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
