@@ -102,7 +102,7 @@ class _SignInFormState extends State<SignInForm> {
             fontWeight: FontWeight.bold,
           ),
         ).fadeInList(0, false),
-        const SizedBox(height: 50.0),
+        const SizedBox(height: 20.0),
         // Form
         Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -145,7 +145,10 @@ class _SignInFormState extends State<SignInForm> {
         error.isNotEmpty
             ? Text(
                 error,
-                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 14.0,
+                ),
               )
             : const SizedBox.shrink(),
       ],

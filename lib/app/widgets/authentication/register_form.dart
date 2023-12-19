@@ -134,6 +134,7 @@ class _RegisterFormState extends State<RegisterForm> {
               items: const ['Sí', 'No'],
               hintText: '¿Eres asesor?',
               validator: Validations.validateYesOrNo,
+              onChanged: (val) {},
               onSaved: (val) {
                 assesor = val == 'Sí';
               },
@@ -143,6 +144,7 @@ class _RegisterFormState extends State<RegisterForm> {
               items: Constants.degrees,
               hintText: 'Carrera',
               validator: Validations.validateDegree,
+              onChanged: (val) {},
               onSaved: (val) {
                 degree = val ?? '';
               },
@@ -178,7 +180,7 @@ class _RegisterFormState extends State<RegisterForm> {
             fontWeight: FontWeight.bold,
           ),
         ).fadeInList(0, false),
-        const SizedBox(height: 50.0),
+        const SizedBox(height: 20.0),
         // Form
         Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -219,7 +221,10 @@ class _RegisterFormState extends State<RegisterForm> {
         // Mensaje de error
         Text(
           error,
-          style: const TextStyle(color: Colors.red, fontSize: 14.0),
+          style: const TextStyle(
+            color: Colors.red,
+            fontSize: 14.0,
+          ),
         )
       ],
     );
