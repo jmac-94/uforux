@@ -279,7 +279,7 @@ class ForumController {
     String type,
     String fileName,
     File file,
-  ) async {
+  ) async { 
     final String filePath =
         'forums/${forum.id}/comments/$commentId/$type/$fileName';
 
