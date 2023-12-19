@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:forux/app/controllers/authentication_controller.dart';
+import 'package:forux/app/models/app_user.dart';
 import 'package:forux/core/utils/const.dart';
 import 'package:forux/core/utils/extensions.dart';
 import 'package:forux/core/utils/validations.dart';
@@ -25,8 +27,65 @@ class _SignInFormState extends State<SignInForm> {
   bool loading = false;
   String error = '';
 
+  // User data
   String email = '';
   String password = '';
+
+  Future<void> signIn() async {
+    final FormState? formState = _formKey.currentState;
+    if (formState == null || !formState.validate()) {
+      return;
+    }
+    formState.save();
+
+    final AppUser? result =
+        await _auth.signInWithEmailAndPassword(email, password);
+    if (result == null) {
+      setState(() {
+        error =
+            'No se pudo iniciar sesión. Por favor ingrese un correo o contraseña válidos.';
+      });
+    }
+  }
+
+  Widget buildSignInForm() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        CustomTextField(
+          enabled: !loading,
+          hintText: 'Correo',
+          textInputAction: TextInputAction.next,
+          validateFunction: Validations.validateEmail,
+          onSaved: (String? val) {
+            email = val ?? '';
+          },
+        ).fadeInList(1, false),
+        const SizedBox(height: 20.0),
+        CustomTextField(
+          enabled: !loading,
+          hintText: 'Contraseña',
+          textInputAction: TextInputAction.done,
+          validateFunction: Validations.validatePassword,
+          obscureText: true,
+          onSaved: (String? val) {
+            password = val ?? '';
+          },
+        ).fadeInList(2, false),
+      ],
+    );
+  }
+
+  Widget buildSignInButton() {
+    return loading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : CustomButton(
+            label: 'Iniciar Sesión',
+            onPressed: signIn,
+          ).fadeInList(4, false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +94,7 @@ class _SignInFormState extends State<SignInForm> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        // App name
         const Text(
           Constants.appName,
           style: TextStyle(
@@ -43,33 +103,16 @@ class _SignInFormState extends State<SignInForm> {
           ),
         ).fadeInList(0, false),
         const SizedBox(height: 50.0),
+        // Form
         Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
           child: buildSignInForm(),
         ),
-        Column(
-          children: [
-            const SizedBox(height: 10.0),
-            Align(
-              alignment: Alignment.center,
-              child: TextButton(
-                onPressed: () {}, // falta agregar ventana.
-                //formMode = FormMode.FORGOT_PASSWORD;
-                // setState(() {}
-                child: const Text(
-                  '¿Olvidó la contraseña?',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 234, 233, 233),
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ).fadeInList(3, false),
         const SizedBox(height: 20.0),
         buildSignInButton(),
+        const SizedBox(height: 20.0),
+        // Cambiar de vista a Register
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -82,7 +125,6 @@ class _SignInFormState extends State<SignInForm> {
             ),
             TextButton(
               onPressed: () {
-                // cambiar vista a registro
                 setState(() {
                   widget.toggleView();
                 });
@@ -99,66 +141,14 @@ class _SignInFormState extends State<SignInForm> {
           ],
         ).fadeInList(5, false),
         const SizedBox(height: 12.0),
-        Text(
-          error,
-          style: const TextStyle(color: Colors.red, fontSize: 14.0),
-        )
+        // Mensaje de error
+        error.isNotEmpty
+            ? Text(
+                error,
+                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+              )
+            : const SizedBox.shrink(),
       ],
     );
-  }
-
-  buildSignInForm() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        CustomTextField(
-          enabled: !loading,
-          hintText: "Correo",
-          textInputAction: TextInputAction.next,
-          validateFunction: Validations.validateEmail,
-          onSaved: (String? val) {
-            email = val ?? '';
-          },
-        ).fadeInList(1, false),
-        Column(
-          children: <Widget>[
-            const SizedBox(height: 20.0),
-            CustomTextField(
-              enabled: !loading,
-              hintText: "Contraseña",
-              textInputAction: TextInputAction.done,
-              validateFunction: Validations.validatePassword,
-              submitAction: signIn,
-              obscureText: true,
-              onSaved: (String? val) {
-                password = val ?? '';
-              },
-            ),
-          ],
-        ).fadeInList(2, false),
-      ],
-    );
-  }
-
-  buildSignInButton() {
-    return loading
-        ? const Center(child: CircularProgressIndicator())
-        : CustomButton(
-            label: "Iniciar Sesión",
-            onPressed: signIn,
-          ).fadeInList(4, false);
-  }
-
-  Future<void> signIn() async {
-    _formKey.currentState!.save();
-    if (_formKey.currentState!.validate()) {
-      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-      if (result == null) {
-        setState(() {
-          error =
-              'No se pudo iniciar sesión. Por favor ingrese un correo o contraseña válidos.';
-        });
-      }
-    }
   }
 }

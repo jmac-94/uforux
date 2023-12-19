@@ -34,6 +34,7 @@ class AppUserController {
 
   Future<void> updateStudentData({
     String? username,
+    String? name,
     String? entrySemester,
     bool? assesor,
     String? degree,
@@ -44,6 +45,7 @@ class AppUserController {
   }) async {
     Map<String, dynamic> studentData = {
       if (username != null) 'username': username,
+      if (name != null) 'name': name,
       if (entrySemester != null) 'entrySemester': entrySemester,
       if (assesor != null) 'assesor': assesor,
       if (degree != null) 'degree': degree,

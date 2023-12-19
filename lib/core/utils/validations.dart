@@ -31,6 +31,14 @@ class Validations {
     return null;
   }
 
+  static String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'El nombre de usuario es requerido.';
+    }
+
+    return null;
+  }
+
   static String? validateSemester(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresar el ciclo de ingreso.';

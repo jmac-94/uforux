@@ -13,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final FormFieldValidator<String>? validateFunction;
   final void Function(String?)? onSaved, onChange;
   final Color backgroundColor;
+  final int? maxLines;
 
   const CustomTextField({
     this.initialValue,
@@ -29,6 +30,7 @@ class CustomTextField extends StatelessWidget {
     this.onSaved,
     this.onChange,
     this.backgroundColor = const Color.fromARGB(255, 178, 167, 202),
+    this.maxLines = 1,
     super.key,
   });
 
@@ -37,6 +39,7 @@ class CustomTextField extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: TextFormField(
+          maxLines: maxLines,
           initialValue: initialValue,
           enabled: enabled,
           onChanged: onChange,

@@ -43,27 +43,32 @@ class AuthenticationController {
 
   Future<AppUser?> registerWithEmailAndPassword({
     required String email,
-    required String username,
     required String password,
+    required String username,
+    required String name,
     required String entrySemester,
     required bool assesor,
     required String degree,
+    required String aboutMe,
   }) async {
     try {
       final UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
 
       final User? user = result.user;
 
       if (user != null) {
         await AppUserController(uid: user.uid).updateStudentData(
           username: username,
+          name: name,
           entrySemester: entrySemester,
           assesor: assesor,
           degree: degree,
           score: 0.0,
           followedForums: [],
-          aboutMe: '',
+          aboutMe: aboutMe,
           comments: {},
         );
       }
