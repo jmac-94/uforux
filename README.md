@@ -23,7 +23,7 @@ Escribir todo el código en inglés, excepto los comentarios que van en español
 
 ### Imports
 
-Esta es la división que deben tener los imports, ordenados según su tipo de import. Notar que cada sección está separada una linea vacía.
+Esta es la división que deben tener los imports, ordenados según su tipo de import. Notar que cada sección está separada por una linea vacía.
 
 ```dart
 // Built-in dart libraries
