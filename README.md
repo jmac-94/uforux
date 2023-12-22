@@ -15,7 +15,17 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-## Good practices of code
+## Software
+
+- Flutter y dart.
+- Emulador de un móvil para correr la aplicación.
+- VSC, android studio o xcode.
+
+## División de carpetas
+...
+
+
+## Buenas prácticas
 
 ### Idioma
 
