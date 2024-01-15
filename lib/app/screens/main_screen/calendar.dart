@@ -117,7 +117,7 @@ class _CalendarState extends State<Calendar> {
       return db.execute(
         'CREATE TABLE events(id INTEGER PRIMARY KEY, title TEXT, date TEXT, startTime TEXT, endTime TEXT)',
       );
-    });
+    }); 
 
     _loadEvents();
   }
