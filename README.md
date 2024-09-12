@@ -1,6 +1,6 @@
 # uforuxpi3
 
-A new Flutter project.
+A new Flutter project for PI3 (DEMO MODE FINALIST - UNIVERSIDAD DE INGENIERIA Y TECNOLOGIA)
 
 ## Getting Started
 
